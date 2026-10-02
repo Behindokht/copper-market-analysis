@@ -98,9 +98,6 @@ def load(name):
     bad = LME_COLUMNS & set(cols)
     if bad:
         raise SystemExit(f"{name}: LME series column(s) {sorted(bad)} must never be exported")
-    for drop in DROP_COLUMNS.get(name, []):
-        if drop not in cols:
-            raise SystemExit(f"{name}: expected column {drop} (to be left out of the site data) is not there")
     keep = [i for i, c in enumerate(cols) if c not in DROP_COLUMNS.get(name, [])]
     if name in DROP_ROWS:
         col, text = DROP_ROWS[name]
