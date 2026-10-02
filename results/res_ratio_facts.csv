@@ -1,0 +1,9 @@
+fact_id,month,value,unit,note
+series_months,1960-01-01,800.0,months,"World Bank monthly copper and aluminium prices, January 1960 to the latest month"
+ratio_latest,2026-08-01,4.4066,ratio,"copper price divided by aluminium price, latest month"
+copper_latest,2026-08-01,14326.0,USD per tonne,latest monthly average
+aluminium_latest,2026-08-01,3251.0,USD per tonne,latest monthly average
+ratio_highest_before_last_24m,2014-01-01,4.2218,ratio,highest ratio in the months before the latest 24 months
+months_below_latest,2026-08-01,799.0,months,earlier months with a lower ratio than the latest month
+ratio_median_since_1970,1970-01-01,1.7054,ratio,median of all months since January 1970
+ratio_min,1988-06-01,0.7099,ratio,lowest ratio in the series

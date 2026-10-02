@@ -96,7 +96,7 @@ for u in sorted(used):
     if u not in keys and not any(k.startswith(u + ".") for k in keys):
         problems.append(f"TEXT key used in code but missing in strings.en.js: {u}")
 dynamic = ("pages.", "nav.", "story.guess2.opt_", "story.sources.names.", "story.guess1.verdict_", "footer.", "story.notshow.", "story.guess2.c_", "site.", "hero.",
-           "dollar.sources.names.", "dollar.notshow.")
+           "dollar.sources.names.", "dollar.notshow.", "ratio.sources.names.", "ratio.notshow.", "ratio.fam_", "ratio.h_")
 for k in sorted(keys):
     if k not in used and not any(k.startswith(d) for d in dynamic) and not any(u.rstrip("*") and k.startswith(u.rstrip("*")) for u in used if u.endswith("*")):
         problems.append(f"TEXT key defined but never used: {k}")

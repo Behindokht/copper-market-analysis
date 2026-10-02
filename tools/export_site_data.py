@@ -46,6 +46,8 @@ PAGES = {
         "episodes": "res_cu_al_episodes",
         "slopes": "res_cu_al_slopes",
         "scenario_today": "res_cu_al_scenario_today",
+        "series": "res_ratio_series",
+        "facts": "res_ratio_facts",
     },
     "demand": {
         "headline": "res_demand_headline",

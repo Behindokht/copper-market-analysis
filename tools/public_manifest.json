@@ -387,7 +387,8 @@
    ],
    "note": "results on World Bank prices (CC BY 4.0)",
    "large_datasets": [
-    "episodes"
+    "episodes",
+    "series"
    ]
   },
   "docs/data/demand.js": {
@@ -418,6 +419,19 @@
    "large_datasets": [
     "checks"
    ]
+  },
+  "results/res_ratio_series.csv": {
+   "sources": [
+    "S02"
+   ],
+   "note": "World Bank monthly copper and aluminium prices (CC BY 4.0; credit 'adapted from World Bank Commodity Price Data') and their ratio, 800 months; never LME",
+   "large_ok": true
+  },
+  "results/res_ratio_facts.csv": {
+   "sources": [
+    "S02"
+   ],
+   "note": "facts about today's copper-to-aluminium ratio, computed from World Bank prices"
   }
  }
 }

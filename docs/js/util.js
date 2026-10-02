@@ -47,6 +47,7 @@
   CMA.minus = function (s) { return String(s).replace("-", "\u2212"); };
   CMA.f1 = function (x) { return CMA.minus((Math.round(x * 10) / 10).toFixed(1)); };
   CMA.f2 = function (x) { return CMA.minus((Math.round(x * 100) / 100).toFixed(2)); };
+  CMA.s1 = function (x) { return (x >= 0 ? "+" : "") + CMA.f1(x); };
   CMA.s2 = function (x) { return (x >= 0 ? "+" : "") + CMA.f2(x); };
   CMA.pctChange = function (x) { return (x >= 0 ? "+" : "") + CMA.minus(Math.abs(x) >= 100 ? CMA.n0(x) : (Math.round(x * 10) / 10).toFixed(1)) + "%"; };
   var MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
