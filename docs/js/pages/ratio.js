@@ -237,6 +237,7 @@
     });
     wrap.appendChild(h("section", { class: "numbers", "aria-labelledby": "ratio-sc" },
       h("h3", { id: "ratio-sc", text: T("sc_title") }),
+      h("p", { class: "verdict", text: T("sc_warn") }),
       h("p", { class: "hint", text: T("sc_hint", vars) }),
       h("div", { class: "numwrap" }, h("table", { class: "numtable" },
         h("thead", {}, h("tr", {}, h("th", { scope: "col", text: T("sc_col_ref") }), h("th", { class: "res", scope: "col", text: T("sc_col_ratio") }),
