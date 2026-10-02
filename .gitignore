@@ -38,3 +38,6 @@ __pycache__/
 .ipynb_checkpoints/
 .DS_Store
 Thumbs.db
+
+# Private single-file previews (built by tools/build_preview.py)
+preview/

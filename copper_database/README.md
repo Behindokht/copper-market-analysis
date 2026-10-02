@@ -18,6 +18,11 @@ Copper analysis/                    raw downloads (LME csv files, World Bank xls
 tools/
   audit_public.py                   pre-push audit of everything that would be public
   public_manifest.json              every published data file, its sources and licence flags
+  export_site_data.py               results/*.csv to docs/data/*.js (calculates nothing)
+  check_site.py                     checks on the website (no outside loading, text keys, glyphs, contrast)
+  contrast_report.py                contrast of every colour pair, reads the tokens in docs/css/site.css
+  build_preview.py                  one-file private preview of the site
+docs/                               the static website (GitHub Pages): index.html, css/, js/, fonts/, data/, DESIGN.md
 ```
 
 Rule: `collected/` and the raw downloads are the inputs. `copper.db` and `csv/` are outputs and are overwritten on every build, so never edit them.
@@ -136,6 +141,15 @@ These published files contain figures taken from or derived from IEA data. The r
 - `results/res_demand_sensitivity.csv` (sensitivity results derived from IEA scenarios)
 
 `copper_database/collected/sources.csv` only quotes short IEA wording and describes IEA files.
+
+## The dashboard (`docs/`)
+
+A static website (plain HTML, CSS and JavaScript, no server and no build step; open `docs/index.html` in a browser). It reads only the data files in `docs/data/*.js`, which `tools/export_site_data.py` writes from the derived tables in `results/`. It never opens the database and never shows an LME series. The Story page is built; the other four pages are placeholders until their stages.
+
+- **Text** lives in one file, `docs/js/strings.en.js`, with `{placeholders}`; every number on a page comes from a data file, so text and numbers cannot drift apart. Another language is a second strings file with the same keys.
+- **Look:** cream page with a faint grain, solid cards for charts and tooltips, deep green text, copper and a data green for chart marks, oxblood footer; Merriweather for headings and Open Sans for text, both self-hosted (SIL Open Font License, texts in `docs/fonts/`). Nothing is loaded from the web. `docs/DESIGN.md` has the tokens and the contrast of every colour pair in use.
+- **Checks:** `python tools/check_site.py` before every commit that touches `docs/` (no outside loading, every text key exists, no hard-coded percentage in the text, no characters the fonts cannot draw, contrast passes), and `python tools/audit_public.py` before every commit or push.
+- **Credits:** `CREDITS.md` and the footer of the site.
 
 ## How to update
 

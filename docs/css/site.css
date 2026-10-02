@@ -1,0 +1,207 @@
+/* Copper market analysis: site styles. Light mode only.
+   Colours: cream page with a faint paper grain behind the content, solid cards for charts and tooltips,
+   deep forest green for headings and text, copper and a data green for chart marks, oxblood for the footer.
+   Fonts (Merriweather for headings, Open Sans for everything else) are self-hosted in ../fonts, nothing is loaded from the web.
+   tools/contrast_report.py reads the tokens below and checks every pair of colours that is used. */
+
+@font-face { font-family: "Open Sans"; src: url("../fonts/open-sans-latin-400-normal.woff2") format("woff2"); font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: "Open Sans"; src: url("../fonts/open-sans-latin-600-normal.woff2") format("woff2"); font-weight: 600; font-style: normal; font-display: swap; }
+@font-face { font-family: "Open Sans"; src: url("../fonts/open-sans-latin-700-normal.woff2") format("woff2"); font-weight: 700; font-style: normal; font-display: swap; }
+@font-face { font-family: "Merriweather"; src: url("../fonts/merriweather-latin-400-normal.woff2") format("woff2"); font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: "Merriweather"; src: url("../fonts/merriweather-latin-700-normal.woff2") format("woff2"); font-weight: 700; font-style: normal; font-display: swap; }
+
+:root {
+  color-scheme: light;
+  /* surfaces */
+  --cream: #F5F0E6;        /* page */
+  --card: #FBF8F1;         /* solid cards: charts, tooltips, notes */
+  --chip: #EDE5D2;         /* chips, track of the meter */
+  --rule: #D9D0BD;         /* borders (decoration only) */
+  --grid: #E4DCCB;         /* chart grid lines (decoration only) */
+  /* text */
+  --forest: #123C32;       /* headings and body text */
+  --forest-muted: #46605A; /* secondary text */
+  --link: #7A3E2E;         /* inline links (the oxblood accent) */
+  /* chart marks: copper = the copper price; green = the comparison series */
+  --copper: #C06A3B;
+  --green: #1C5F31;
+  /* large hero lettering only, on the deep green band */
+  --copper-hero: #C47A45;
+  /* fills and tints only, never text and never a data series on their own */
+  --copper-tint: #D89A5A;
+  --teal-tint: #3B5D5A;
+  /* footer and small accents */
+  --oxblood: #5A1F1A;
+  --oxblood-accent: #7A3E2E;
+  --font-head: "Merriweather", Georgia, "Times New Roman", serif;
+  --font-body: "Open Sans", "Segoe UI", system-ui, -apple-system, sans-serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background-color: var(--cream);
+  /* a very faint paper grain, behind the content only; cards sit on top of it as solid colour */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .3 0 0 0 0 .22 0 0 0 0 .12 0 0 0 .05 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
+  background-size: 180px 180px;
+  color: var(--forest);
+  font: 400 1rem/1.6 var(--font-body);
+}
+.num, table, svg text, output, .tabular { font-feature-settings: "tnum"; font-variant-numeric: tabular-nums; }
+h1, h2, h3 { font-family: var(--font-head); color: var(--forest); margin: 0; }
+h2 { font-weight: 400; font-size: clamp(1.35rem, 2.6vw, 1.8rem); line-height: 1.3; }
+h3 { font-weight: 400; font-size: 1.15rem; line-height: 1.35; }
+p { margin: 0 0 .9em; }
+a { color: var(--link); text-underline-offset: 3px; }
+a:hover { color: var(--forest); }
+:focus-visible { outline: 3px solid var(--oxblood-accent); outline-offset: 2px; border-radius: 2px; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.skip { position: absolute; left: 8px; top: -60px; z-index: 50; background: var(--forest); color: var(--cream); padding: 10px 14px; border-radius: 0 0 6px 6px; }
+.skip:focus { top: env(safe-area-inset-top, 0px); }
+.wrap { max-width: 1080px; margin-inline: auto; padding-inline: clamp(16px, 4vw, 40px); }
+.small { font-size: .875rem; }
+.muted { color: var(--forest-muted); }
+
+/* header */
+header.top { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20; background: var(--cream); border-bottom: 1px solid var(--rule); }
+header.top .bar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 4px 20px; min-height: 52px; }
+.brand { font: 700 1rem var(--font-head); color: var(--forest); text-decoration: none; padding: 12px 0; }
+nav.main { display: flex; flex-wrap: wrap; gap: 2px 6px; }
+nav.main a { font: 600 .875rem var(--font-body); color: var(--forest); text-decoration: none; padding: 14px 10px 11px; border-bottom: 3px solid transparent; }
+nav.main a:hover { border-bottom-color: var(--rule); }
+nav.main a[aria-current="page"] { border-bottom-color: var(--copper); }
+
+/* hero band: deep green with copper lettering (large text only); small text on the band is cream */
+.hero { background: var(--forest); color: var(--cream); padding: clamp(28px, 6vw, 64px) 0; }
+.hero h1 { font-weight: 700; font-size: clamp(1.8rem, 4.4vw, 2.8rem); line-height: 1.22; color: var(--copper-hero); max-width: 22em; }
+.hero p { color: var(--cream); max-width: 40em; }
+.hero .lead { font-size: 1.1rem; margin-top: 18px; }
+.hero .byline { font-size: .9rem; margin: 6px 0 0; }
+
+/* pages */
+.page { padding-bottom: 48px; }
+.page-head { padding: clamp(24px, 4vw, 40px) 0 8px; }
+.eyebrow { font: 600 .75rem var(--font-body); letter-spacing: .12em; text-transform: uppercase; color: var(--forest-muted); margin: 0 0 8px; }
+.intro { color: var(--forest-muted); max-width: 44em; margin-top: 10px; }
+.finding { font: 400 1.1rem/1.65 var(--font-head); max-width: 44em; margin: 18px 0; }
+.card { background: var(--card); border: 1px solid var(--rule); border-radius: 8px; padding: clamp(16px, 3vw, 28px); margin: 22px 0; box-shadow: 0 1px 2px rgba(18, 60, 50, .06); }
+.card h3 { margin-bottom: 6px; }
+.hint { color: var(--forest-muted); font-size: .9rem; margin-bottom: 14px; }
+
+/* buttons and inputs */
+.btn { font: 600 .95rem var(--font-body); background: var(--forest); color: var(--cream); border: 2px solid var(--forest); border-radius: 6px; padding: 9px 18px; cursor: pointer; }
+.btn:hover { background: #0C2A23; }
+.btn.secondary { background: var(--card); color: var(--forest); }
+.btn.secondary:hover { background: var(--chip); }
+.btn.small { padding: 5px 12px; font-size: .8125rem; margin-top: 12px; }
+.btn[disabled] { opacity: .5; cursor: not-allowed; }
+.row { display: flex; flex-wrap: wrap; gap: 12px 16px; align-items: center; }
+input[type="range"] { width: min(520px, 100%); accent-color: var(--green); height: 28px; }
+.guess-value { font: 400 1.6rem var(--font-head); min-width: 3.4em; }
+fieldset.opts { border: 0; padding: 0; margin: 0; display: grid; gap: 10px; }
+fieldset.opts legend { padding: 0; margin-bottom: 8px; font-weight: 600; }
+.opt { display: flex; gap: 12px; align-items: flex-start; padding: 12px 14px; border: 2px solid var(--rule); border-radius: 8px; background: var(--card); cursor: pointer; }
+.opt:hover { border-color: var(--forest-muted); }
+.opt input { margin-top: 4px; accent-color: var(--green); width: 18px; height: 18px; flex: none; }
+.opt:has(input:checked) { border-color: var(--forest); background: var(--chip); }
+.opt:has(input:focus-visible) { outline: 3px solid var(--oxblood-accent); outline-offset: 2px; }
+
+/* reveal blocks */
+.reveal { margin-top: 20px; padding-top: 18px; border-top: 1px solid var(--rule); }
+.bignum { font: 400 clamp(2.4rem, 7vw, 3.6rem)/1.1 var(--font-head); color: var(--forest); }
+.bigcap { color: var(--forest-muted); font-size: .95rem; margin-top: 4px; }
+.verdict { font-weight: 600; margin: 10px 0; }
+.meter { position: relative; height: 12px; margin: 46px 6px 104px; background: var(--chip); border: 1px solid var(--rule); border-radius: 6px; }
+.meter .tick { position: absolute; top: -5px; width: 2px; height: 20px; background: var(--forest-muted); transform: translateX(-1px); }
+.meter .dot { position: absolute; top: 50%; width: 18px; height: 18px; border-radius: 50%; transform: translate(-50%, -50%); border: 3px solid var(--card); box-shadow: 0 0 0 2px var(--forest); }
+.meter .dot.actual { background: var(--green); box-shadow: 0 0 0 2px var(--green); }
+.meter .dot.you { background: var(--card); }
+.meter .lab { position: absolute; font-size: .8125rem; white-space: nowrap; transform: translateX(-50%); }
+.meter .lab.up { bottom: 22px; }
+.meter .lab.down { top: 22px; }
+.meter .lab.down2 { top: 46px; }
+.meter .ends { position: absolute; top: 74px; left: 0; right: 0; display: flex; justify-content: space-between; font-size: .75rem; color: var(--forest-muted); }
+
+/* chart */
+.chart-card .qtitle { margin-bottom: 4px; }
+.chart { position: relative; width: 100%; margin-top: 8px; }
+.chart svg { display: block; width: 100%; height: auto; overflow: visible; touch-action: pan-y; }
+.chart svg:focus-visible { outline: 3px solid var(--oxblood-accent); outline-offset: 4px; }
+.chart .gridline { stroke: var(--grid); stroke-width: 1; }
+.chart .zeroline { stroke: var(--forest-muted); stroke-width: 1.4; }
+.chart .axisline { stroke: var(--forest-muted); stroke-width: 1; }
+.chart .ax { font-size: 12px; fill: var(--forest-muted); }
+.chart .lbl { font-size: 12.5px; font-weight: 600; fill: var(--forest); }
+.chart .callout { font-size: 12px; fill: var(--forest); }
+.chart .callout .strong { font-weight: 600; }
+.chart .badge { font-size: 11px; font-weight: 700; }
+.marklist { display: none; margin: 10px 0 0; padding-left: 1.4em; font-size: .875rem; }
+.chart[data-narrow="true"] ~ .marklist { display: block; }
+.chart .gapline { stroke: var(--forest-muted); stroke-width: 1; stroke-dasharray: 3 3; }
+.chart-tip { position: absolute; z-index: 5; pointer-events: none; background: var(--card); border: 1px solid var(--forest-muted); border-radius: 6px; padding: 8px 10px; font-size: .8125rem; line-height: 1.45; box-shadow: 0 2px 8px rgba(18, 60, 50, .18); max-width: 260px; }
+.chart-tip strong { display: block; margin-bottom: 2px; }
+.key { display: flex; flex-wrap: wrap; gap: 6px 22px; margin: 10px 0 2px; font-size: .875rem; }
+.key .sw.dash { border-top-style: dashed; }
+.key .sw { display: inline-block; width: 22px; height: 0; border-top: 3px solid currentColor; vertical-align: middle; margin-right: 8px; }
+.tableview { margin-top: 12px; }
+.tableview summary { cursor: pointer; font-weight: 600; font-size: .9rem; }
+.tablewrap { max-height: 320px; overflow: auto; margin-top: 8px; border: 1px solid var(--rule); border-radius: 6px; background: var(--card); }
+.tablewrap table { border-collapse: collapse; width: 100%; font-size: .875rem; }
+.tablewrap th, .tablewrap td { padding: 6px 12px; text-align: right; border-bottom: 1px solid var(--grid); }
+.tablewrap th:first-child, .tablewrap td:first-child { text-align: left; }
+.tablewrap thead th { position: sticky; top: 0; background: var(--chip); z-index: 1; }
+
+/* the numbers table */
+.numtable { width: 100%; border-collapse: collapse; font-size: .9rem; margin-top: 8px; }
+.numtable th, .numtable td { padding: 8px 12px; text-align: left; vertical-align: top; border-bottom: 1px solid var(--grid); }
+.numtable thead th { background: var(--chip); font-weight: 600; font-size: .8125rem; }
+.numtable td.res, .numtable td.mon, .numtable thead th.res, .numtable thead th.mon { text-align: right; white-space: nowrap; }
+.numtable tbody th.group { background: var(--card); font: 700 .9rem var(--font-body); padding-top: 18px; border-bottom: 2px solid var(--rule); }
+.numwrap { overflow-x: auto; border: 1px solid var(--rule); border-radius: 6px; background: var(--card); }
+@media (max-width: 640px) { .numtable td.res { white-space: normal; } }
+
+/* note, chips, next */
+.note { background: var(--card); border: 1px solid var(--rule); border-left: 4px solid var(--copper); border-radius: 6px; padding: 16px 20px; margin: 26px 0; }
+.note h3 { font: 600 1rem var(--font-body); margin-bottom: 6px; }
+.note ul { margin: 6px 0 0; padding-left: 1.2em; }
+.note li { margin: 4px 0; }
+.sources h3 { font: 600 .95rem var(--font-body); margin-bottom: 8px; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 10px; padding: 0; list-style: none; }
+.chip { background: var(--chip); border: 1px solid var(--rule); border-radius: 999px; padding: 4px 12px; font-size: .8125rem; }
+.chip b { font-weight: 700; }
+.attrib { font-size: .85rem; color: var(--forest-muted); max-width: 52em; }
+.next { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; margin-top: 28px; }
+.placeholder { border: 2px dashed var(--rule); border-radius: 8px; padding: 28px; color: var(--forest-muted); background: transparent; }
+
+/* footer */
+footer.foot { background: var(--oxblood); color: var(--cream); padding: 32px 0 40px; margin-top: 24px; }
+footer.foot a { color: var(--cream); }
+footer.foot a:hover { color: var(--cream); text-decoration-thickness: 2px; }
+footer.foot :focus-visible { outline-color: var(--cream); }
+footer.foot .cols { display: grid; gap: 20px 40px; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); }
+footer.foot h2 { font: 700 1rem var(--font-head); color: var(--cream); margin-bottom: 8px; }
+footer.foot p { margin-bottom: .5em; }
+footer.foot details { margin-top: 22px; max-width: 60em; }
+footer.foot summary { cursor: pointer; font-weight: 600; }
+footer.foot .fine { font-size: .85rem; margin-top: 18px; }
+
+[hidden] { display: none !important; }
+@media (max-width: 640px) {
+  header.top .bar { flex-direction: column; flex-wrap: nowrap; align-items: stretch; gap: 0; }
+  .brand { padding: 8px 0 0; font-size: .9rem; }
+  nav.main { min-width: 0; flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; margin-inline: -4px; }
+  nav.main::-webkit-scrollbar { display: none; }
+  nav.main a { padding: 10px 10px 8px; white-space: nowrap; flex: none; }
+  .meter .lab { font-size: .75rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  * { animation: none !important; transition: none !important; }
+}
+
+/* tabular numerals wherever digits line up (placed last, because the font shorthand above resets font-feature-settings) */
+.num, table, svg text, output, .tabular, .bignum, .guess-value, .chart-tip, .meter .lab, .chip, .verdict, .marklist {
+  font-feature-settings: "tnum";
+  font-variant-numeric: tabular-nums;
+}

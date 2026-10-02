@@ -115,7 +115,7 @@ check_no,table_name,description,status,detail,run_date
 114,stg_ev_data,rows of the three kept parameters dropped for a non-numeric year or value,PASS,details withheld: raw IEA data is not redistributed,2026-10-02
 115,stg_ev_data,world EV car sales 2025 in plausible range (10 to 40 million),PASS,details withheld: raw IEA data is not redistributed,2026-10-02
 116,stg_ev_data vs python baseline,"row count, non-null counts, distinct counts, sums, min and max per column, and counts and sums per group match the old Python output",PASS,details withheld: raw IEA data is not redistributed,2026-10-02
-117,stg_usgs_copper,rows read (copper only) / sections,INFO,"194 rows; sections Import Sources, Salient Statistics—United States, World Mine and Refinery Production and Reserves",2026-10-02
+117,stg_usgs_copper,rows read (copper only) / sections,INFO,"194 rows; sections Import Sources, Salient Statistics, United States, World Mine and Refinery Production and Reserves",2026-10-02
 118,stg_usgs_copper,2024: mine production by country adds up to world total (2% tolerance for USGS rounding),PASS,"sum 22,981 vs total 23,000 (0.08% apart)",2026-10-02
 119,stg_usgs_copper,2025: mine production by country adds up to world total (2% tolerance for USGS rounding),PASS,"sum 23,013 vs total 23,000 (0.06% apart)",2026-10-02
 120,stg_usgs_copper,reserves by country add up to world total (2% tolerance),PASS,"sum 980,200 vs total 980,000 (0.02% apart)",2026-10-02

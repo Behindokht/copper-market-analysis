@@ -1,0 +1,149 @@
+#!/usr/bin/env python3
+"""
+Checks on the static site in docs/ (run before every commit that touches it):  python tools/check_site.py
+
+  1. none of the three characters the fonts cannot draw ("greater or equal", "almost equal", the right arrow) appears anywhere in docs/
+  2. nothing is loaded from outside the site: no external stylesheet, script, font, import, fetch or other network call
+  3. every font file named in the stylesheet exists, and every font family has its licence text next to it
+  4. every text key the code asks for exists in docs/js/strings.en.js, and no key is unused
+  5. the strings never contain a hard-coded percentage: every number on the site comes from the data files
+  6. the Story's first guess never uses the word that would turn an association into a cause
+  7. the contrast of every colour pair in use passes (tools/contrast_report.py)
+  8. plain text style: no em dash or en dash in any site file, none of the stiff words in the banned list, and no sentence over 25 words
+     in the page text (lists of credits and attributions are citations and are exempt from the length rule)
+Exit code 1 if anything fails.
+"""
+import json
+import re
+import subprocess
+import sys
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parent.parent
+DOCS = ROOT / "docs"
+problems = []
+
+text_files = [p for p in DOCS.rglob("*") if p.is_file() and p.suffix in (".html", ".css", ".js", ".md", ".txt", ".json")]
+
+# 1. glyphs the fonts lack
+for p in text_files:
+    if p.name.startswith("OFL-"):
+        continue
+    t = p.read_text(encoding="utf-8", errors="replace")
+    for ch, name in (("≥", "greater or equal"), ("≈", "almost equal"), ("→", "right arrow")):
+        if ch in t or ("\\u%04x" % ord(ch)) in t.lower():
+            problems.append(f"GLYPH {p.relative_to(ROOT).as_posix()}: contains the character for '{name}', which the fonts cannot draw")
+
+# 2. no outside loading
+EXTERNAL = [
+    (r"<link[^>]+href=[\"']https?:", "external stylesheet or link"), (r"<script[^>]+src=[\"']https?:", "external script"),
+    (r"url\(\s*[\"']?https?:", "external url() in CSS"), (r"@import", "@import"), (r"\bfetch\s*\(", "fetch()"), (r"XMLHttpRequest", "XMLHttpRequest"),
+    (r"new\s+WebSocket", "WebSocket"), (r"sendBeacon", "sendBeacon"), (r"\bimport\s*\(", "dynamic import()"), (r"<iframe", "iframe"),
+    (r"fonts\.(googleapis|gstatic)\.com", "Google Fonts"),
+]
+for p in text_files:
+    if p.suffix not in (".html", ".css", ".js") or p.parent.name == "data":
+        continue
+    t = p.read_text(encoding="utf-8", errors="replace")
+    for pat, what in EXTERNAL:
+        if re.search(pat, t):
+            problems.append(f"EXTERNAL {p.relative_to(ROOT).as_posix()}: {what}")
+
+# 3. fonts and licences
+css = (DOCS / "css" / "site.css").read_text(encoding="utf-8")
+families = set(re.findall(r"font-family:\s*\"([^\"]+)\";\s*src", css))
+for rel in re.findall(r"url\(\"\.\./(fonts/[^\"]+)\"\)", css):
+    if not (DOCS / rel).exists():
+        problems.append(f"FONT missing file docs/{rel}")
+for fam in families:
+    lic = DOCS / "fonts" / ("OFL-" + fam.replace(" ", "") + ".txt")
+    if not lic.exists():
+        problems.append(f"FONT licence text missing for {fam}: expected {lic.relative_to(ROOT).as_posix()}")
+    elif "SIL OPEN FONT LICENSE" not in lic.read_text(encoding="utf-8", errors="replace").upper():
+        problems.append(f"FONT licence text for {fam} does not look like the SIL Open Font License")
+
+# 4. strings
+raw = (DOCS / "js" / "strings.en.js").read_text(encoding="utf-8")
+S = json.loads(raw[raw.index("{", raw.index("window.CMA_STRINGS")): raw.rindex("}") + 1])
+
+
+def flat(d, prefix=""):
+    for k, v in d.items():
+        if isinstance(v, dict):
+            yield from flat(v, prefix + k + ".")
+        else:
+            yield prefix + k, v
+
+
+keys = dict(flat(S))
+used = set()
+for p in (DOCS / "js").rglob("*.js"):
+    if p.name.startswith("strings"):
+        continue
+    t = p.read_text(encoding="utf-8")
+    for m in re.finditer(r"\bt\(\s*\"([\w.]+)\"", t):
+        used.add(m.group(1))
+    for m in re.finditer(r"\bt\(\s*\"([\w.]+)\"\s*\+", t):     # keys built in code: prefix + id
+        used.add(m.group(1) + "*")
+    if p.parent.name == "pages":
+        for m in re.finditer(r"\bT\(\s*\"([\w.]+)\"", t):   # a page helper T("key") means t("<page>.key")
+            used.add(p.stem + "." + m.group(1))
+    for m in re.finditer(r"\"(pages|nav|story|footer|site|hero)\.[\w.]*\"", t):
+        used.add(m.group(0).strip('"'))
+for u in sorted(used):
+    if u.endswith("*") or u.endswith("."):
+        continue
+    if u not in keys and not any(k.startswith(u + ".") for k in keys):
+        problems.append(f"TEXT key used in code but missing in strings.en.js: {u}")
+dynamic = ("pages.", "nav.", "story.guess2.opt_", "story.sources.names.", "story.guess1.verdict_", "footer.", "story.notshow.", "story.guess2.c_", "site.", "hero.",
+           "dollar.sources.names.", "dollar.notshow.")
+for k in sorted(keys):
+    if k not in used and not any(k.startswith(d) for d in dynamic) and not any(u.rstrip("*") and k.startswith(u.rstrip("*")) for u in used if u.endswith("*")):
+        problems.append(f"TEXT key defined but never used: {k}")
+
+# 5. no hard-coded percentage in the strings
+for k, v in keys.items():
+    for s in (v if isinstance(v, list) else [v]):
+        if isinstance(s, str) and re.search(r"\d(\.\d+)?\s?%", s):
+            problems.append(f"NUMBER hard-coded in text {k}: numbers must come from the data files")
+
+# 6. no causal word in the first guess
+for k, v in keys.items():
+    if k.startswith("story.guess1.") and isinstance(v, str) and re.search(r"\bbecause\b", v, re.I):
+        problems.append(f"WORDING {k}: the first guess must not say 'because' (an association is not a cause)")
+
+# 8. plain text style
+BANNED = ["utilize", "utilise", "leverage", "furthermore", "moreover", "notably", "robust", "delve", "underscore", "paramount", "plethora",
+          "facilitate", "elucidate", "endeavor", "endeavour", "commence", "subsequently", "nevertheless", "consequently", "albeit",
+          "whilst", "comprehensive", "holistic", "seamless", "myriad", "intricate", "pivotal", "landscape"]
+EXEMPT_LENGTH = ("footer.credits", "story.sources.attribution", "dollar.sources.attribution", "ratio.sources.attribution")
+for p in text_files:
+    if p.name.startswith("OFL-"):
+        continue
+    t = p.read_text(encoding="utf-8", errors="replace")
+    if "\u2014" in t or "\u2013" in t or "\\u2014" in t or "\\u2013" in t:
+        problems.append(f"DASH {p.relative_to(ROOT).as_posix()}: contains an em dash or en dash; use a full stop, a comma or 'to'")
+for k, v in keys.items():
+    for s_ in (v if isinstance(v, list) else [v]):
+        if not isinstance(s_, str) or k.endswith(("_url", "_user", "_domain")):
+            continue
+        for w in BANNED:
+            if re.search(rf"\b{w}\b", s_, re.I):
+                problems.append(f"STYLE {k}: stiff word '{w}'")
+        if not k.startswith(EXEMPT_LENGTH):
+            for sent in re.split(r"(?<=[.!?])\s+", s_):
+                n_words = len(re.sub(r"\{\w+\}", "X", sent).split())
+                if n_words > 25:
+                    problems.append(f"STYLE {k}: a sentence has {n_words} words (limit 25): {sent[:70]}...")
+
+# 7. contrast
+r = subprocess.run([sys.executable, str(ROOT / "tools" / "contrast_report.py")], capture_output=True, text=True, encoding="utf-8", errors="replace")
+if r.returncode != 0:
+    problems.append("CONTRAST " + (r.stdout.strip().splitlines()[-1] if r.stdout.strip() else r.stderr.strip()))
+
+if problems:
+    print(f"SITE CHECK FAILED: {len(problems)} problem(s)")
+    for p in problems:
+        print("  -", p)
+    sys.exit(1)
+print(f"SITE CHECK PASSED: {len(text_files)} text files, {len(keys)} text keys, {len(families)} font families, all colour pairs in use pass.")
