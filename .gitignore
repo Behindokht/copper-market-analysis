@@ -1,0 +1,40 @@
+# ---------------------------------------------------------------------------------------------
+# Never public: commercial, licensed or generated data.
+# Run `python tools/audit_public.py` before every push; it fails if any of this slips through.
+# ---------------------------------------------------------------------------------------------
+
+# The database and every CSV generated from it (they contain the LME series and other raw data)
+copper_database/copper.db
+copper_database/csv/
+*.db
+*.sqlite
+*.sqlite3
+
+# LME downloads (commercial data) - wherever they are
+HistoricalExport-lme-*.csv
+
+# Raw downloads in the project root (LME, World Bank, FRED, IEA, USGS files)
+/*.csv
+/*.xlsx
+/*.pdf
+/*.xml
+/*.zip
+
+# Frozen proofs of the SQL migration that hold summaries of LME or IEA data.
+# Not public: the LME licence is commercial, and the IEA terms are not confirmed yet.
+copper_database/baselines/lme_copper_daily_python.csv
+copper_database/baselines/ev_data_python.csv
+copper_database/baselines/datacentre_annex_world_python.csv
+copper_database/baselines/datacentre_annex_regional_python.csv
+
+# Hand-collected tables from secondary articles ("do not republish"; replace with company reports first)
+copper_database/collected/company_production.csv
+copper_database/collected/mine_production.csv
+
+# Local tooling and environments
+.claude/
+.venv/
+__pycache__/
+.ipynb_checkpoints/
+.DS_Store
+Thumbs.db

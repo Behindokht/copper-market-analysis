@@ -1,0 +1,5 @@
+# Keep line endings the same on every machine (the data and SQL files are text)
+* text=auto eol=lf
+*.woff2 binary
+*.png binary
+*.ipynb text eol=lf
