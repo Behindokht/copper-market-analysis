@@ -7,3 +7,5 @@ measure,value
 "2 x covariance (USD copper, euros per dollar)",-8.452779882063682
 "variance, copper in EUR (= sum of the three above)",33.10632629792299
 months,331.0
+first month (YYYYMM),199902.0
+last month (YYYYMM),202608.0

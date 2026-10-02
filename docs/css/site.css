@@ -129,6 +129,7 @@ fieldset.opts legend { padding: 0; margin-bottom: 8px; font-weight: 600; }
 .chart svg { display: block; width: 100%; height: auto; overflow: visible; touch-action: pan-y; }
 .chart svg:focus-visible { outline: 3px solid var(--oxblood-accent); outline-offset: 4px; }
 .chart .gridline { stroke: var(--grid); stroke-width: 1; }
+.chart .leader { stroke: var(--forest-muted); stroke-width: 1; }
 .chart .zeroline { stroke: var(--forest-muted); stroke-width: 1.4; }
 .chart .axisline { stroke: var(--forest-muted); stroke-width: 1; }
 .chart .ax { font-size: 12px; fill: var(--forest-muted); }

@@ -9,6 +9,7 @@
     var m = label.match(/(\d{4}-\d{2}) to (\d{4}-\d{2})/);
     return { from: ym(m[1]), to: ym(m[2]) };
   }
+  function pEurIso(label) { var m = label.match(/(\d{4}-\d{2}) to (\d{4}-\d{2})/); return { from: m[1], to: m[2] }; }
   function find(rows, col, text) {
     var r = rows.filter(function (x) { return String(x[col]).indexOf(text) === 0; })[0];
     if (!r) { throw new Error("missing row: " + text); }
@@ -45,12 +46,17 @@
     });
     var meEnd = find(me, "version", "month-end"), meAvg = find(me, "version", "monthly averages");
     var sdEur = find(vr, "measure", "monthly std dev, copper in EUR").value, sdUsd = find(vr, "measure", "monthly std dev, copper in USD").value;
+    // the dollar and euro swings are computed over the same months: the span must match the euro correlation's sample
+    var sdMonths = find(vr, "measure", "months").value;
+    var ymd = function (v) { var t = String(Math.round(v)); return t.slice(0, 4) + "-" + t.slice(4, 6); };
+    var sdFrom = ymd(find(vr, "measure", "first month").value), sdTo = ymd(find(vr, "measure", "last month").value);
+    if (sdMonths !== cEur.months || sdFrom !== pEurIso(cEur.comparison).from || sdTo !== pEurIso(cEur.comparison).to) { throw new Error("swing months differ from the euro sample"); }
 
     var vars = {
       index_from: indexFrom, euro_from: euroFrom, opposite_share: CMA.n0(oppShare), r: CMA.f2(cIdx["pearson r"]),
       low: CMA.f2(cIdx["95% interval low"]), high: CMA.f2(cIdx["95% interval high"]), beta: CMA.n1(-rIdx.coefficient),
       min: CMA.f2(idxVals[iMin]), max: CMA.f2(idxVals[iMax]), last: CMA.f2(idxVals[iLast]),
-      sd_eur: CMA.n1(sdEur), sd_usd: CMA.n1(sdUsd)
+      sd_eur: CMA.n1(sdEur), sd_usd: CMA.n1(sdUsd), share: CMA.n0(shareDollar), sd_months: sdMonths, sd_from: ym(sdFrom), sd_to: ym(sdTo)
     };
 
     root.textContent = "";
@@ -156,7 +162,7 @@
       { title: T("g_euro"), rows: [
         [T("r_cum_since", { since: CMA.monthLong("2006-01-01") }), pair(pctC(cumSince["copper in USD, % change"]), pctC(cumSince["copper in EUR, % change"])), ""],
         [T("r_cum_last"), pair(pctC(cumLast["copper in USD, % change"]), pctC(cumLast["copper in EUR, % change"])), ""],
-        [T("r_sd"), pair(CMA.n1(sdUsd) + "%", CMA.n1(sdEur) + "%"), find(vr, "measure", "months").value]
+        [T("r_sd", { from: ym(sdFrom), to: ym(sdTo) }), pair(CMA.n1(sdUsd) + "%", CMA.n1(sdEur) + "%"), find(vr, "measure", "months").value]
       ] }
     ];
     var ntbody = h("tbody");
@@ -169,6 +175,7 @@
     wrap.appendChild(h("section", { class: "numbers", "aria-labelledby": "dollar-nums" },
       h("h3", { id: "dollar-nums", text: T("numbers_title") }),
       h("p", { class: "hint", text: T("numbers_hint") }),
+      h("p", { class: "small muted", text: T("ci_note") }),
       h("div", { class: "numwrap" }, h("table", { class: "numtable" },
         h("thead", {}, h("tr", {}, h("th", { scope: "col", text: T("col_measure") }), h("th", { class: "res", scope: "col", text: T("col_result") }), h("th", { class: "mon", scope: "col", text: T("col_months") }))),
         ntbody))));

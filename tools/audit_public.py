@@ -19,6 +19,8 @@ It fails (exit 1) if:
   8. a file the manifest flags as containing IEA-derived figures is missing from the IEA list in copper_database/README.md
   9. the Story's direction counts do not reconcile (opposite + same direction + unchanged must equal the months compared, opposite must equal
      the two conditional counts, and every share must equal its counts); checked in results/res_story_guess_dollar.csv and docs/data/story.js
+  10. the Dollar page's euro-price and dollar-price swing figures are not over the same months: the months in res_copper_eur_variance_split must
+     equal the months of the full-sample euro correlation and match its first and last month; checked in the results CSVs and docs/data/dollar.js
 It also prints the files that contain IEA-derived figures (so the IEA terms can be confirmed), the files that carry figures from
 secondary articles, and the e-mail addresses found in published files.
 """
@@ -256,6 +258,31 @@ def main():
         ds = js_datasets(read("docs/data/story.js", False))["guess_dollar"]
         cols = ds["columns"]
         problems += story_reconciles({r[cols.index("fact_id")]: (float(r[cols.index("value")]), r[cols.index("months")]) for r in ds["rows"]}, "docs/data/story.js")
+
+    # 10 euro-price and dollar-price swing over the same months
+    def swing_check(var_rows, corr_rows, where):
+        v = {r[0]: float(r[1]) for r in var_rows}
+        try:
+            n, a, z = int(v["months"]), str(int(v["first month (YYYYMM)"])), str(int(v["last month (YYYYMM)"]))
+        except KeyError as e:
+            return [f"SWING {where}: {e} is missing from the variance table"]
+        c = [r for r in corr_rows if r[0].startswith("Copper vs euros per dollar, 1999")]
+        if not c:
+            return [f"SWING {where}: the full-sample euro correlation row is missing"]
+        m = re.search(r"(\d{4})-(\d{2}) to (\d{4})-(\d{2})", c[0][0])
+        if int(c[0][1]) != n or m.group(1) + m.group(2) != a or m.group(3) + m.group(4) != z:
+            return [f"SWING {where}: swing months {a} to {z} ({n}) differ from the euro correlation sample '{c[0][0]}' ({c[0][1]})"]
+        return []
+    rv, rc = ROOT / "results" / "res_copper_eur_variance_split.csv", ROOT / "results" / "res_dollar_correlations.csv"
+    if rv.exists() and rc.exists() and (not staged or any(x in files for x in ("results/res_copper_eur_variance_split.csv", "results/res_dollar_correlations.csv"))):
+        import csv as _csv
+        vr = [(r[0], r[1]) for r in list(_csv.reader(rv.open(encoding="utf-8")))[1:]]
+        cr = [(r[0], r[1]) for r in list(_csv.reader(rc.open(encoding="utf-8")))[1:]]
+        problems += swing_check(vr, cr, "results")
+    djs = ROOT / "docs" / "data" / "dollar.js"
+    if djs.exists() and (not staged or "docs/data/dollar.js" in files):
+        dd_ = js_datasets(read("docs/data/dollar.js", False))
+        problems += swing_check(dd_["eur_variance"]["rows"], [(r[0], r[1]) for r in dd_["correlations"]["rows"]], "docs/data/dollar.js")
 
     # report
     iea = sorted(f for f in files if mf.get(f, {}).get("iea_figures"))

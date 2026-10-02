@@ -128,9 +128,9 @@ window.CMA_STRINGS = {
  },
  "dollar": {
   "intro": "This page compares monthly changes in the copper price with monthly changes in the US dollar. The dollar is measured two ways: a broad dollar index (from {index_from}) and euros per dollar (from {euro_from}). For both, a higher number means a stronger dollar.",
-  "finding_1": "Mostly yes, but only in part. Since {index_from}, copper and the broad dollar index moved in opposite directions in {opposite_share}% of months. The correlation of their monthly changes is {r}, with a 95 percent range of {low} to {high}. In months when the dollar index rose one percent, copper was on average {beta}% lower.",
+  "finding_1": "Mostly yes, but only in part. Since {index_from}, copper and the broad dollar index moved in opposite directions in {opposite_share}% of months. The correlation of their monthly changes is {r}, with a 95 percent range of {low} to {high}. In months when the dollar index rose one percent, copper was on average {beta}% lower, with wide variation from month to month. The dollar index alone tracks about {share}% of copper's monthly moves.",
   "finding_2": "The link is not steady. The 36-month correlation with the broad dollar index has ranged from {min} to {max}. It is {last} now.",
-  "finding_3": "For a European buyer, the euro price of copper swung a little less from month to month than the dollar price: {sd_eur}% against {sd_usd}%. Copper tended to fall when the dollar rose, and that softens the swing for euro buyers.",
+  "finding_3": "For a European buyer, the euro price of copper swung a little less from month to month than the dollar price: {sd_eur}% against {sd_usd}%. Both figures cover the same {sd_months} months, {sd_from} to {sd_to}. Copper tended to fall when the dollar rose, and that softens the swing for euro buyers.",
   "chart_title": "Does the link between copper and the dollar stay the same over time?",
   "y_label": "Correlation of monthly changes, 36-month window",
   "label_index": "Broad dollar index",
@@ -172,7 +172,8 @@ window.CMA_STRINGS = {
   "r_cpi": "Copper move per one percent rise of the broad dollar index, all months, then without October and November 2025",
   "r_cum_since": "Copper price change since {since}: in dollars, then in euros",
   "r_cum_last": "Copper price change over the last 12 months: in dollars, then in euros",
-  "r_sd": "Monthly swing of the copper price (standard deviation): in dollars, then in euros",
+  "r_sd": "Monthly swing of the copper price (standard deviation), {from} to {to}: in dollars, then in euros",
+  "ci_note": "The 95 percent ranges for correlations come from a block bootstrap: blocks of six months, 5,000 resamples, a fixed seed. This allows for neighbouring months being related. The ranges for copper moves come from regression standard errors that allow for the same thing (Newey-West, three lags).",
   "result_pair": "{a}, then {b}",
   "notshow": {
    "title": "What this page does not show",

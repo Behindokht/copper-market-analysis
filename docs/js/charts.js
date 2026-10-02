@@ -109,6 +109,10 @@
         }
         var bx0 = anchor === "start" ? cx + dx : (anchor === "end" ? cx + dx - widest : cx + dx - widest / 2);
         box(bx0 - 3, cy + (m.dy || 0) - 13, bx0 + widest + 3, cy + (m.dy || 0) + 14.5 * (m.lines.length - 1) + 5);
+        if (Math.abs(m.dy || 0) > 24) {              // a thin leader from the dot to a label that sits further away
+          var ly = (m.dy || 0) > 0 ? cy + m.dy - 14 : cy + m.dy + 14.5 * (m.lines.length - 1) + 5;
+          s.appendChild(svg("line", { x1: cx, y1: cy + ((m.dy || 0) > 0 ? 6 : -6), x2: cx + dx, y2: ly, class: "leader" }));
+        }
         var t = svg("text", { x: cx + dx, y: cy + (m.dy || 0), "text-anchor": anchor, class: "callout", fill: color("--forest") });
         t.setAttribute("style", "paint-order:stroke;stroke:" + color("--card") + ";stroke-width:3px;stroke-linejoin:round");
         m.lines.forEach(function (line, k) {
