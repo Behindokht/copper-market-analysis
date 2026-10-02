@@ -1,0 +1,261 @@
+{
+ "about": "Every published data file needs an entry: its sources and what it contains. tools/audit_public.py reads this file. Flags: iea_figures = contains IEA-derived figures (confirm IEA terms before the repo goes public); iea_quotes = quotes short IEA wording; secondary_article_figures = figures from secondary articles (attributed); lme_statistics_only = statistics derived from licensed LME data, never LME values; large_ok = a derived series with 100 or more rows that was checked on purpose.",
+ "files": {
+  "results/res_dollar_correlations.csv": {
+   "sources": [
+    "S02",
+    "S16",
+    "S17"
+   ],
+   "note": "derived statistics from World Bank commodity prices (CC BY 4.0) and FRED series (public domain, citation requested)"
+  },
+  "results/res_dollar_regressions.csv": {
+   "sources": [
+    "S02",
+    "S16",
+    "S17",
+    "S18"
+   ],
+   "note": "derived statistics from World Bank commodity prices (CC BY 4.0) and FRED series (public domain, citation requested)"
+  },
+  "results/res_dollar_stability_by_period.csv": {
+   "sources": [
+    "S02",
+    "S16",
+    "S17"
+   ],
+   "note": "derived statistics from World Bank commodity prices (CC BY 4.0) and FRED series (public domain, citation requested)"
+  },
+  "results/res_dollar_rolling_correlation_36m.csv": {
+   "sources": [
+    "S02",
+    "S16",
+    "S17"
+   ],
+   "note": "monthly rolling correlations (derived, 296 rows); derived statistics from World Bank commodity prices (CC BY 4.0) and FRED series (public domain, citation requested)",
+   "large_ok": true
+  },
+  "results/res_dollar_lead_lag.csv": {
+   "sources": [
+    "S02",
+    "S16",
+    "S17"
+   ],
+   "note": "derived statistics from World Bank commodity prices (CC BY 4.0) and FRED series (public domain, citation requested)"
+  },
+  "results/res_dollar_cpi_sensitivity.csv": {
+   "sources": [
+    "S02",
+    "S04",
+    "S16",
+    "S17"
+   ],
+   "note": "derived statistics from World Bank commodity prices (CC BY 4.0) and FRED series (public domain, citation requested); CPI from BLS via FRED"
+  },
+  "results/res_dollar_month_end_check.csv": {
+   "sources": [
+    "S01",
+    "S17"
+   ],
+   "note": "correlations and coefficients only; no LME price values (the LME data is licensed and never published)",
+   "lme_statistics_only": true
+  },
+  "results/res_copper_eur_vs_usd_cumulative.csv": {
+   "sources": [
+    "S02",
+    "S16"
+   ],
+   "note": "derived statistics from World Bank commodity prices (CC BY 4.0) and FRED series (public domain, citation requested)"
+  },
+  "results/res_copper_eur_variance_split.csv": {
+   "sources": [
+    "S02",
+    "S16"
+   ],
+   "note": "derived statistics from World Bank commodity prices (CC BY 4.0) and FRED series (public domain, citation requested)"
+  },
+  "results/res_cu_al_episodes.csv": {
+   "sources": [
+    "S02"
+   ],
+   "note": "one row per signal episode (derived, 211 rows); World Bank prices (CC BY 4.0)",
+   "large_ok": true
+  },
+  "results/res_cu_al_scenario_today.csv": {
+   "sources": [
+    "S02"
+   ],
+   "note": "arithmetic on World Bank prices (CC BY 4.0)"
+  },
+  "results/res_cu_al_slopes.csv": {
+   "sources": [
+    "S02"
+   ],
+   "note": "regression results on World Bank prices (CC BY 4.0)"
+  },
+  "results/res_cu_al_threshold_table.csv": {
+   "sources": [
+    "S02"
+   ],
+   "note": "results by threshold on World Bank prices (CC BY 4.0)"
+  },
+  "results/res_demand_assumptions.csv": {
+   "sources": [
+    "S05",
+    "S06",
+    "S11",
+    "S13",
+    "S15",
+    "S20"
+   ],
+   "note": "assumption register: IEA headline values (EV sales, capacity), USGS output, copper per car (S11) and per MW (S13)",
+   "iea_figures": true,
+   "secondary_article_figures": true
+  },
+  "results/res_demand_context.csv": {
+   "sources": [
+    "S06",
+    "S13",
+    "S15"
+   ],
+   "note": "USGS mine and refinery output; S13 reported figures; model figure built from an IEA capacity number",
+   "iea_figures": true,
+   "secondary_article_figures": true
+  },
+  "results/res_demand_headline.csv": {
+   "sources": [
+    "S05",
+    "S06",
+    "S11",
+    "S13",
+    "S15",
+    "S20"
+   ],
+   "note": "scenario results derived from IEA EV sales and capacity",
+   "iea_figures": true
+  },
+  "results/res_demand_sensitivity.csv": {
+   "sources": [
+    "S05",
+    "S06",
+    "S11",
+    "S13",
+    "S15",
+    "S20"
+   ],
+   "note": "sensitivity results derived from IEA scenarios",
+   "iea_figures": true
+  },
+  "copper_database/collected/copper_intensity_vehicle.csv": {
+   "sources": [
+    "S11"
+   ],
+   "note": "copper per vehicle quoted from a secondary article, attributed",
+   "secondary_article_figures": true
+  },
+  "copper_database/collected/datacentre_copper_assumptions.csv": {
+   "sources": [
+    "S13"
+   ],
+   "note": "S&P Global figures as reported by a secondary article, attributed",
+   "secondary_article_figures": true
+  },
+  "copper_database/collected/datacentre_electricity_iea.csv": {
+   "sources": [
+    "S12"
+   ],
+   "note": "IEA report-page figures (data-centre electricity)",
+   "iea_figures": true
+  },
+  "copper_database/collected/datacentre_growth_by_region.csv": {
+   "sources": [
+    "S12"
+   ],
+   "note": "IEA report-page figures (growth by region)",
+   "iea_figures": true
+  },
+  "copper_database/collected/usgs_mine_production_country.csv": {
+   "sources": [
+    "S07"
+   ],
+   "note": "USGS MCS 2025 (US government work)"
+  },
+  "copper_database/collected/sources.csv": {
+   "sources": [
+    "all"
+   ],
+   "note": "the sources register; quotes short IEA wording (S21) and describes IEA files (S05, S15)",
+   "iea_quotes": true
+  },
+  "copper_database/collected/known_issues.csv": {
+   "sources": [
+    "S05",
+    "S11",
+    "S13"
+   ],
+   "note": "known issues; K01 states IT-vs-total differences computed from the IEA annex",
+   "iea_figures": true
+  },
+  "copper_database/collected/scenario_assumptions.csv": {
+   "sources": [
+    "S20",
+    "S15"
+   ],
+   "note": "project assumptions; the base-year build (14 GW, 9.25 GW) is computed from IEA capacity numbers",
+   "iea_figures": true
+  },
+  "copper_database/baselines/fred_monthly_python.csv": {
+   "sources": [
+    "S03",
+    "S04"
+   ],
+   "note": "per-series counts, dates and sums of the old aluminium and CPI tables (aggregates only)"
+  },
+  "copper_database/baselines/usgs_copper_python.csv": {
+   "sources": [
+    "S06"
+   ],
+   "note": "aggregates of USGS copper data (US government work)",
+   "large_ok": true
+  },
+  "copper_database/baselines/wb_prices_monthly_python.csv": {
+   "sources": [
+    "S02"
+   ],
+   "note": "per-commodity counts, dates and sums (aggregates only); World Bank (CC BY 4.0)"
+  },
+  "notebooks/01_copper_vs_dollar.ipynb": {
+   "sources": [
+    "S02",
+    "S04",
+    "S16",
+    "S17",
+    "S18",
+    "S19",
+    "S01"
+   ],
+   "note": "outputs show derived statistics; the month-end section shows correlations from LME data without any LME price values",
+   "lme_statistics_only": true
+  },
+  "notebooks/02_copper_vs_aluminium_ratio.ipynb": {
+   "sources": [
+    "S02"
+   ],
+   "note": "outputs show derived statistics on World Bank prices"
+  },
+  "notebooks/03_demand_scenario.ipynb": {
+   "sources": [
+    "S05",
+    "S06",
+    "S11",
+    "S13",
+    "S15",
+    "S20",
+    "S21"
+   ],
+   "note": "outputs show IEA headline figures, scenario results and copper per car and per MW",
+   "iea_figures": true,
+   "secondary_article_figures": true
+  }
+ }
+}

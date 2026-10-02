@@ -1,0 +1,10 @@
+#!/bin/sh
+# Git pre-commit hook: audits the staged files before every commit and blocks the commit if a forbidden file,
+# an LME series column or a local path is staged. Install with:  python tools/install_hook.py
+for py in python python3 py; do
+  if command -v "$py" >/dev/null 2>&1; then
+    exec "$py" tools/audit_public.py --staged --quiet
+  fi
+done
+echo "pre-commit: Python was not found, so tools/audit_public.py could not run. Commit blocked." >&2
+exit 1
