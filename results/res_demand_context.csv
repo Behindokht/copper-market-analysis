@@ -1,0 +1,9 @@
+metric,value,unit,source_id,note
+world_mine_production_2025e_t,23000000.0,t,S06,"USGS world mine production, 2025 estimate (the base for every percentage)"
+world_mine_production_2024_t,23000000.0,t,S06,"USGS world mine production, 2024"
+world_refinery_production_2025e_t,29000000.0,t,S06,"USGS world refinery production, 2025 estimate (primary and secondary)"
+s13_dc_copper_demand_2025_t,1100000.0,t,S13,"S13 as reported (secondary, low reliability): data-centre copper demand 2025; not reconciled with the model (known issue K02)"
+s13_dc_copper_demand_2040_low_t,1700000.0,t,S13,"S13 as reported: data-centre copper demand per year in 2040 (a forecast, low end)"
+s13_dc_copper_demand_2040_high_t,2700000.0,t,S13,"S13 as reported: data-centre copper demand per year in 2040 (a forecast, high end)"
+model_dc_build_2024_copper_low_t,420000.0,t,S13,"Model: 2023 to 2024 build (total capacity, S15) x low copper per MW (S13)"
+model_dc_build_2024_copper_high_t,560000.0,t,S13,"Model: 2023 to 2024 build (total capacity, S15) x high copper per MW (S13)"

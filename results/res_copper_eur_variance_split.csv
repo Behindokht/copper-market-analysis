@@ -1,0 +1,9 @@
+measure,value
+"monthly std dev, copper in USD (%)",6.074976459770029
+"monthly std dev, euros per dollar (%)",2.1572591854542407
+"monthly std dev, copper in EUR (%)",5.753809720343817
+"variance, copper in USD",36.905338986759986
+"variance, euros per dollar",4.6537671932266935
+"2 x covariance (USD copper, euros per dollar)",-8.452779882063682
+"variance, copper in EUR (= sum of the three above)",33.10632629792299
+months,331.0

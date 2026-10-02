@@ -1,0 +1,16 @@
+input_id,name,unit,low,mid,high,source_id,reliability,kind
+bev_cu_kg,Copper per battery-electric car (mid-size),kg per car,82.0,86.5,91.0,S11,medium,source range (mid = middle of the range)
+phev_cu_kg,Copper per plug-in hybrid car,kg per car,59.0,63.5,68.0,S11,medium,source range (mid = middle of the range)
+petrol_midsize_cu_kg,Copper per mid-size internal-combustion (petrol or diesel) car,kg per car,18.0,20.0,22.0,S11,medium,source range (mid = middle of the range)
+petrol_compact_cu_kg,Copper per compact internal-combustion car,kg per car,8.0,9.0,10.0,S11,medium,source range (mid = middle of the range)
+petrol_luxury_cu_kg,Copper per luxury internal-combustion car,kg per car,25.0,27.5,30.0,S11,medium,source range (mid = middle of the range)
+hev_cu_kg,Copper per hybrid electric car (not in the IEA EV data; used for a bounding case),kg per car,39.0,42.0,45.0,S11,medium,source range (mid = middle of the range)
+dc_cu_t_per_mw,Copper per MW of data-centre capacity (non-crypto); capacity basis not stated by the source,t per MW,30.0,35.0,40.0,S13,low,source range (mid = middle of the range)
+dc_fibre_reduction_t_per_mw,Possible reduction in copper per MW from a shift to fibre,t per MW,4.0,4.5,5.0,S13,low,source range (mid = middle of the range)
+dc_build_growth_pct,Constant yearly growth of data-centre capacity additions,percent per year,15.0,15.0,15.0,S20,assumption,project assumption
+ev_2030_interpolation,"EV sales (BEV, PHEV, share) in 2030 between the 2025 actuals and the IEA 2035 scenario",method,,,,S20,assumption,project assumption
+petrol_car_for_non_ev,Copper in every non-EV new car,kg per car,,,,S20,assumption,project assumption
+dc_even_build,Data-centre capacity added evenly each year to the target year,method,,,,S20,assumption,project assumption
+dc_base_year_build,Base-year data-centre build that is subtracted,GW per year,9.25,14.0,14.0,S20,assumption,project assumption
+dc_capacity_basis,Capacity basis for copper per MW,method,,,,S20,assumption,project assumption
+world_mine_production_2025e,World mine production 2025 estimate (the base for every percentage),t,23000000.0,23000000.0,23000000.0,S06,high,data (USGS estimate)
