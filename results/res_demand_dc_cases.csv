@@ -1,0 +1,257 @@
+iea_case,basis,year,is_exploratory,path,intensity_case,t_per_mw,base_build_case,new_capacity_copper_t,base_year_copper_t,extra_vs_base_t,is_slower_build
+Base,IT equipment,2030,0,even,low,30.0,2023-24,530000.0,330000.0,200000.0,0
+Base,IT equipment,2030,0,even,low,30.0,2020-24 average,530000.0,225000.0,305000.0,0
+Base,IT equipment,2030,0,even,mid,35.0,2023-24,618333.333,385000.0,233333.333,0
+Base,IT equipment,2030,0,even,mid,35.0,2020-24 average,618333.333,262500.0,355833.333,0
+Base,IT equipment,2030,0,even,high,40.0,2023-24,706666.667,440000.0,266666.667,0
+Base,IT equipment,2030,0,even,high,40.0,2020-24 average,706666.667,300000.0,406666.667,0
+Base,IT equipment,2030,0,even,fibre_shift,30.5,2023-24,538833.333,335500.0,203333.333,0
+Base,IT equipment,2030,0,even,fibre_shift,30.5,2020-24 average,538833.333,228750.0,310083.333,0
+Base,IT equipment,2030,0,constant_growth,low,30.0,2023-24,730672.489,330000.0,400672.489,0
+Base,IT equipment,2030,0,constant_growth,low,30.0,2020-24 average,730672.489,225000.0,505672.489,0
+Base,IT equipment,2030,0,constant_growth,mid,35.0,2023-24,852451.238,385000.0,467451.238,0
+Base,IT equipment,2030,0,constant_growth,mid,35.0,2020-24 average,852451.238,262500.0,589951.238,0
+Base,IT equipment,2030,0,constant_growth,high,40.0,2023-24,974229.986,440000.0,534229.986,0
+Base,IT equipment,2030,0,constant_growth,high,40.0,2020-24 average,974229.986,300000.0,674229.986,0
+Base,IT equipment,2030,0,constant_growth,fibre_shift,30.5,2023-24,742850.364,335500.0,407350.364,0
+Base,IT equipment,2030,0,constant_growth,fibre_shift,30.5,2020-24 average,742850.364,228750.0,514100.364,0
+Headwinds,IT equipment,2030,0,even,low,30.0,2023-24,270000.0,330000.0,-60000.0,1
+Headwinds,IT equipment,2030,0,even,low,30.0,2020-24 average,270000.0,225000.0,45000.0,0
+Headwinds,IT equipment,2030,0,even,mid,35.0,2023-24,315000.0,385000.0,-70000.0,1
+Headwinds,IT equipment,2030,0,even,mid,35.0,2020-24 average,315000.0,262500.0,52500.0,0
+Headwinds,IT equipment,2030,0,even,high,40.0,2023-24,360000.0,440000.0,-80000.0,1
+Headwinds,IT equipment,2030,0,even,high,40.0,2020-24 average,360000.0,300000.0,60000.0,0
+Headwinds,IT equipment,2030,0,even,fibre_shift,30.5,2023-24,274500.0,335500.0,-61000.0,1
+Headwinds,IT equipment,2030,0,even,fibre_shift,30.5,2020-24 average,274500.0,228750.0,45750.0,0
+Headwinds,IT equipment,2030,0,constant_growth,low,30.0,2023-24,372229.381,330000.0,42229.381,0
+Headwinds,IT equipment,2030,0,constant_growth,low,30.0,2020-24 average,372229.381,225000.0,147229.381,0
+Headwinds,IT equipment,2030,0,constant_growth,mid,35.0,2023-24,434267.612,385000.0,49267.612,0
+Headwinds,IT equipment,2030,0,constant_growth,mid,35.0,2020-24 average,434267.612,262500.0,171767.612,0
+Headwinds,IT equipment,2030,0,constant_growth,high,40.0,2023-24,496305.842,440000.0,56305.842,0
+Headwinds,IT equipment,2030,0,constant_growth,high,40.0,2020-24 average,496305.842,300000.0,196305.842,0
+Headwinds,IT equipment,2030,0,constant_growth,fibre_shift,30.5,2023-24,378433.204,335500.0,42933.204,0
+Headwinds,IT equipment,2030,0,constant_growth,fibre_shift,30.5,2020-24 average,378433.204,228750.0,149683.204,0
+High Efficiency,IT equipment,2030,0,even,low,30.0,2023-24,425000.0,330000.0,95000.0,0
+High Efficiency,IT equipment,2030,0,even,low,30.0,2020-24 average,425000.0,225000.0,200000.0,0
+High Efficiency,IT equipment,2030,0,even,mid,35.0,2023-24,495833.333,385000.0,110833.333,0
+High Efficiency,IT equipment,2030,0,even,mid,35.0,2020-24 average,495833.333,262500.0,233333.333,0
+High Efficiency,IT equipment,2030,0,even,high,40.0,2023-24,566666.667,440000.0,126666.667,0
+High Efficiency,IT equipment,2030,0,even,high,40.0,2020-24 average,566666.667,300000.0,266666.667,0
+High Efficiency,IT equipment,2030,0,even,fibre_shift,30.5,2023-24,432083.333,335500.0,96583.333,0
+High Efficiency,IT equipment,2030,0,even,fibre_shift,30.5,2020-24 average,432083.333,228750.0,203333.333,0
+High Efficiency,IT equipment,2030,0,constant_growth,low,30.0,2023-24,585916.619,330000.0,255916.619,0
+High Efficiency,IT equipment,2030,0,constant_growth,low,30.0,2020-24 average,585916.619,225000.0,360916.619,0
+High Efficiency,IT equipment,2030,0,constant_growth,mid,35.0,2023-24,683569.389,385000.0,298569.389,0
+High Efficiency,IT equipment,2030,0,constant_growth,mid,35.0,2020-24 average,683569.389,262500.0,421069.389,0
+High Efficiency,IT equipment,2030,0,constant_growth,high,40.0,2023-24,781222.159,440000.0,341222.159,0
+High Efficiency,IT equipment,2030,0,constant_growth,high,40.0,2020-24 average,781222.159,300000.0,481222.159,0
+High Efficiency,IT equipment,2030,0,constant_growth,fibre_shift,30.5,2023-24,595681.896,335500.0,260181.896,0
+High Efficiency,IT equipment,2030,0,constant_growth,fibre_shift,30.5,2020-24 average,595681.896,228750.0,366931.896,0
+Lift-Off,IT equipment,2030,0,even,low,30.0,2023-24,825000.0,330000.0,495000.0,0
+Lift-Off,IT equipment,2030,0,even,low,30.0,2020-24 average,825000.0,225000.0,600000.0,0
+Lift-Off,IT equipment,2030,0,even,mid,35.0,2023-24,962500.0,385000.0,577500.0,0
+Lift-Off,IT equipment,2030,0,even,mid,35.0,2020-24 average,962500.0,262500.0,700000.0,0
+Lift-Off,IT equipment,2030,0,even,high,40.0,2023-24,1100000.0,440000.0,660000.0,0
+Lift-Off,IT equipment,2030,0,even,high,40.0,2020-24 average,1100000.0,300000.0,800000.0,0
+Lift-Off,IT equipment,2030,0,even,fibre_shift,30.5,2023-24,838750.0,335500.0,503250.0,0
+Lift-Off,IT equipment,2030,0,even,fibre_shift,30.5,2020-24 average,838750.0,228750.0,610000.0,0
+Lift-Off,IT equipment,2030,0,constant_growth,low,30.0,2023-24,1137367.554,330000.0,807367.554,0
+Lift-Off,IT equipment,2030,0,constant_growth,low,30.0,2020-24 average,1137367.554,225000.0,912367.554,0
+Lift-Off,IT equipment,2030,0,constant_growth,mid,35.0,2023-24,1326928.813,385000.0,941928.813,0
+Lift-Off,IT equipment,2030,0,constant_growth,mid,35.0,2020-24 average,1326928.813,262500.0,1064428.813,0
+Lift-Off,IT equipment,2030,0,constant_growth,high,40.0,2023-24,1516490.072,440000.0,1076490.072,0
+Lift-Off,IT equipment,2030,0,constant_growth,high,40.0,2020-24 average,1516490.072,300000.0,1216490.072,0
+Lift-Off,IT equipment,2030,0,constant_growth,fibre_shift,30.5,2023-24,1156323.68,335500.0,820823.68,0
+Lift-Off,IT equipment,2030,0,constant_growth,fibre_shift,30.5,2020-24 average,1156323.68,228750.0,927573.68,0
+Base,IT equipment,2035,1,even,low,30.0,2023-24,436363.636,330000.0,106363.636,0
+Base,IT equipment,2035,1,even,low,30.0,2020-24 average,436363.636,225000.0,211363.636,0
+Base,IT equipment,2035,1,even,mid,35.0,2023-24,509090.909,385000.0,124090.909,0
+Base,IT equipment,2035,1,even,mid,35.0,2020-24 average,509090.909,262500.0,246590.909,0
+Base,IT equipment,2035,1,even,high,40.0,2023-24,581818.182,440000.0,141818.182,0
+Base,IT equipment,2035,1,even,high,40.0,2020-24 average,581818.182,300000.0,281818.182,0
+Base,IT equipment,2035,1,even,fibre_shift,30.5,2023-24,443636.364,335500.0,108136.364,0
+Base,IT equipment,2035,1,even,fibre_shift,30.5,2020-24 average,443636.364,228750.0,214886.364,0
+Base,IT equipment,2035,1,constant_growth,low,30.0,2023-24,797505.32,330000.0,467505.32,0
+Base,IT equipment,2035,1,constant_growth,low,30.0,2020-24 average,797505.32,225000.0,572505.32,0
+Base,IT equipment,2035,1,constant_growth,mid,35.0,2023-24,930422.874,385000.0,545422.874,0
+Base,IT equipment,2035,1,constant_growth,mid,35.0,2020-24 average,930422.874,262500.0,667922.874,0
+Base,IT equipment,2035,1,constant_growth,high,40.0,2023-24,1063340.427,440000.0,623340.427,0
+Base,IT equipment,2035,1,constant_growth,high,40.0,2020-24 average,1063340.427,300000.0,763340.427,0
+Base,IT equipment,2035,1,constant_growth,fibre_shift,30.5,2023-24,810797.076,335500.0,475297.076,0
+Base,IT equipment,2035,1,constant_growth,fibre_shift,30.5,2020-24 average,810797.076,228750.0,582047.076,0
+Headwinds,IT equipment,2035,1,even,low,30.0,2023-24,174545.455,330000.0,-155454.545,1
+Headwinds,IT equipment,2035,1,even,low,30.0,2020-24 average,174545.455,225000.0,-50454.545,1
+Headwinds,IT equipment,2035,1,even,mid,35.0,2023-24,203636.364,385000.0,-181363.636,1
+Headwinds,IT equipment,2035,1,even,mid,35.0,2020-24 average,203636.364,262500.0,-58863.636,1
+Headwinds,IT equipment,2035,1,even,high,40.0,2023-24,232727.273,440000.0,-207272.727,1
+Headwinds,IT equipment,2035,1,even,high,40.0,2020-24 average,232727.273,300000.0,-67272.727,1
+Headwinds,IT equipment,2035,1,even,fibre_shift,30.5,2023-24,177454.545,335500.0,-158045.455,1
+Headwinds,IT equipment,2035,1,even,fibre_shift,30.5,2020-24 average,177454.545,228750.0,-51295.455,1
+Headwinds,IT equipment,2035,1,constant_growth,low,30.0,2023-24,319002.128,330000.0,-10997.872,1
+Headwinds,IT equipment,2035,1,constant_growth,low,30.0,2020-24 average,319002.128,225000.0,94002.128,0
+Headwinds,IT equipment,2035,1,constant_growth,mid,35.0,2023-24,372169.149,385000.0,-12830.851,1
+Headwinds,IT equipment,2035,1,constant_growth,mid,35.0,2020-24 average,372169.149,262500.0,109669.149,0
+Headwinds,IT equipment,2035,1,constant_growth,high,40.0,2023-24,425336.171,440000.0,-14663.829,1
+Headwinds,IT equipment,2035,1,constant_growth,high,40.0,2020-24 average,425336.171,300000.0,125336.171,0
+Headwinds,IT equipment,2035,1,constant_growth,fibre_shift,30.5,2023-24,324318.83,335500.0,-11181.17,1
+Headwinds,IT equipment,2035,1,constant_growth,fibre_shift,30.5,2020-24 average,324318.83,228750.0,95568.83,0
+High Efficiency,IT equipment,2035,1,even,low,30.0,2023-24,349090.909,330000.0,19090.909,0
+High Efficiency,IT equipment,2035,1,even,low,30.0,2020-24 average,349090.909,225000.0,124090.909,0
+High Efficiency,IT equipment,2035,1,even,mid,35.0,2023-24,407272.727,385000.0,22272.727,0
+High Efficiency,IT equipment,2035,1,even,mid,35.0,2020-24 average,407272.727,262500.0,144772.727,0
+High Efficiency,IT equipment,2035,1,even,high,40.0,2023-24,465454.545,440000.0,25454.545,0
+High Efficiency,IT equipment,2035,1,even,high,40.0,2020-24 average,465454.545,300000.0,165454.545,0
+High Efficiency,IT equipment,2035,1,even,fibre_shift,30.5,2023-24,354909.091,335500.0,19409.091,0
+High Efficiency,IT equipment,2035,1,even,fibre_shift,30.5,2020-24 average,354909.091,228750.0,126159.091,0
+High Efficiency,IT equipment,2035,1,constant_growth,low,30.0,2023-24,638004.256,330000.0,308004.256,0
+High Efficiency,IT equipment,2035,1,constant_growth,low,30.0,2020-24 average,638004.256,225000.0,413004.256,0
+High Efficiency,IT equipment,2035,1,constant_growth,mid,35.0,2023-24,744338.299,385000.0,359338.299,0
+High Efficiency,IT equipment,2035,1,constant_growth,mid,35.0,2020-24 average,744338.299,262500.0,481838.299,0
+High Efficiency,IT equipment,2035,1,constant_growth,high,40.0,2023-24,850672.342,440000.0,410672.342,0
+High Efficiency,IT equipment,2035,1,constant_growth,high,40.0,2020-24 average,850672.342,300000.0,550672.342,0
+High Efficiency,IT equipment,2035,1,constant_growth,fibre_shift,30.5,2023-24,648637.66,335500.0,313137.66,0
+High Efficiency,IT equipment,2035,1,constant_growth,fibre_shift,30.5,2020-24 average,648637.66,228750.0,419887.66,0
+Lift-Off,IT equipment,2035,1,even,low,30.0,2023-24,714545.455,330000.0,384545.455,0
+Lift-Off,IT equipment,2035,1,even,low,30.0,2020-24 average,714545.455,225000.0,489545.455,0
+Lift-Off,IT equipment,2035,1,even,mid,35.0,2023-24,833636.364,385000.0,448636.364,0
+Lift-Off,IT equipment,2035,1,even,mid,35.0,2020-24 average,833636.364,262500.0,571136.364,0
+Lift-Off,IT equipment,2035,1,even,high,40.0,2023-24,952727.273,440000.0,512727.273,0
+Lift-Off,IT equipment,2035,1,even,high,40.0,2020-24 average,952727.273,300000.0,652727.273,0
+Lift-Off,IT equipment,2035,1,even,fibre_shift,30.5,2023-24,726454.545,335500.0,390954.545,0
+Lift-Off,IT equipment,2035,1,even,fibre_shift,30.5,2020-24 average,726454.545,228750.0,497704.545,0
+Lift-Off,IT equipment,2035,1,constant_growth,low,30.0,2023-24,1305914.962,330000.0,975914.962,0
+Lift-Off,IT equipment,2035,1,constant_growth,low,30.0,2020-24 average,1305914.962,225000.0,1080914.962,0
+Lift-Off,IT equipment,2035,1,constant_growth,mid,35.0,2023-24,1523567.455,385000.0,1138567.455,0
+Lift-Off,IT equipment,2035,1,constant_growth,mid,35.0,2020-24 average,1523567.455,262500.0,1261067.455,0
+Lift-Off,IT equipment,2035,1,constant_growth,high,40.0,2023-24,1741219.949,440000.0,1301219.949,0
+Lift-Off,IT equipment,2035,1,constant_growth,high,40.0,2020-24 average,1741219.949,300000.0,1441219.949,0
+Lift-Off,IT equipment,2035,1,constant_growth,fibre_shift,30.5,2023-24,1327680.211,335500.0,992180.211,0
+Lift-Off,IT equipment,2035,1,constant_growth,fibre_shift,30.5,2020-24 average,1327680.211,228750.0,1098930.211,0
+Base,Whole data centre,2030,0,even,low,30.0,2023-24,645000.0,420000.0,225000.0,0
+Base,Whole data centre,2030,0,even,low,30.0,2020-24 average,645000.0,277500.0,367500.0,0
+Base,Whole data centre,2030,0,even,mid,35.0,2023-24,752500.0,490000.0,262500.0,0
+Base,Whole data centre,2030,0,even,mid,35.0,2020-24 average,752500.0,323750.0,428750.0,0
+Base,Whole data centre,2030,0,even,high,40.0,2023-24,860000.0,560000.0,300000.0,0
+Base,Whole data centre,2030,0,even,high,40.0,2020-24 average,860000.0,370000.0,490000.0,0
+Base,Whole data centre,2030,0,even,fibre_shift,30.5,2023-24,655750.0,427000.0,228750.0,0
+Base,Whole data centre,2030,0,even,fibre_shift,30.5,2020-24 average,655750.0,282125.0,373625.0,0
+Base,Whole data centre,2030,0,constant_growth,low,30.0,2023-24,889214.633,420000.0,469214.633,0
+Base,Whole data centre,2030,0,constant_growth,low,30.0,2020-24 average,889214.633,277500.0,611714.633,0
+Base,Whole data centre,2030,0,constant_growth,mid,35.0,2023-24,1037417.072,490000.0,547417.072,0
+Base,Whole data centre,2030,0,constant_growth,mid,35.0,2020-24 average,1037417.072,323750.0,713667.072,0
+Base,Whole data centre,2030,0,constant_growth,high,40.0,2023-24,1185619.511,560000.0,625619.511,0
+Base,Whole data centre,2030,0,constant_growth,high,40.0,2020-24 average,1185619.511,370000.0,815619.511,0
+Base,Whole data centre,2030,0,constant_growth,fibre_shift,30.5,2023-24,904034.877,427000.0,477034.877,0
+Base,Whole data centre,2030,0,constant_growth,fibre_shift,30.5,2020-24 average,904034.877,282125.0,621909.877,0
+Headwinds,Whole data centre,2030,0,even,low,30.0,2023-24,305000.0,420000.0,-115000.0,1
+Headwinds,Whole data centre,2030,0,even,low,30.0,2020-24 average,305000.0,277500.0,27500.0,0
+Headwinds,Whole data centre,2030,0,even,mid,35.0,2023-24,355833.333,490000.0,-134166.667,1
+Headwinds,Whole data centre,2030,0,even,mid,35.0,2020-24 average,355833.333,323750.0,32083.333,0
+Headwinds,Whole data centre,2030,0,even,high,40.0,2023-24,406666.667,560000.0,-153333.333,1
+Headwinds,Whole data centre,2030,0,even,high,40.0,2020-24 average,406666.667,370000.0,36666.667,0
+Headwinds,Whole data centre,2030,0,even,fibre_shift,30.5,2023-24,310083.333,427000.0,-116916.667,1
+Headwinds,Whole data centre,2030,0,even,fibre_shift,30.5,2020-24 average,310083.333,282125.0,27958.333,0
+Headwinds,Whole data centre,2030,0,constant_growth,low,30.0,2023-24,420481.338,420000.0,481.338,0
+Headwinds,Whole data centre,2030,0,constant_growth,low,30.0,2020-24 average,420481.338,277500.0,142981.338,0
+Headwinds,Whole data centre,2030,0,constant_growth,mid,35.0,2023-24,490561.561,490000.0,561.561,0
+Headwinds,Whole data centre,2030,0,constant_growth,mid,35.0,2020-24 average,490561.561,323750.0,166811.561,0
+Headwinds,Whole data centre,2030,0,constant_growth,high,40.0,2023-24,560641.784,560000.0,641.784,0
+Headwinds,Whole data centre,2030,0,constant_growth,high,40.0,2020-24 average,560641.784,370000.0,190641.784,0
+Headwinds,Whole data centre,2030,0,constant_growth,fibre_shift,30.5,2023-24,427489.361,427000.0,489.361,0
+Headwinds,Whole data centre,2030,0,constant_growth,fibre_shift,30.5,2020-24 average,427489.361,282125.0,145364.361,0
+High Efficiency,Whole data centre,2030,0,even,low,30.0,2023-24,440000.0,420000.0,20000.0,0
+High Efficiency,Whole data centre,2030,0,even,low,30.0,2020-24 average,440000.0,277500.0,162500.0,0
+High Efficiency,Whole data centre,2030,0,even,mid,35.0,2023-24,513333.333,490000.0,23333.333,0
+High Efficiency,Whole data centre,2030,0,even,mid,35.0,2020-24 average,513333.333,323750.0,189583.333,0
+High Efficiency,Whole data centre,2030,0,even,high,40.0,2023-24,586666.667,560000.0,26666.667,0
+High Efficiency,Whole data centre,2030,0,even,high,40.0,2020-24 average,586666.667,370000.0,216666.667,0
+High Efficiency,Whole data centre,2030,0,even,fibre_shift,30.5,2023-24,447333.333,427000.0,20333.333,0
+High Efficiency,Whole data centre,2030,0,even,fibre_shift,30.5,2020-24 average,447333.333,282125.0,165208.333,0
+High Efficiency,Whole data centre,2030,0,constant_growth,low,30.0,2023-24,606596.029,420000.0,186596.029,0
+High Efficiency,Whole data centre,2030,0,constant_growth,low,30.0,2020-24 average,606596.029,277500.0,329096.029,0
+High Efficiency,Whole data centre,2030,0,constant_growth,mid,35.0,2023-24,707695.367,490000.0,217695.367,0
+High Efficiency,Whole data centre,2030,0,constant_growth,mid,35.0,2020-24 average,707695.367,323750.0,383945.367,0
+High Efficiency,Whole data centre,2030,0,constant_growth,high,40.0,2023-24,808794.705,560000.0,248794.705,0
+High Efficiency,Whole data centre,2030,0,constant_growth,high,40.0,2020-24 average,808794.705,370000.0,438794.705,0
+High Efficiency,Whole data centre,2030,0,constant_growth,fibre_shift,30.5,2023-24,616705.963,427000.0,189705.963,0
+High Efficiency,Whole data centre,2030,0,constant_growth,fibre_shift,30.5,2020-24 average,616705.963,282125.0,334580.963,0
+Lift-Off,Whole data centre,2030,0,even,low,30.0,2023-24,1040000.0,420000.0,620000.0,0
+Lift-Off,Whole data centre,2030,0,even,low,30.0,2020-24 average,1040000.0,277500.0,762500.0,0
+Lift-Off,Whole data centre,2030,0,even,mid,35.0,2023-24,1213333.333,490000.0,723333.333,0
+Lift-Off,Whole data centre,2030,0,even,mid,35.0,2020-24 average,1213333.333,323750.0,889583.333,0
+Lift-Off,Whole data centre,2030,0,even,high,40.0,2023-24,1386666.667,560000.0,826666.667,0
+Lift-Off,Whole data centre,2030,0,even,high,40.0,2020-24 average,1386666.667,370000.0,1016666.667,0
+Lift-Off,Whole data centre,2030,0,even,fibre_shift,30.5,2023-24,1057333.333,427000.0,630333.333,0
+Lift-Off,Whole data centre,2030,0,even,fibre_shift,30.5,2020-24 average,1057333.333,282125.0,775208.333,0
+Lift-Off,Whole data centre,2030,0,constant_growth,low,30.0,2023-24,1433772.432,420000.0,1013772.432,0
+Lift-Off,Whole data centre,2030,0,constant_growth,low,30.0,2020-24 average,1433772.432,277500.0,1156272.432,0
+Lift-Off,Whole data centre,2030,0,constant_growth,mid,35.0,2023-24,1672734.504,490000.0,1182734.504,0
+Lift-Off,Whole data centre,2030,0,constant_growth,mid,35.0,2020-24 average,1672734.504,323750.0,1348984.504,0
+Lift-Off,Whole data centre,2030,0,constant_growth,high,40.0,2023-24,1911696.576,560000.0,1351696.576,0
+Lift-Off,Whole data centre,2030,0,constant_growth,high,40.0,2020-24 average,1911696.576,370000.0,1541696.576,0
+Lift-Off,Whole data centre,2030,0,constant_growth,fibre_shift,30.5,2023-24,1457668.639,427000.0,1030668.639,0
+Lift-Off,Whole data centre,2030,0,constant_growth,fibre_shift,30.5,2020-24 average,1457668.639,282125.0,1175543.639,0
+Base,Whole data centre,2035,1,even,low,30.0,2023-24,490909.091,420000.0,70909.091,0
+Base,Whole data centre,2035,1,even,low,30.0,2020-24 average,490909.091,277500.0,213409.091,0
+Base,Whole data centre,2035,1,even,mid,35.0,2023-24,572727.273,490000.0,82727.273,0
+Base,Whole data centre,2035,1,even,mid,35.0,2020-24 average,572727.273,323750.0,248977.273,0
+Base,Whole data centre,2035,1,even,high,40.0,2023-24,654545.455,560000.0,94545.455,0
+Base,Whole data centre,2035,1,even,high,40.0,2020-24 average,654545.455,370000.0,284545.455,0
+Base,Whole data centre,2035,1,even,fibre_shift,30.5,2023-24,499090.909,427000.0,72090.909,0
+Base,Whole data centre,2035,1,even,fibre_shift,30.5,2020-24 average,499090.909,282125.0,216965.909,0
+Base,Whole data centre,2035,1,constant_growth,low,30.0,2023-24,897193.485,420000.0,477193.485,0
+Base,Whole data centre,2035,1,constant_growth,low,30.0,2020-24 average,897193.485,277500.0,619693.485,0
+Base,Whole data centre,2035,1,constant_growth,mid,35.0,2023-24,1046725.733,490000.0,556725.733,0
+Base,Whole data centre,2035,1,constant_growth,mid,35.0,2020-24 average,1046725.733,323750.0,722975.733,0
+Base,Whole data centre,2035,1,constant_growth,high,40.0,2023-24,1196257.98,560000.0,636257.98,0
+Base,Whole data centre,2035,1,constant_growth,high,40.0,2020-24 average,1196257.98,370000.0,826257.98,0
+Base,Whole data centre,2035,1,constant_growth,fibre_shift,30.5,2023-24,912146.71,427000.0,485146.71,0
+Base,Whole data centre,2035,1,constant_growth,fibre_shift,30.5,2020-24 average,912146.71,282125.0,630021.71,0
+Headwinds,Whole data centre,2035,1,even,low,30.0,2023-24,171818.182,420000.0,-248181.818,1
+Headwinds,Whole data centre,2035,1,even,low,30.0,2020-24 average,171818.182,277500.0,-105681.818,1
+Headwinds,Whole data centre,2035,1,even,mid,35.0,2023-24,200454.545,490000.0,-289545.455,1
+Headwinds,Whole data centre,2035,1,even,mid,35.0,2020-24 average,200454.545,323750.0,-123295.455,1
+Headwinds,Whole data centre,2035,1,even,high,40.0,2023-24,229090.909,560000.0,-330909.091,1
+Headwinds,Whole data centre,2035,1,even,high,40.0,2020-24 average,229090.909,370000.0,-140909.091,1
+Headwinds,Whole data centre,2035,1,even,fibre_shift,30.5,2023-24,174681.818,427000.0,-252318.182,1
+Headwinds,Whole data centre,2035,1,even,fibre_shift,30.5,2020-24 average,174681.818,282125.0,-107443.182,1
+Headwinds,Whole data centre,2035,1,constant_growth,low,30.0,2023-24,314017.72,420000.0,-105982.28,1
+Headwinds,Whole data centre,2035,1,constant_growth,low,30.0,2020-24 average,314017.72,277500.0,36517.72,0
+Headwinds,Whole data centre,2035,1,constant_growth,mid,35.0,2023-24,366354.006,490000.0,-123645.994,1
+Headwinds,Whole data centre,2035,1,constant_growth,mid,35.0,2020-24 average,366354.006,323750.0,42604.006,0
+Headwinds,Whole data centre,2035,1,constant_growth,high,40.0,2023-24,418690.293,560000.0,-141309.707,1
+Headwinds,Whole data centre,2035,1,constant_growth,high,40.0,2020-24 average,418690.293,370000.0,48690.293,0
+Headwinds,Whole data centre,2035,1,constant_growth,fibre_shift,30.5,2023-24,319251.348,427000.0,-107748.652,1
+Headwinds,Whole data centre,2035,1,constant_growth,fibre_shift,30.5,2020-24 average,319251.348,282125.0,37126.348,0
+High Efficiency,Whole data centre,2035,1,even,low,30.0,2023-24,338181.818,420000.0,-81818.182,1
+High Efficiency,Whole data centre,2035,1,even,low,30.0,2020-24 average,338181.818,277500.0,60681.818,0
+High Efficiency,Whole data centre,2035,1,even,mid,35.0,2023-24,394545.455,490000.0,-95454.545,1
+High Efficiency,Whole data centre,2035,1,even,mid,35.0,2020-24 average,394545.455,323750.0,70795.455,0
+High Efficiency,Whole data centre,2035,1,even,high,40.0,2023-24,450909.091,560000.0,-109090.909,1
+High Efficiency,Whole data centre,2035,1,even,high,40.0,2020-24 average,450909.091,370000.0,80909.091,0
+High Efficiency,Whole data centre,2035,1,even,fibre_shift,30.5,2023-24,343818.182,427000.0,-83181.818,1
+High Efficiency,Whole data centre,2035,1,even,fibre_shift,30.5,2020-24 average,343818.182,282125.0,61693.182,0
+High Efficiency,Whole data centre,2035,1,constant_growth,low,30.0,2023-24,618066.623,420000.0,198066.623,0
+High Efficiency,Whole data centre,2035,1,constant_growth,low,30.0,2020-24 average,618066.623,277500.0,340566.623,0
+High Efficiency,Whole data centre,2035,1,constant_growth,mid,35.0,2023-24,721077.727,490000.0,231077.727,0
+High Efficiency,Whole data centre,2035,1,constant_growth,mid,35.0,2020-24 average,721077.727,323750.0,397327.727,0
+High Efficiency,Whole data centre,2035,1,constant_growth,high,40.0,2023-24,824088.831,560000.0,264088.831,0
+High Efficiency,Whole data centre,2035,1,constant_growth,high,40.0,2020-24 average,824088.831,370000.0,454088.831,0
+High Efficiency,Whole data centre,2035,1,constant_growth,fibre_shift,30.5,2023-24,628367.734,427000.0,201367.734,0
+High Efficiency,Whole data centre,2035,1,constant_growth,fibre_shift,30.5,2020-24 average,628367.734,282125.0,346242.734,0
+Lift-Off,Whole data centre,2035,1,even,low,30.0,2023-24,837272.727,420000.0,417272.727,0
+Lift-Off,Whole data centre,2035,1,even,low,30.0,2020-24 average,837272.727,277500.0,559772.727,0
+Lift-Off,Whole data centre,2035,1,even,mid,35.0,2023-24,976818.182,490000.0,486818.182,0
+Lift-Off,Whole data centre,2035,1,even,mid,35.0,2020-24 average,976818.182,323750.0,653068.182,0
+Lift-Off,Whole data centre,2035,1,even,high,40.0,2023-24,1116363.636,560000.0,556363.636,0
+Lift-Off,Whole data centre,2035,1,even,high,40.0,2020-24 average,1116363.636,370000.0,746363.636,0
+Lift-Off,Whole data centre,2035,1,even,fibre_shift,30.5,2023-24,851227.273,427000.0,424227.273,0
+Lift-Off,Whole data centre,2035,1,even,fibre_shift,30.5,2020-24 average,851227.273,282125.0,569102.273,0
+Lift-Off,Whole data centre,2035,1,constant_growth,low,30.0,2023-24,1530213.333,420000.0,1110213.333,0
+Lift-Off,Whole data centre,2035,1,constant_growth,low,30.0,2020-24 average,1530213.333,277500.0,1252713.333,0
+Lift-Off,Whole data centre,2035,1,constant_growth,mid,35.0,2023-24,1785248.889,490000.0,1295248.889,0
+Lift-Off,Whole data centre,2035,1,constant_growth,mid,35.0,2020-24 average,1785248.889,323750.0,1461498.889,0
+Lift-Off,Whole data centre,2035,1,constant_growth,high,40.0,2023-24,2040284.444,560000.0,1480284.444,0
+Lift-Off,Whole data centre,2035,1,constant_growth,high,40.0,2020-24 average,2040284.444,370000.0,1670284.444,0
+Lift-Off,Whole data centre,2035,1,constant_growth,fibre_shift,30.5,2023-24,1555716.889,427000.0,1128716.889,0
+Lift-Off,Whole data centre,2035,1,constant_growth,fibre_shift,30.5,2020-24 average,1555716.889,282125.0,1273591.889,0

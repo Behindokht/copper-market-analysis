@@ -88,6 +88,8 @@ The `raw_fred_*` tables are the first of the new analysis path: raw as loaded, n
 - `notebooks/01_copper_vs_dollar.ipynb`: tests whether copper moves against the dollar (H1). It reads only the marts, never the raw LME series, includes a month-end robustness check (LME copper and the dollar index), and is committed with its outputs.
 - `notebooks/02_copper_vs_aluminium_ratio.ipynb`: a price question only (does a high copper-to-aluminium ratio say anything about the relative price over the next 6 and 12 months?), by threshold, with independent episodes counted. No demand data, so substitution is not tested.
 - `notebooks/03_demand_scenario.ipynb`: scenario arithmetic for EV and data-centre demand against 2025e world mine output (main year 2030, 2035 beside it). EV transition and car-market growth are kept apart; data centres use capacity (total and IT), with the copper in new capacity (always positive) as the main figure and the extra over the 2024 build as the secondary one; the EV transition and data-centre results are separate bars, and their total is labelled "the two effects together, on their own baselines" (EV vs 2025, data centres vs the 2024 build); a tornado shows each assumption. Scenario, not a forecast; every input has a source and reliability.
+- `notebooks/04_dashboard_exports.ipynb`: prepares the dashboard-only tables (the two Story facts, the World Bank copper series nominal and real, the demand case grids and ranges, the data-quality tables). It never writes an LME series and withholds check details that mention LME.
+- `tools/export_site_data.py`: turns the derived tables in `results/` into the website's data files in `docs/data/*.js`. It calculates nothing, and `tools/audit_public.py` checks the files it writes.
 - `results/`: derived result tables (CSV) and nothing raw. `build_db.py` reloads `res_*.csv` into the database so a rebuild does not lose them.
 - Python environment for the notebooks: `.venv` with the versions in `requirements.txt`.
 
@@ -102,7 +104,7 @@ The `raw_fred_*` tables are the first of the new analysis path: raw as loaded, n
 | Migration proofs for LME and IEA (`baselines/`) | They summarise LME or IEA data (the LME licence is commercial; the IEA terms are not confirmed yet) |
 | `company_production.csv`, `mine_production.csv` | Figures from secondary articles ("do not republish"); to be replaced with company annual reports |
 
-**To rebuild:** download the raw files, then run `python copper_database/build_db.py --raw .` (Python with pandas and openpyxl). The notebooks use the environment in `requirements.txt`. Without the LME files the build skips the LME steps and the checks that need them or the missing proofs; each skip is logged as INFO in `data_checks`, and the LME columns of the panel stay empty. This was tested on a copy containing only the public files plus the non-LME downloads: the build has no FAIL, all three notebooks run, and all result files come out identical to the full run.
+**To rebuild:** download the raw files, then run `python copper_database/build_db.py --raw .` (Python with pandas and openpyxl). The notebooks use the environment in `requirements.txt`. Without the LME files the build skips the LME steps and the checks that need them or the missing proofs; each skip is logged as INFO in `data_checks`, and the LME columns of the panel stay empty. This was tested on a copy containing only the public files plus the non-LME downloads: the build has no FAIL, all four notebooks run, and the analysis result files come out identical to the full run (only the two files that describe the build itself differ: the data checks, which has fewer rows without LME and the missing proofs, and the table counts per layer).
 
 **The one result that needs licensed data:** the month-end robustness result is provided as a file (`results/res_dollar_month_end_check.csv`); reproducing it needs LME historical data that I download myself, which is licensed and is not in this repository. The LME-versus-World-Bank cross-check in `data_checks` needs it too. Everything else can be rebuilt from the public downloads, but the project is not fully reproducible without that LME data.
 
@@ -112,15 +114,26 @@ The `raw_fred_*` tables are the first of the new analysis path: raw as loaded, n
 
 These published files contain figures taken from or derived from IEA data. The repository stays private until the IEA terms and the World Bank licence line are confirmed. The audit keeps this list in step with `tools/public_manifest.json`.
 
-- `results/res_demand_assumptions.csv`
-- `results/res_demand_context.csv`
-- `results/res_demand_headline.csv`
-- `results/res_demand_sensitivity.csv`
-- `copper_database/collected/datacentre_electricity_iea.csv` (IEA report-page figures)
-- `copper_database/collected/datacentre_growth_by_region.csv` (IEA report-page figures)
-- `copper_database/collected/scenario_assumptions.csv` (the base-year build is computed from IEA capacity numbers)
-- `copper_database/collected/known_issues.csv` (IT-versus-total differences computed from the IEA annex)
-- `notebooks/03_demand_scenario.ipynb` (outputs show IEA headline figures)
+- `copper_database/collected/datacentre_electricity_iea.csv` (IEA report-page figures (data-centre electricity))
+- `copper_database/collected/datacentre_growth_by_region.csv` (IEA report-page figures (growth by region))
+- `copper_database/collected/known_issues.csv` (known issues; K01 states IT-vs-total differences computed from the IEA annex)
+- `copper_database/collected/scenario_assumptions.csv` (project assumptions; the base-year build (14 GW, 9.25 GW) is computed from IEA capacity numbers)
+- `docs/data/demand.js` (scenario results and case grids derived from IEA EV sales and capacity; copper per car and per MW from secondary articles)
+- `docs/data/quality.js` (data checks (LME details withheld, IEA headline numbers in some details), the sources register and known issues)
+- `notebooks/03_demand_scenario.ipynb` (outputs show IEA headline figures, scenario results and copper per car and per MW)
+- `notebooks/04_dashboard_exports.ipynb` (outputs show derived counts and the demand ranges (IEA-derived percentages); no LME values)
+- `results/res_dashboard_checks.csv` (the data checks; details that mention LME are withheld except the LME-versus-World-Bank agreement; some details quote IEA headline numbers)
+- `results/res_dashboard_known_issues.csv` (the known issues register; K01 quotes IEA-derived percentages)
+- `results/res_demand_assumptions.csv` (assumption register: IEA headline values (EV sales, capacity), USGS output, copper per car (S11) and per MW (S13))
+- `results/res_demand_context.csv` (USGS mine and refinery output; S13 reported figures; model figure built from an IEA capacity number)
+- `results/res_demand_dc_capacity.csv` (IEA data-centre capacity by case, total and IT)
+- `results/res_demand_dc_cases.csv` (256 data-centre cases derived from IEA capacity (grid for the selectors))
+- `results/res_demand_dc_paths.csv` (data-centre capacity additions and build paths derived from IEA capacity)
+- `results/res_demand_ev_cases.csv` (972 EV cases derived from IEA EV sales and shares (grid for the interactive selectors))
+- `results/res_demand_ev_paths.csv` (IEA EV sales 2025 and 2035 and the interpolated 2030 paths)
+- `results/res_demand_headline.csv` (scenario results derived from IEA EV sales and capacity)
+- `results/res_demand_ranges.csv` (the one-at-a-time range and the all-assumptions-at-an-extreme range, derived from IEA scenarios)
+- `results/res_demand_sensitivity.csv` (sensitivity results derived from IEA scenarios)
 
 `copper_database/collected/sources.csv` only quotes short IEA wording and describes IEA files.
 

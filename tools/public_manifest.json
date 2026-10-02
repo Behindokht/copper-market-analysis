@@ -256,6 +256,168 @@
    "note": "outputs show IEA headline figures, scenario results and copper per car and per MW",
    "iea_figures": true,
    "secondary_article_figures": true
+  },
+  "results/res_story_guess_dollar.csv": {
+   "sources": [
+    "S02",
+    "S17",
+    "S18"
+   ],
+   "note": "R squared and direction counts from monthly changes in World Bank copper and the FRED dollar index and yield"
+  },
+  "results/res_story_copper_series.csv": {
+   "sources": [
+    "S02",
+    "S04"
+   ],
+   "note": "World Bank monthly copper price (CC BY 4.0; credit 'adapted from World Bank Commodity Price Data'), never the LME series; the real series is deflated with US CPI (BLS via FRED, public domain), 800 months",
+   "large_ok": true
+  },
+  "results/res_story_copper_record_facts.csv": {
+   "sources": [
+    "S02",
+    "S04"
+   ],
+   "note": "record and peak facts computed from the World Bank copper series and US CPI"
+  },
+  "results/res_demand_ev_cases.csv": {
+   "sources": [
+    "S05",
+    "S11",
+    "S20"
+   ],
+   "note": "972 EV cases derived from IEA EV sales and shares (grid for the interactive selectors)",
+   "iea_figures": true,
+   "large_ok": true
+  },
+  "results/res_demand_dc_cases.csv": {
+   "sources": [
+    "S13",
+    "S15",
+    "S20"
+   ],
+   "note": "256 data-centre cases derived from IEA capacity (grid for the selectors)",
+   "iea_figures": true,
+   "secondary_article_figures": true,
+   "large_ok": true
+  },
+  "results/res_demand_ranges.csv": {
+   "sources": [
+    "S05",
+    "S15",
+    "S11",
+    "S13",
+    "S20"
+   ],
+   "note": "the one-at-a-time range and the all-assumptions-at-an-extreme range, derived from IEA scenarios",
+   "iea_figures": true
+  },
+  "results/res_dashboard_checks.csv": {
+   "sources": [
+    "all"
+   ],
+   "note": "the data checks; details that mention LME are withheld except the LME-versus-World-Bank agreement; some details quote IEA headline numbers",
+   "iea_figures": true,
+   "lme_statistics_only": true,
+   "large_ok": true
+  },
+  "results/res_dashboard_sources.csv": {
+   "sources": [
+    "all"
+   ],
+   "note": "the sources register (names, URLs, licences, reliability); quotes short IEA wording",
+   "iea_quotes": true
+  },
+  "results/res_dashboard_known_issues.csv": {
+   "sources": [
+    "S05",
+    "S11",
+    "S13"
+   ],
+   "note": "the known issues register; K01 quotes IEA-derived percentages",
+   "iea_figures": true
+  },
+  "results/res_dashboard_pipeline.csv": {
+   "sources": [
+    "own"
+   ],
+   "note": "number of tables per pipeline layer"
+  },
+  "notebooks/04_dashboard_exports.ipynb": {
+   "sources": [
+    "S02",
+    "S04",
+    "S05",
+    "S15",
+    "S17"
+   ],
+   "note": "outputs show derived counts and the demand ranges (IEA-derived percentages); no LME values",
+   "iea_figures": true
+  },
+  "docs/data/story.js": {
+   "sources": [
+    "S02",
+    "S04",
+    "S17",
+    "S18"
+   ],
+   "note": "World Bank monthly copper price (CC BY 4.0; credit 'adapted from World Bank Commodity Price Data'), never the LME series",
+   "large_datasets": [
+    "copper_series"
+   ]
+  },
+  "docs/data/dollar.js": {
+   "sources": [
+    "S01",
+    "S02",
+    "S04",
+    "S16",
+    "S17",
+    "S18"
+   ],
+   "note": "derived statistics; the month-end result is LME-based correlations only, no LME prices",
+   "lme_statistics_only": true,
+   "large_datasets": [
+    "rolling"
+   ]
+  },
+  "docs/data/ratio.js": {
+   "sources": [
+    "S02"
+   ],
+   "note": "results on World Bank prices (CC BY 4.0)",
+   "large_datasets": [
+    "episodes"
+   ]
+  },
+  "docs/data/demand.js": {
+   "sources": [
+    "S05",
+    "S06",
+    "S11",
+    "S13",
+    "S15",
+    "S20"
+   ],
+   "note": "scenario results and case grids derived from IEA EV sales and capacity; copper per car and per MW from secondary articles",
+   "iea_figures": true,
+   "secondary_article_figures": true,
+   "large_datasets": [
+    "ev_cases",
+    "dc_cases"
+   ]
+  },
+  "docs/data/quality.js": {
+   "sources": [
+    "all"
+   ],
+   "note": "data checks (LME details withheld, IEA headline numbers in some details), the sources register and known issues",
+   "iea_figures": true,
+   "iea_quotes": true,
+   "lme_statistics_only": true,
+   "large_datasets": [
+    "checks"
+   ]
   }
  }
 }

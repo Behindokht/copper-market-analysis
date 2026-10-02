@@ -1,0 +1,6 @@
+range_id,end,total_kt,total_pct_of_mine,cases_considered,detail
+reference,reference,1189.2,5.1702,,"Reference case (a convenience choice, not the most likely case): Reference case"
+one_at_a_time,low,792.5,3.4456,23.0,Data-centre IEA case: Headwinds
+one_at_a_time,high,1650.0,7.1738,23.0,Data-centre IEA case: Lift-Off
+all_combinations,low,254.0,1.1043,27648.0,"EV: IEA CPS, constant growth to 2030, BEV 82 kg, PHEV 68 kg, petrol-car copper 42 kg (hybrid bound mid); data centres: IEA Headwinds, even build, total capacity, 40 t/MW, base-year build 2023-24"
+all_combinations,high,2903.8,12.6254,27648.0,"EV: IEA STEPS, straight line to 2030, BEV 91 kg, PHEV 68 kg, petrol-car copper 9 kg (compact mid); data centres: IEA Lift-Off, constant growth build, total capacity, 40 t/MW, base-year build 2020-24 average"

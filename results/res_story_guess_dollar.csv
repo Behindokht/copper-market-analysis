@@ -1,0 +1,15 @@
+fact_id,label,value,unit,months,period_from,period_to
+r2_dollar_index,Share of copper's monthly moves the broad dollar index accounts for (R squared),31.38,percent,247,2006-02,2026-08
+r2_euro,Same for the euro alone (euros per dollar),10.4,percent,331,1999-02,2026-08
+r2_dollar_index_plus_yield,Broad dollar index plus the change in the 10-year US yield,41.36,percent,247,2006-02,2026-08
+months_total,Months compared (monthly changes of copper and the broad dollar index),247.0,months,247,2006-02,2026-08
+dollar_rose_months,Months in which the broad dollar index rose,122.0,months,247,2006-02,2026-08
+copper_fell_when_dollar_rose_months,"Of those, months in which copper fell",84.0,months,122,2006-02,2026-08
+copper_fell_when_dollar_rose,Share of those months in which copper fell,68.85,percent,122,2006-02,2026-08
+dollar_fell_months,Months in which the broad dollar index fell,125.0,months,247,2006-02,2026-08
+copper_rose_when_dollar_fell_months,"Of those, months in which copper rose",94.0,months,125,2006-02,2026-08
+copper_rose_when_dollar_fell,Share of those months in which copper rose,75.2,percent,125,2006-02,2026-08
+opposite_months,Months in which copper and the dollar index moved in strictly opposite directions,178.0,months,247,2006-02,2026-08
+opposite_direction_share,Share of months in which they moved in opposite directions,72.06,percent,247,2006-02,2026-08
+same_direction_months,Months in which they moved in the same direction,68.0,months,247,2006-02,2026-08
+unchanged_months,Months in which one of the two monthly averages did not change at all (counted as neither),1.0,months,247,2006-02,2026-08

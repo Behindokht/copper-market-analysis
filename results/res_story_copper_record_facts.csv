@@ -1,0 +1,12 @@
+fact_id,month,value,unit,note
+series_months,1960-01-01,800.0,months,"World Bank monthly copper price, January 1960 to the latest month"
+nominal_latest,2026-08-01,14326.0,USD per tonne,latest monthly average
+nominal_record,2026-08-01,14326.0,USD per tonne,highest nominal monthly average in the series
+real_latest,2026-08-01,14326.0,"USD per tonne, August 2026 dollars",deflated with US CPI (a US-dollar view); the latest month is the base
+real_months_above_latest,2026-08-01,36.0,months,months in which the real price was higher than the latest month
+real_peak_all,1974-04-01,21062.1,"USD per tonne, August 2026 dollars",highest real monthly price since 1960
+real_peak_vs_latest_pct,1974-04-01,47.02,percent,how far above the latest month the real peak is
+real_peak_1960s,1966-04-01,19739.4,"USD per tonne, August 2026 dollars",highest real price in the 1960s
+real_peak_since_1990,2011-02-01,14859.1,"USD per tonne, August 2026 dollars",highest real price since 1990
+latest_vs_real_peak_since_1990_pct,2026-08-01,-3.59,percent,the latest month against the real high since 1990
+cpi_gap,2025-10-01,,,"US CPI has no value for October 2025 (federal shutdown, BLS), so the real price for that month is empty"

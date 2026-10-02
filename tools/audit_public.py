@@ -17,6 +17,8 @@ It fails (exit 1) if:
   7. a data file (results/, collected/, baselines/, notebooks/, docs/data/) is not listed in tools/public_manifest.json, a csv with 100 or
      more rows is not marked large_ok there, or a dataset with 100 or more rows in docs/data/*.js is not listed under large_datasets
   8. a file the manifest flags as containing IEA-derived figures is missing from the IEA list in copper_database/README.md
+  9. the Story's direction counts do not reconcile (opposite + same direction + unchanged must equal the months compared, opposite must equal
+     the two conditional counts, and every share must equal its counts); checked in results/res_story_guess_dollar.csv and docs/data/story.js
 It also prints the files that contain IEA-derived figures (so the IEA terms can be confirmed), the files that carry figures from
 secondary articles, and the e-mail addresses found in published files.
 """
@@ -111,8 +113,36 @@ def notebook_outputs(text):
 
 def js_datasets(text):
     """docs/data/*.js files are written as 'window.CMA_DATA.<page> = {...};' with datasets {"columns": [...], "rows": [...]}."""
-    body = text.split("=", 1)[1].strip().rstrip(";")
-    return json.loads(body)
+    m = re.search(r"window\.CMA_DATA\.\w+\s*=\s*", text)
+    if not m:
+        raise ValueError("no 'window.CMA_DATA.<page> =' assignment found")
+    return json.loads(text[m.end():].strip().rstrip(";"))
+
+
+def story_reconciles(facts, where):
+    """facts: {fact_id: (value, months)}. One definition, one sample: every count and share must tie out."""
+    out = []
+    try:
+        v = {k: x[0] for k, x in facts.items()}
+        n = v["months_total"]
+        fell, rose = v["copper_fell_when_dollar_rose_months"], v["copper_rose_when_dollar_fell_months"]
+        if v["opposite_months"] != fell + rose:
+            out.append(f"STORY {where}: opposite_months {v['opposite_months']} is not {fell} + {rose}")
+        if v["opposite_months"] + v["same_direction_months"] + v["unchanged_months"] != n:
+            out.append(f"STORY {where}: opposite + same direction + unchanged = {v['opposite_months'] + v['same_direction_months'] + v['unchanged_months']}, not {n}")
+        if v["dollar_rose_months"] + v["dollar_fell_months"] > n:
+            out.append(f"STORY {where}: dollar rose + fell months exceed the months compared")
+        for share, num, den in (("copper_fell_when_dollar_rose", fell, v["dollar_rose_months"]),
+                                ("copper_rose_when_dollar_fell", rose, v["dollar_fell_months"]),
+                                ("opposite_direction_share", v["opposite_months"], n)):
+            if abs(v[share] - num / den * 100) > 0.01:
+                out.append(f"STORY {where}: {share} {v[share]} does not equal {num}/{den} = {num / den * 100:.2f}")
+        for r2 in ("r2_dollar_index", "r2_euro", "r2_dollar_index_plus_yield"):
+            if not 0 <= v[r2] <= 100:
+                out.append(f"STORY {where}: {r2} {v[r2]} is outside 0 to 100")
+    except KeyError as e:
+        out.append(f"STORY {where}: fact {e} is missing")
+    return out
 
 
 def main():
@@ -214,6 +244,18 @@ def main():
     for f in iea_all:
         if (ROOT / f).exists() and f not in readme:
             problems.append(f"README IEA LIST {f}: flagged as IEA-derived in the manifest but missing from the IEA list in copper_database/README.md")
+
+    # 9 Story figures reconcile
+    sj = ROOT / "results" / "res_story_guess_dollar.csv"
+    if sj.exists() and (not staged or "results/res_story_guess_dollar.csv" in files):
+        import csv as _csv
+        rows = list(_csv.DictReader(sj.open(encoding="utf-8")))
+        problems += story_reconciles({r["fact_id"]: (float(r["value"]), r["months"]) for r in rows}, "results/res_story_guess_dollar.csv")
+    sjs = ROOT / "docs" / "data" / "story.js"
+    if sjs.exists() and (not staged or "docs/data/story.js" in files):
+        ds = js_datasets(read("docs/data/story.js", False))["guess_dollar"]
+        cols = ds["columns"]
+        problems += story_reconciles({r[cols.index("fact_id")]: (float(r[cols.index("value")]), r[cols.index("months")]) for r in ds["rows"]}, "docs/data/story.js")
 
     # report
     iea = sorted(f for f in files if mf.get(f, {}).get("iea_figures"))
