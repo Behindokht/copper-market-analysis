@@ -292,6 +292,11 @@ def main():
         print("Files with IEA-derived figures (confirm the IEA terms before the repo goes public):")
         for f in iea:
             print(f"   {f}   [{', '.join(mf[f].get('sources', []))}] {mf[f].get('note', '')}")
+        ro = sorted(f for f in files if mf.get(f, {}).get("iea_results_only"))
+        if ro:
+            print("\nFiles with results derived from IEA scenarios (tonnes and percentages only, after tools/trim_iea.py):")
+            for f in ro:
+                print(f"   {f}")
         print("\nFiles that only quote short IEA wording or describe IEA files (no IEA figures):")
         for f in sorted(f for f in files if mf.get(f, {}).get("iea_quotes")):
             print(f"   {f}")

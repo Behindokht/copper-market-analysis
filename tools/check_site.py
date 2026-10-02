@@ -9,6 +9,7 @@ Checks on the static site in docs/ (run before every commit that touches it):  p
   5. the strings never contain a hard-coded percentage: every number on the site comes from the data files
   6. the Story's first guess never uses the word that would turn an association into a cause
   7. the contrast of every colour pair in use passes (tools/contrast_report.py)
+  9. wording: the demand text never says gap, deficit or shortage
   8. plain text style: no em dash or en dash in any site file, none of the stiff words in the banned list, and no sentence over 25 words
      in the page text (lists of credits and attributions are citations and are exempt from the length rule)
 Exit code 1 if anything fails.
@@ -86,8 +87,8 @@ for p in (DOCS / "js").rglob("*.js"):
     for m in re.finditer(r"\bt\(\s*\"([\w.]+)\"\s*\+", t):     # keys built in code: prefix + id
         used.add(m.group(1) + "*")
     if p.parent.name == "pages":
-        for m in re.finditer(r"\bT\(\s*\"([\w.]+)\"", t):   # a page helper T("key") means t("<page>.key")
-            used.add(p.stem + "." + m.group(1))
+        for m in re.finditer(r"\bT\(\s*\"([\w.]+)\"(\s*\+)?", t):   # a page helper T("key") means t("<page>.key"); T("prefix" + id) is a built key
+            used.add(p.stem + "." + m.group(1) + ("*" if m.group(2) else ""))
     for m in re.finditer(r"\"(pages|nav|story|footer|site|hero)\.[\w.]*\"", t):
         used.add(m.group(0).strip('"'))
 for u in sorted(used):
@@ -96,7 +97,9 @@ for u in sorted(used):
     if u not in keys and not any(k.startswith(u + ".") for k in keys):
         problems.append(f"TEXT key used in code but missing in strings.en.js: {u}")
 dynamic = ("pages.", "nav.", "story.guess2.opt_", "story.sources.names.", "story.guess1.verdict_", "footer.", "story.notshow.", "story.guess2.c_", "site.", "hero.",
-           "dollar.sources.names.", "dollar.notshow.", "ratio.sources.names.", "ratio.notshow.", "ratio.fam_", "ratio.h_")
+           "dollar.sources.names.", "dollar.notshow.", "ratio.sources.names.", "ratio.notshow.", "ratio.fam_", "ratio.h_",
+           "demand.sources.names.", "demand.notshow.", "demand.scen_", "demand.path_", "demand.cu_", "demand.pet_", "demand.dc_", "demand.dcpath_", "demand.basis_",
+           "demand.int_", "demand.base_", "quality.reason.", "quality.f_")
 for k in sorted(keys):
     if k not in used and not any(k.startswith(d) for d in dynamic) and not any(u.rstrip("*") and k.startswith(u.rstrip("*")) for u in used if u.endswith("*")):
         problems.append(f"TEXT key defined but never used: {k}")
@@ -116,7 +119,7 @@ for k, v in keys.items():
 BANNED = ["utilize", "utilise", "leverage", "furthermore", "moreover", "notably", "robust", "delve", "underscore", "paramount", "plethora",
           "facilitate", "elucidate", "endeavor", "endeavour", "commence", "subsequently", "nevertheless", "consequently", "albeit",
           "whilst", "comprehensive", "holistic", "seamless", "myriad", "intricate", "pivotal", "landscape"]
-EXEMPT_LENGTH = ("footer.credits", "story.sources.attribution", "dollar.sources.attribution", "ratio.sources.attribution")
+EXEMPT_LENGTH = ("footer.credits", "story.sources.attribution", "dollar.sources.attribution", "ratio.sources.attribution", "demand.sources.attribution")
 for p in text_files:
     if p.name.startswith("OFL-"):
         continue
@@ -135,6 +138,13 @@ for k, v in keys.items():
                 n_words = len(re.sub(r"\{\w+\}", "X", sent).split())
                 if n_words > 25:
                     problems.append(f"STYLE {k}: a sentence has {n_words} words (limit 25): {sent[:70]}...")
+
+# 9. wording on the demand page: never a gap, deficit or shortage (there is no supply projection)
+for k, v in keys.items():
+    if k.startswith("demand.") or k.startswith("quality.reason.K0"):
+        for s_ in (v if isinstance(v, list) else [v]):
+            if isinstance(s_, str) and re.search(r"\b(gap|gaps|deficit|deficits|shortage|shortages|shortfall)\b", s_, re.I):
+                problems.append(f"WORDING {k}: the demand pages never say gap, deficit or shortage")
 
 # 7. contrast
 r = subprocess.run([sys.executable, str(ROOT / "tools" / "contrast_report.py")], capture_output=True, text=True, encoding="utf-8", errors="replace")

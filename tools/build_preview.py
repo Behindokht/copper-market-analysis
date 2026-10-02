@@ -15,7 +15,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 DOCS = ROOT / "docs"
-SCRIPTS = ["js/strings.en.js", "data/story.js", "data/quality.js", "data/dollar.js", "data/ratio.js", "js/util.js", "js/charts.js", "js/pages/story.js", "js/pages/dollar.js", "js/pages/ratio.js", "js/app.js"]
+SCRIPTS = ["js/strings.en.js", "data/story.js", "data/quality.js", "data/dollar.js", "data/ratio.js", "data/demand.js", "js/util.js", "js/charts.js", "js/pages/story.js", "js/pages/dollar.js", "js/pages/ratio.js", "js/pages/demand.js", "js/pages/quality.js", "js/app.js"]
 
 
 def esc(js):

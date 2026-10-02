@@ -14,7 +14,7 @@ check_no,table_name,description,status,detail,run_date
 13,raw_fred_gs10,rows loaded as-is / blank values kept as blank,INFO,881 rows; 0 blank values; 1953-04-01 to 2026-08-01,2026-10-02
 14,raw_usgs_commodities,file used / lines loaded as-is,INFO,MCS2026_Commodities_Data.csv; 8886 lines; 127 commodities,2026-10-02
 15,raw_iea_annex_cells,file used / non-empty cells loaded as-is,INFO,details withheld: raw IEA data is not redistributed,2026-10-02
-16,res_ tables,result tables reloaded from results/ (written by the notebooks),INFO,"['res_copper_eur_variance_split', 'res_copper_eur_vs_usd_cumulative', 'res_cu_al_episodes', 'res_cu_al_scenario_today', 'res_cu_al_slopes', 'res_cu_al_threshold_table', 'res_demand_assumptions', 'res_demand_context', 'res_demand_headline', 'res_demand_sensitivity', 'res_dollar_correlations', 'res_dollar_cpi_sensitivity', 'res_dollar_lead_lag', 'res_dollar_month_end_check', 'res_dollar_regressions', 'res_dollar_rolling_correlation_36m', 'res_dollar_stability_by_period']",2026-10-02
+16,res_ tables,result tables reloaded from results/ (written by the notebooks),INFO,"['res_copper_eur_variance_split', 'res_copper_eur_vs_usd_cumulative', 'res_cu_al_episodes', 'res_cu_al_scenario_today', 'res_cu_al_slopes', 'res_cu_al_threshold_table', 'res_dashboard_checks', 'res_dashboard_known_issues', 'res_dashboard_pipeline', 'res_dashboard_sources', 'res_demand_assumptions', 'res_demand_context', 'res_demand_dc_capacity', 'res_demand_dc_cases', 'res_demand_dc_paths', 'res_demand_ev_cases', 'res_demand_ev_paths', 'res_demand_headline', 'res_demand_ranges', 'res_demand_sensitivity', 'res_dollar_correlations', 'res_dollar_cpi_sensitivity', 'res_dollar_lead_lag', 'res_dollar_month_end_check', 'res_dollar_regressions', 'res_dollar_rolling_correlation_36m', 'res_dollar_stability_by_period', 'res_ratio_facts', 'res_ratio_series', 'res_story_copper_record_facts', 'res_story_copper_series', 'res_story_guess_dollar']",2026-10-02
 17,stg_lme_copper_daily vs stg_wb_prices_monthly,LME monthly average cash price vs World Bank copper,PASS,331 overlapping months; correlation 1.0000; mean gap 0.09%; max gap 0.74%,2026-10-02
 18,stg_fred_monthly vs stg_wb_prices_monthly,FRED (IMF) aluminium vs World Bank aluminium,PASS,415 overlapping months; mean gap 0.12%; max gap 0.97%,2026-10-02
 19,usgs_mine_production_country,MCS 2025 2023: countries add up to world total (2% tolerance for USGS rounding),PASS,"sum 22,558 vs total 22,600 (0.19% apart)",2026-10-02
@@ -169,18 +169,20 @@ check_no,table_name,description,status,detail,run_date
 168,mine_production,every source_id exists in sources register,PASS,ok,2026-10-02
 169,scenario_assumptions,every source_id exists in sources register,PASS,ok,2026-10-02
 170,usgs_mine_production_country,every source_id exists in sources register,PASS,ok,2026-10-02
-171,res_demand_assumptions,every source_id exists in sources register,PASS,ok,2026-10-02
-172,res_demand_context,every source_id exists in sources register,PASS,ok,2026-10-02
-173,mart_demand_assumptions,every source_id exists in sources register,PASS,ok,2026-10-02
-174,mart_demand_context,every source_id exists in sources register,PASS,ok,2026-10-02
-175,mart_scenario_inputs,every source_id exists in sources register,PASS,ok,2026-10-02
-176,stg_datacentre_annex_regional,every source_id exists in sources register,PASS,details withheld: raw IEA data is not redistributed,2026-10-02
-177,stg_datacentre_annex_world,every source_id exists in sources register,PASS,details withheld: raw IEA data is not redistributed,2026-10-02
-178,stg_datacentre_capacity_scenarios,every source_id exists in sources register,PASS,details withheld: raw IEA data is not redistributed,2026-10-02
-179,stg_ev_data,every source_id exists in sources register,PASS,details withheld: raw IEA data is not redistributed,2026-10-02
-180,stg_fred_dtwexbgs_daily,every source_id exists in sources register,PASS,ok,2026-10-02
-181,stg_fred_monthly,every source_id exists in sources register,PASS,ok,2026-10-02
-182,stg_lme_copper_daily,every source_id exists in sources register,PASS,details withheld: the LME data is commercial and is never published,2026-10-02
-183,stg_usgs_copper,every source_id exists in sources register,PASS,ok,2026-10-02
-184,stg_wb_prices_monthly,every source_id exists in sources register,PASS,ok,2026-10-02
-185,sources,sources in the register that no table uses yet,INFO,"['S14', 'S19', 'S21']",2026-10-02
+171,res_dashboard_known_issues,every source_id exists in sources register,PASS,ok,2026-10-02
+172,res_dashboard_sources,every source_id exists in sources register,PASS,ok,2026-10-02
+173,res_demand_assumptions,every source_id exists in sources register,PASS,ok,2026-10-02
+174,res_demand_context,every source_id exists in sources register,PASS,ok,2026-10-02
+175,mart_demand_assumptions,every source_id exists in sources register,PASS,ok,2026-10-02
+176,mart_demand_context,every source_id exists in sources register,PASS,ok,2026-10-02
+177,mart_scenario_inputs,every source_id exists in sources register,PASS,ok,2026-10-02
+178,stg_datacentre_annex_regional,every source_id exists in sources register,PASS,details withheld: raw IEA data is not redistributed,2026-10-02
+179,stg_datacentre_annex_world,every source_id exists in sources register,PASS,details withheld: raw IEA data is not redistributed,2026-10-02
+180,stg_datacentre_capacity_scenarios,every source_id exists in sources register,PASS,details withheld: raw IEA data is not redistributed,2026-10-02
+181,stg_ev_data,every source_id exists in sources register,PASS,details withheld: raw IEA data is not redistributed,2026-10-02
+182,stg_fred_dtwexbgs_daily,every source_id exists in sources register,PASS,ok,2026-10-02
+183,stg_fred_monthly,every source_id exists in sources register,PASS,ok,2026-10-02
+184,stg_lme_copper_daily,every source_id exists in sources register,PASS,details withheld: the LME data is commercial and is never published,2026-10-02
+185,stg_usgs_copper,every source_id exists in sources register,PASS,ok,2026-10-02
+186,stg_wb_prices_monthly,every source_id exists in sources register,PASS,ok,2026-10-02
+187,sources,sources in the register that no table uses yet,INFO,none,2026-10-02

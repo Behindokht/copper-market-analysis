@@ -119,6 +119,8 @@ The `raw_fred_*` tables are the first of the new analysis path: raw as loaded, n
 
 These published files contain figures taken from or derived from IEA data. The repository stays private until the IEA terms and the World Bank licence line are confirmed. The audit keeps this list in step with `tools/public_manifest.json`.
 
+**If the IEA terms turn out to be restrictive:** run `python tools/trim_iea.py` (a dry run that changes nothing) and then `python tools/trim_iea.py --apply`. The step stops tracking and git-ignores the IEA volumes and report figures (electric-car sales and shares, data-centre capacity in GW, IEA page figures: `res_demand_ev_paths`, `res_demand_dc_capacity`, `res_demand_dc_paths`, `res_demand_headline`, and two collected IEA tables), drops the car-sales and gigawatt columns and the IEA input rows from three result files, withholds the detail text of the data checks on IEA tables, clears the saved outputs of notebook 03, and updates the manifest and this list. The files stay on your disk. What it leaves for you to decide is printed at the end: the base-year data-centre build in `scenario_assumptions.csv` (computed from IEA capacity), the K01 wording (percentages computed from the annex) and the IEA scenario names used as labels. The Demand page reads only tonnes, percentages and copper per car and per MW, so it works unchanged after the step.
+
 - `copper_database/collected/datacentre_electricity_iea.csv` (IEA report-page figures (data-centre electricity))
 - `copper_database/collected/datacentre_growth_by_region.csv` (IEA report-page figures (growth by region))
 - `copper_database/collected/known_issues.csv` (known issues; K01 states IT-vs-total differences computed from the IEA annex)
@@ -144,7 +146,7 @@ These published files contain figures taken from or derived from IEA data. The r
 
 ## The dashboard (`docs/`)
 
-A static website (plain HTML, CSS and JavaScript, no server and no build step; open `docs/index.html` in a browser). It reads only the data files in `docs/data/*.js`, which `tools/export_site_data.py` writes from the derived tables in `results/`. It never opens the database and never shows an LME series. The Story page is built; the other four pages are placeholders until their stages.
+A static website (plain HTML, CSS and JavaScript, no server and no build step; open `docs/index.html` in a browser). It reads only the data files in `docs/data/*.js`, which `tools/export_site_data.py` writes from the derived tables in `results/`. It never opens the database and never shows an LME series. All five pages are built (Story, Dollar vs copper, Copper vs aluminium, Demand scenario, Data quality).
 
 - **Text** lives in one file, `docs/js/strings.en.js`, with `{placeholders}`; every number on a page comes from a data file, so text and numbers cannot drift apart. Another language is a second strings file with the same keys.
 - **Look:** cream page with a faint grain, solid cards for charts and tooltips, deep green text, copper and a data green for chart marks, oxblood footer; Merriweather for headings and Open Sans for text, both self-hosted (SIL Open Font License, texts in `docs/fonts/`). Nothing is loaded from the web. `docs/DESIGN.md` has the tokens and the contrast of every colour pair in use.

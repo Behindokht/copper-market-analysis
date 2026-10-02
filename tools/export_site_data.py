@@ -5,7 +5,7 @@ Export the derived result tables in results/*.csv to the dashboard's data files 
   python tools/export_site_data.py
 
 - Reads ONLY results/res_*.csv (the derived tables written by the notebooks). It never opens copper.db, the raw downloads or any LME file.
-- Calculates nothing: it only reads, converts types and writes. Every number on the website is a number from a results file.
+- Calculates nothing: it only reads, converts types, leaves out the columns and rows the pages do not use (DROP_COLUMNS, DROP_ROWS) and writes. Every number on the website is a number from a results file.
 - One file per dashboard page. A file looks like:  window.CMA_DATA.<page> = {"<dataset>": {"columns": [...], "rows": [[...], ...]}, ...};
   (JavaScript, not JSON, so the site also works when opened from a file and needs no server).
 - Stops if a dataset has a column that belongs to the licensed LME series. tools/audit_public.py checks the written files again.
@@ -50,16 +50,12 @@ PAGES = {
         "facts": "res_ratio_facts",
     },
     "demand": {
-        "headline": "res_demand_headline",
         "sensitivity": "res_demand_sensitivity",
         "assumptions": "res_demand_assumptions",
         "context": "res_demand_context",
         "ranges": "res_demand_ranges",
         "ev_cases": "res_demand_ev_cases",
         "dc_cases": "res_demand_dc_cases",
-        "ev_paths": "res_demand_ev_paths",
-        "dc_capacity": "res_demand_dc_capacity",
-        "dc_paths": "res_demand_dc_paths",
     },
     "quality": {
         "checks": "res_dashboard_checks",
@@ -68,6 +64,14 @@ PAGES = {
         "pipeline": "res_dashboard_pipeline",
     },
 }
+
+# The demand page needs tonnes, percentages and copper per car or per MW, not the IEA's own volumes. These columns and rows are left out
+# of the site data on purpose (car sales in the case grids, gigawatts in the data-centre grids, the IEA input rows of the assumption register).
+DROP_COLUMNS = {
+    "res_demand_ev_cases": ["extra_bev", "extra_phev", "delta_total_sales"],
+    "res_demand_dc_cases": ["build_in_target_year_gw", "base_build_gw"],
+}
+DROP_ROWS = {"res_demand_assumptions": ("kind", "IEA")}      # rows whose 'kind' contains this text
 
 INT = re.compile(r"^-?\d+$")
 FLOAT = re.compile(r"^-?(\d+\.\d*|\.\d+|\d+)([eE][-+]?\d+)?$")
@@ -94,7 +98,14 @@ def load(name):
     bad = LME_COLUMNS & set(cols)
     if bad:
         raise SystemExit(f"{name}: LME series column(s) {sorted(bad)} must never be exported")
-    return {"columns": cols, "rows": [[convert(c) for c in r] for r in body]}
+    for drop in DROP_COLUMNS.get(name, []):
+        if drop not in cols:
+            raise SystemExit(f"{name}: expected column {drop} (to be left out of the site data) is not there")
+    keep = [i for i, c in enumerate(cols) if c not in DROP_COLUMNS.get(name, [])]
+    if name in DROP_ROWS:
+        col, text = DROP_ROWS[name]
+        body = [r for r in body if text not in r[cols.index(col)]]
+    return {"columns": [cols[i] for i in keep], "rows": [[convert(r[i]) for i in keep] for r in body]}
 
 
 def main():
