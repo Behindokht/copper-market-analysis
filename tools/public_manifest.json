@@ -378,7 +378,8 @@
    "note": "derived statistics; the month-end result is LME-based correlations only, no LME prices",
    "lme_statistics_only": true,
    "large_datasets": [
-    "rolling"
+    "rolling",
+    "series"
    ]
   },
   "docs/data/ratio.js": {
@@ -432,6 +433,14 @@
     "S02"
    ],
    "note": "facts about today's copper-to-aluminium ratio, computed from World Bank prices"
+  },
+  "results/res_dollar_series.csv": {
+   "sources": [
+    "S02",
+    "S17"
+   ],
+   "note": "World Bank monthly copper (CC BY 4.0; credit 'adapted from World Bank Commodity Price Data') and the FRED broad dollar index (public domain), each also indexed to 100 in the first month; 248 months; never LME",
+   "large_ok": true
   }
  }
 }

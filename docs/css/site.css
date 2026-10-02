@@ -260,6 +260,34 @@ ul.bars, ul.ranges, ul.tornado, ul.issues { list-style: none; margin: 10px 0 0; 
 .checktable td:last-child { word-break: break-word; min-width: 200px; }
 .card-details { margin: 16px 0; }
 
+
+/* the technical layer sits behind a fold; the page foot has one Sources line */
+details.fold { margin: 26px 0; border: 1px solid var(--rule); border-radius: 8px; background: var(--card); }
+details.fold > summary { cursor: pointer; padding: 14px 20px; font: 700 1rem var(--font-head); color: var(--forest); }
+details.fold > summary:hover { background: var(--chip); border-radius: 8px; }
+details.fold[open] > summary { border-bottom: 1px solid var(--rule); border-radius: 8px 8px 0 0; }
+.fold-body { padding: 4px clamp(12px, 2.5vw, 22px) 18px; }
+.fold-body .card { box-shadow: none; }
+.fold-body .numbers h3, .fold-body > section > h3 { margin-top: 18px; }
+details.srcfold { margin: 22px 0 6px; }
+details.srcfold > summary { cursor: pointer; font-weight: 600; font-size: .9rem; color: var(--link); }
+.notadvice { margin: 6px 0 22px; }
+.answer { font: 400 1.25rem/1.55 var(--font-head); max-width: 40em; margin: 12px 0 18px; color: var(--forest); }
+.hook { font: 700 clamp(1.5rem, 4.5vw, 2.1rem)/1.25 var(--font-head); max-width: 24em; margin: 8px 0 6px; color: var(--forest); }
+.found { background: var(--card); border: 1px solid var(--rule); border-radius: 8px; padding: 18px clamp(16px, 3vw, 26px); margin: 20px 0; }
+.found h3 { margin-bottom: 8px; }
+.found ul { list-style: none; margin: 0; padding: 0; }
+.found li { padding: 10px 0; border-top: 1px solid var(--grid); max-width: 46em; }
+.found li:first-child { border-top: 0; }
+.found a { font-weight: 600; white-space: nowrap; }
+.statusbar { display: flex; height: 22px; border-radius: 4px; overflow: hidden; margin: 10px 0 6px; background: var(--chip); }
+.statusbar span { display: block; height: 100%; min-width: 3px; }
+.statusbar .s-pass { background: var(--green); }
+.statusbar .s-info { background: var(--teal-tint); }
+.statusbar .s-warn { background: var(--oxblood-accent); }
+.statusbar .s-fail { background: var(--oxblood); }
+.statuskey { display: flex; flex-wrap: wrap; gap: 4px 18px; font-size: .875rem; }
+
 /* note, chips, next */
 .note { background: var(--card); border: 1px solid var(--rule); border-left: 4px solid var(--copper); border-radius: 6px; padding: 16px 20px; margin: 26px 0; }
 .note h3 { font: 600 1rem var(--font-body); margin-bottom: 6px; }

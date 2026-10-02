@@ -21,6 +21,7 @@ It fails (exit 1) if:
      the two conditional counts, and every share must equal its counts); checked in results/res_story_guess_dollar.csv and docs/data/story.js
   10. the Dollar page's euro-price and dollar-price swing figures are not over the same months: the months in res_copper_eur_variance_split must
      equal the months of the full-sample euro correlation and match its first and last month; checked in the results CSVs and docs/data/dollar.js
+  11. the Dollar page's chart series, correlation sample, regression sample must start and end in the same months (the intro dates come from this sample)
 It also prints the files that contain IEA-derived figures (so the IEA terms can be confirmed), the files that carry figures from
 secondary articles, and the e-mail addresses found in published files.
 """
@@ -283,6 +284,25 @@ def main():
     if djs.exists() and (not staged or "docs/data/dollar.js" in files):
         dd_ = js_datasets(read("docs/data/dollar.js", False))
         problems += swing_check(dd_["eur_variance"]["rows"], [(r[0], r[1]) for r in dd_["correlations"]["rows"]], "docs/data/dollar.js")
+
+    # 11 the Dollar page's dates: the chart series, the correlation, the regression and the Story must share one sample
+    def sample_check(d, where):
+        out = []
+        try:
+            cr = [r for r in d["correlations"]["rows"] if r[0].startswith("Copper vs broad dollar index")][0]
+            m = re.search(r"(\d{4}-\d{2}) to (\d{4}-\d{2})", cr[0])
+            first, last, months = m.group(1), m.group(2), cr[1]
+            ser = d["series"]["rows"]
+            if ser[1][0][:7] != first or ser[-1][0][:7] != last or len(ser) - 1 != months:
+                out.append(f"DOLLAR SAMPLE {where}: the chart series ({ser[1][0][:7]} to {ser[-1][0][:7]}, {len(ser) - 1} changes) differs from the correlation sample {first} to {last} ({months})")
+            reg = [r for r in d["regressions"]["rows"] if r[0].startswith("2. dollar index only")][0]
+            if first + " on" not in reg[0] or reg[-1] != months:
+                out.append(f"DOLLAR SAMPLE {where}: the regression sample '{reg[0]}' ({reg[-1]}) differs from the correlation sample {first} ({months})")
+        except (KeyError, IndexError) as e:
+            out.append(f"DOLLAR SAMPLE {where}: could not read the tables ({e!r})")
+        return out
+    if djs.exists() and (not staged or "docs/data/dollar.js" in files):
+        problems += sample_check(js_datasets(read("docs/data/dollar.js", False)), "docs/data/dollar.js")
 
     # report
     iea = sorted(f for f in files if mf.get(f, {}).get("iea_figures"))

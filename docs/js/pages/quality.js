@@ -29,11 +29,21 @@
     wrap.appendChild(h("header", { class: "page-head" },
       h("p", { class: "eyebrow", text: CMA.t("pages.quality.eyebrow") }),
       h("h2", { id: "quality-title", tabindex: "-1", text: CMA.t("pages.quality.title") }),
-      h("p", { class: "intro", text: T("intro") }),
-      h("p", { class: "finding", text: T("summary", { n_pass: count("PASS"), n_info: count("INFO"), n_warn: count("WARN"), n_fail: count("FAIL") }) })));
+      h("p", { class: "answer", text: T("answer", { n_warn: count("WARN") }) }),
+      h("p", { class: "intro", text: T("intro") })));
+
+    // ---- the one simple chart: how all the checks came out
+    var total = C.length, st = [["PASS", "s-pass", "bar_pass"], ["INFO", "s-info", "bar_info"], ["WARN", "s-warn", "bar_warn"], ["FAIL", "s-fail", "bar_fail"]];
+    wrap.appendChild(h("section", { class: "card", "aria-labelledby": "q-bar" },
+      h("h3", { id: "q-bar", class: "qtitle", text: T("bar_title") }),
+      h("div", { class: "statusbar", role: "img", "aria-label": T("bar_aria", { n: total, n_pass: count("PASS"), n_info: count("INFO"), n_warn: count("WARN"), n_fail: count("FAIL") }) },
+        st.filter(function (x) { return count(x[0]) > 0; }).map(function (x) { return h("span", { class: x[1], style: "width:" + (count(x[0]) / total * 100) + "%" }); })),
+      h("div", { class: "statuskey" }, st.map(function (x) { return h("span", { text: T(x[2]) + ": " + count(x[0]) }); })),
+      h("p", { class: "small", style: "margin-top:10px", text: T("summary", { n_pass: count("PASS"), n_info: count("INFO"), n_warn: count("WARN"), n_fail: count("FAIL") }) })));
 
     // ---- how the data moves
-    wrap.appendChild(h("section", { class: "card", "aria-labelledby": "q-flow" },
+    var fold = [];
+    fold.push(h("section", { "aria-labelledby": "q-flow" },
       h("h3", { id: "q-flow", text: T("flow_title") }),
       h("p", { text: T("flow_text", { raw: pl.raw, staging: pl.staging, mart: pl.mart, result: pl.result }) }),
       h("p", { class: "small muted", text: T("flow_note") })));
@@ -54,7 +64,7 @@
 
     // ---- known limits
     var limits = KI.filter(function (r) { return r.status === "limitation"; });
-    wrap.appendChild(h("section", { class: "card", "aria-labelledby": "q-limits" },
+    fold.push(h("section", { "aria-labelledby": "q-limits" },
       h("h3", { id: "q-limits", text: T("limits_title") }), h("p", { class: "hint", text: T("limits_hint") }),
       h("ul", {}, limits.map(function (r) { return h("li", {}, h("b", { text: r.issue_id + ". " }), r.description); }))));
 
@@ -70,7 +80,7 @@
         h("td", {}, h("span", { class: "pill rel-" + String(r.reliability).replace(/\W/g, ""), text: r.reliability })),
         h("td", { text: String(r.accessed_on) }));
     });
-    wrap.appendChild(h("section", { class: "numbers", "aria-labelledby": "q-src" },
+    fold.push(h("section", { class: "numbers", "aria-labelledby": "q-src" },
       h("h3", { id: "q-src", text: T("sources_title") }), h("p", { class: "hint", text: T("sources_hint") }),
       h("p", { class: "small muted", text: T("src_lme") }),
       h("div", { class: "numwrap" }, h("table", { class: "numtable srctable" },
@@ -96,12 +106,14 @@
       inp.addEventListener("change", function () { filter = k; renderChecks(); });
       return h("label", {}, inp, h("span", { text: T("f_" + k) + (k === "all" ? " (" + C.length + ")" : " (" + count(k) + ")") }));
     }));
-    wrap.appendChild(h("section", { class: "card", "aria-labelledby": "q-checks" },
+    fold.push(h("section", { "aria-labelledby": "q-checks" },
       h("h3", { id: "q-checks", text: T("checks_title") }), h("p", { class: "hint", text: T("checks_hint") }),
       h("fieldset", { class: "seg" }, h("legend", { text: T("filter_legend") }), radios), countLine,
       h("div", { class: "tablewrap tall" }, h("table", { class: "checktable" },
         h("thead", {}, h("tr", {}, ["chk_col_no", "chk_col_table", "chk_col_what", "chk_col_status", "chk_col_detail"].map(function (k) { return h("th", { scope: "col", text: T(k) }); }))), tbody))));
     renderChecks();
+    wrap.appendChild(CMA.fold(T("details_lead"), fold));
+    CMA.pageFoot(wrap, null);
 
     wrap.appendChild(h("nav", { class: "next", "aria-label": "Next page" },
       h("a", { class: "btn secondary", href: "#demand", text: CMA.t("nav.demand") }),

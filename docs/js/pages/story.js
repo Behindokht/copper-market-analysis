@@ -3,7 +3,7 @@
   var CMA = window.CMA, t = CMA.t, h = CMA.h;
 
   CMA.pages.story = function (root) {
-    var D = window.CMA_DATA.story, Q = window.CMA_DATA.quality;
+    var D = window.CMA_DATA.story;
     var F = {}, R = {};
     CMA.rows(D.guess_dollar).forEach(function (r) { F[r.fact_id] = r; });
     CMA.rows(D.record_facts).forEach(function (r) { R[r.fact_id] = r; });
@@ -28,10 +28,31 @@
     wrap.appendChild(h("header", { class: "page-head" },
       h("p", { class: "eyebrow", text: t("story.eyebrow") }),
       h("h2", { id: "story-title", tabindex: "-1", text: t("story.title") }),
-      h("p", { class: "intro", text: t("story.intro") }),
-      h("button", { class: "btn secondary small", type: "button", id: "g-reset", text: t("story.reset"), onclick: function () {
-        CMA.store.clear(["g1", "g2"]); CMA.pages.story(root);
-      } })));
+      h("p", { class: "intro", text: t("story.intro") })));
+
+    // ---- "What I found": three plain sentences, each with a link to its page; numbers from the data files
+    var RT = {};
+    CMA.rows(window.CMA_DATA.ratio.facts).forEach(function (r) { RT[r.fact_id] = r; });
+    var foundVars = {
+      opposite_share: CMA.n0(F.opposite_direction_share.value), index_from: CMA.monthLong(F.r2_dollar_index.period_from + "-01"),
+      latest_month: CMA.monthLong(R.nominal_latest.month), ratio_latest: CMA.f2(RT.ratio_latest.value), years: Math.floor(RT.series_months.value / 12)
+    };
+    var recordIsLatest = R.nominal_record.month === R.nominal_latest.month && R.real_months_above_latest.value > 0;
+    var ratioIsHighest = RT.months_below_latest.value === RT.series_months.value - 1;
+    if (!recordIsLatest || !ratioIsHighest) { throw new Error("the 'What I found' sentences no longer match the data"); }
+    function foundItem(key, href, local) {
+      var a = h("a", { href: href, text: t(local ? "story.found_more_record" : "story.found_more") });
+      if (local) { a.addEventListener("click", function (e) { e.preventDefault(); var el = document.getElementById("guess2"); if (el) { el.scrollIntoView({ behavior: "smooth", block: "start" }); } }); }
+      return h("li", {}, t("story." + key, foundVars) + " ", a);
+    }
+    wrap.appendChild(h("section", { class: "found", "aria-labelledby": "story-found" },
+      h("h3", { id: "story-found", text: t("story.found_title") }),
+      h("ul", {}, foundItem("found_dollar", "#dollar"), foundItem("found_record", "#story", true), foundItem("found_ratio", "#ratio"))));
+    var resetBtn = h("button", { class: "btn secondary small", type: "button", id: "g-reset", text: t("story.reset"), hidden: true, onclick: function () {
+      CMA.store.clear(["g1", "g2"]); CMA.pages.story(root);
+    } });
+    wrap.appendChild(resetBtn);
+    function refreshReset() { resetBtn.hidden = CMA.store.get("g1") === null && CMA.store.get("g2") === null; }
 
     // =============================== guess 1: how much does the dollar account for?
     var g1 = F, locked = false, guess = 50;
@@ -90,7 +111,7 @@
     slider.addEventListener("input", function () { guess = +slider.value; out.textContent = guess + "%"; });
     lockBtn.addEventListener("click", function () {
       if (locked) { setLocked(false); slider.focus(); return; }
-      guess = +slider.value; CMA.store.set("g1", String(guess)); setLocked(true);
+      guess = +slider.value; CMA.store.set("g1", String(guess)); setLocked(true); refreshReset();
     });
     var saved1 = CMA.store.get("g1");
     if (saved1 !== null && !isNaN(+saved1)) { guess = +saved1; slider.value = guess; out.textContent = guess + "%"; setLocked(true); }
@@ -112,6 +133,7 @@
     function renderReveal2(choice) {
       var ok = choice === "b";
       reveal2.hidden = false;
+      if (typeof nsBox !== "undefined") { nsBox.hidden = false; }
       reveal2.textContent = "";
       reveal2.appendChild(h("h4", { class: "sr", text: t("story.guess2.reveal_title") }));
       reveal2.appendChild(h("p", { class: "verdict", text: ok ? t("story.guess2.match") : t("story.guess2.differ") }));
@@ -178,7 +200,7 @@
         h("div", { class: "tablewrap" }, h("table", {}, thead, tbody))));
     }
     radios.forEach(function (lab) {
-      lab.querySelector("input").addEventListener("change", function (e) { CMA.store.set("g2", e.target.value); renderReveal2(e.target.value); });
+      lab.querySelector("input").addEventListener("change", function (e) { CMA.store.set("g2", e.target.value); renderReveal2(e.target.value); refreshReset(); });
     });
     var saved2 = CMA.store.get("g2");
     if (saved2 && optsDef.some(function (o) { return o[0] === saved2; })) {
@@ -188,19 +210,13 @@
 
     // =============================== what this does not show, sources, next
     var nsItems = window.CMA_STRINGS.story.notshow.items.map(function (s) { return CMA.fill(s, { series_start: seriesStart }); });
-    wrap.appendChild(h("aside", { class: "note", "aria-labelledby": "story-ns" },
-      h("h3", { id: "story-ns", text: t("story.notshow.title") }), h("ul", {}, nsItems.map(function (s) { return h("li", { text: s }); }))));
+    var nsBox = h("aside", { class: "note", "aria-labelledby": "story-ns", hidden: true },
+      h("h3", { id: "story-ns", text: t("story.notshow.title") }), h("ul", {}, nsItems.map(function (s) { return h("li", { text: s }); })));
+    wrap.appendChild(nsBox);
 
-    var srcRows = {};
-    CMA.rows(Q.sources).forEach(function (r) { srcRows[r.source_id] = r; });
-    var chips = Object.keys(window.CMA_STRINGS.story.sources.names).map(function (id) {
-      var r = srcRows[id];
-      return h("li", { class: "chip" }, h("b", { text: id }), " " + t("story.sources.names." + id) + ", " +
-        t("story.sources.reliability", { reliability: r ? r.reliability : "unrated" }));
-    });
-    wrap.appendChild(h("section", { class: "sources", "aria-labelledby": "story-src" },
-      h("h3", { id: "story-src", text: t("story.sources.title") }), h("ul", { class: "chips" }, chips),
-      h("p", { class: "attrib", text: t("story.sources.attribution") })));
+    if (!reveal2.hidden) { nsBox.hidden = false; }
+    refreshReset();
+    CMA.pageFoot(wrap, window.CMA_STRINGS.story.sources.names, t("story.sources.attribution"));
 
     wrap.appendChild(h("nav", { class: "next", "aria-label": "Next page" },
       h("span"), h("a", { class: "btn", href: "#dollar", text: t("story.next", { title: t("pages.dollar.title") }) })));

@@ -66,5 +66,23 @@
     clear: function (keys) { try { keys.forEach(function (k) { window.localStorage.removeItem("cma." + k); }); } catch (e) { /* ignore */ } }
   };
   CMA.say = function (text) { var l = document.getElementById("live"); if (l) { l.textContent = text; } };
+  // a closed fold for the technical layer: <details class="fold"><summary>Show the details</summary> ... </details>
+  CMA.fold = function (lead, children) {
+    return CMA.h("details", { class: "fold" }, CMA.h("summary", { text: CMA.t("foot.details") }),
+      CMA.h("div", { class: "fold-body" }, lead ? CMA.h("p", { class: "hint", text: lead }) : null, children));
+  };
+  // the end of every page: one "Sources" line that opens the list, and one short line saying this is not a forecast
+  CMA.pageFoot = function (wrap, names, attribution) {
+    var reg = {};
+    if (names) {
+      CMA.rows(window.CMA_DATA.quality.sources).forEach(function (r) { reg[r.source_id] = r; });
+      var chips = Object.keys(names).map(function (id) {
+        return CMA.h("li", { class: "chip" }, CMA.h("b", { text: id }), " " + names[id] + ", " + CMA.t("story.sources.reliability", { reliability: reg[id] ? reg[id].reliability : "unrated" }));
+      });
+      wrap.appendChild(CMA.h("details", { class: "srcfold" }, CMA.h("summary", { text: CMA.t("foot.sources") }),
+        CMA.h("ul", { class: "chips" }, chips), CMA.h("p", { class: "attrib", text: attribution })));
+    }
+    wrap.appendChild(CMA.h("p", { class: "small muted notadvice", text: CMA.t("foot.not_advice") }));
+  };
   CMA.pages = CMA.pages || {};
 })();

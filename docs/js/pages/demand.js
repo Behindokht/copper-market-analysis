@@ -58,11 +58,11 @@
     wrap.appendChild(h("header", { class: "page-head" },
       h("p", { class: "eyebrow", text: CMA.t("pages.demand.eyebrow") }),
       h("h2", { id: "demand-title", tabindex: "-1", text: CMA.t("pages.demand.title") }),
+      h("p", { class: "answer", text: T("answer", vars) }),
       h("p", { class: "intro", text: T("intro", vars) })));
     wrap.appendChild(h("p", { class: "verdict", text: T("warn") }));
-    wrap.appendChild(h("section", { class: "findings", "aria-label": "Findings" },
-      h("p", { class: "finding", text: T("finding_1", vars) }), h("p", { class: "finding", text: T("finding_2", vars) }),
-      h("p", { class: "finding", text: T("finding_3", vars) }), h("p", { class: "finding", text: T("finding_4", vars) })));
+    var findingsEl = h("section", { class: "findings", "aria-label": "Findings" },
+      h("p", { class: "finding", text: T("finding_3", vars) }), h("p", { class: "finding", text: T("finding_4", vars) }));
 
     // =============================== both ranges, visible without any click
     var axisMax = Math.ceil(rg["all_combinations:high"].total_pct_of_mine / 2) * 2;
@@ -96,7 +96,6 @@
         rangeRow(T("range_all"), rg["all_combinations:low"].total_pct_of_mine, rg["all_combinations:high"].total_pct_of_mine, rg["all_combinations:low"].total_kt, rg["all_combinations:high"].total_kt,
           T("range_all_note") + " " + T("range_cases", { n: CMA.n0(rg["all_combinations:low"].cases_considered) }), endsDetails())),
       h("div", { class: "raxis" }, ticks), h("p", { class: "small muted raxis-label", text: T("range_axis") }));
-    wrap.appendChild(rcard);
 
     // =============================== the explorer: selectors and two panels
     var stateLine = h("p", { class: "verdict", "aria-live": "polite" });
@@ -138,12 +137,12 @@
     var xcard = h("div", { class: "card", id: "dm-explorer", "aria-labelledby": "dm-exp-title" },
       h("h3", { id: "dm-exp-title", class: "qtitle", text: T("explorer_title") }),
       h("p", { class: "hint", text: T("explorer_hint") }),
-      h("div", { class: "selgrid" },
-        h("fieldset", { class: "selgroup" }, h("legend", { text: T("group_ev") }), evFields),
-        h("fieldset", { class: "selgroup" }, h("legend", { text: T("group_dc") }), dcFields)),
+      h("details", { class: "tableview settings" }, h("summary", { text: T("explorer_open") }),
+        h("div", { class: "selgrid" },
+          h("fieldset", { class: "selgroup" }, h("legend", { text: T("group_ev") }), evFields),
+          h("fieldset", { class: "selgroup" }, h("legend", { text: T("group_dc") }), dcFields))),
       h("div", { class: "row", style: "margin:10px 0" }, stateLine, resetBtn),
       panels);
-    wrap.appendChild(xcard);
 
     var domain = Math.ceil(Math.max(
       Math.max.apply(null, EV.map(function (r) { return r.transition_t; })) + Math.max.apply(null, DC.map(function (r) { return r.extra_vs_base_t; })),
@@ -204,7 +203,6 @@
     }
     syncSelects();
     update();
-    wrap.appendChild(basisHost);
 
     // =============================== what moves the 2030 total most
     var groups = {};
@@ -230,7 +228,7 @@
           g.lo < 0 ? h("span", { class: "tlab l num", style: "left:" + (50 - negW) + "%", text: lab(g.lo) }) : null,
           g.hi > 0 ? h("span", { class: "tlab r num", style: "left:" + (50 + posW) + "%", text: lab(g.hi) }) : null));
     }));
-    wrap.appendChild(h("div", { class: "card chart-card", "aria-labelledby": "dm-sens" },
+    var sensEl = (h("div", { class: "card chart-card", "aria-labelledby": "dm-sens" },
       h("h3", { id: "dm-sens", class: "qtitle", text: T("sens_title") }),
       h("p", { class: "hint", text: T("sens_hint") }),
       h("p", { class: "small muted", text: T("sens_key") }),
@@ -250,13 +248,13 @@
           s13: CMA.n1(ctx.s13_dc_copper_demand_2025_t.value / 1e6), lo: m(ctx.model_dc_build_2024_copper_low_t.value), hi: m(ctx.model_dc_build_2024_copper_high_t.value) });
         return h("div", { class: "issue" }, h("p", {}, h("span", { class: "pill warn", text: T("issue_open") }), " ", h("b", { text: id + ". " }), text),
           h("details", { class: "tableview" }, h("summary", { text: CMA.t("quality.show_detail") }), h("p", { class: "small", text: K[id].description }), h("p", { class: "small muted", text: K[id].note })));
-      }),
-      h("h4", { style: "margin-top:16px", text: T("limits_title") }),
+      }));
+    var limitsEl = h("div", { class: "card", "aria-labelledby": "dm-limits" },
+      h("h3", { id: "dm-limits", class: "qtitle", text: T("limits_title") }),
       h("ul", {}, KI.filter(function (r) { return r.status === "limitation"; }).map(function (r) { return h("li", {}, h("b", { text: r.issue_id + ". " }), r.description); })));
-    wrap.appendChild(issues);
 
     var inRows = AS.filter(function (r) { return String(r.kind).indexOf("IEA") < 0; });
-    wrap.appendChild(h("details", { class: "tableview card-details" }, h("summary", { text: T("inputs_summary") }),
+    var inputsEl = (h("details", { class: "tableview card-details" }, h("summary", { text: T("inputs_summary") }),
       h("p", { class: "small muted", text: T("inputs_note") }),
       h("div", { class: "tablewrap" }, h("table", {},
         h("thead", {}, h("tr", {}, ["in_col_name", "in_col_low", "in_col_mid", "in_col_high", "in_col_src", "in_col_rel"].map(function (k) { return h("th", { scope: "col", text: T(k) }); }))),
@@ -266,16 +264,17 @@
         }))))));
 
     // =============================== what this does not show, sources, next
-    wrap.appendChild(h("aside", { class: "note", "aria-labelledby": "dm-ns" },
+    var nsEl = (h("aside", { class: "note", "aria-labelledby": "dm-ns" },
       h("h3", { id: "dm-ns", text: T("notshow.title") }), h("ul", {}, window.CMA_STRINGS.demand.notshow.items.map(function (x) { return h("li", { text: x }); }))));
-    var srcRows = {};
-    CMA.rows(Q.sources).forEach(function (r) { srcRows[r.source_id] = r; });
-    var chips = Object.keys(window.CMA_STRINGS.demand.sources.names).map(function (id) {
-      var r = srcRows[id];
-      return h("li", { class: "chip" }, h("b", { text: id }), " " + T("sources.names." + id) + ", " + CMA.t("story.sources.reliability", { reliability: r ? r.reliability : "unrated" }));
-    });
-    wrap.appendChild(h("section", { class: "sources", "aria-labelledby": "dm-src" },
-      h("h3", { id: "dm-src", text: CMA.t("story.sources.title") }), h("ul", { class: "chips" }, chips), h("p", { class: "attrib", text: T("sources.attribution") })));
+    // the page in its final order: answer, the bars, the ranges, findings, capacity basis, open issues, limits, details, foot
+    wrap.appendChild(xcard);
+    wrap.appendChild(rcard);
+    wrap.appendChild(findingsEl);
+    wrap.appendChild(basisHost);
+    wrap.appendChild(issues);
+    wrap.appendChild(nsEl);
+    wrap.appendChild(CMA.fold(T("details_lead"), [sensEl, limitsEl, inputsEl]));
+    CMA.pageFoot(wrap, window.CMA_STRINGS.demand.sources.names, T("sources.attribution"));
     wrap.appendChild(h("nav", { class: "next", "aria-label": "Next page" },
       h("a", { class: "btn secondary", href: "#ratio", text: CMA.t("nav.ratio") }),
       h("a", { class: "btn", href: "#quality", text: T("next", { title: CMA.t("pages.quality.title") }) })));

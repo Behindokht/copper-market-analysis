@@ -40,7 +40,13 @@ window.CMA_STRINGS = {
  "story": {
   "eyebrow": "Story",
   "title": "How well do you already know copper's price?",
-  "intro": "Guess first, then see the numbers. Each guess takes a few seconds. Nothing you enter leaves your browser.",
+  "intro": "Guess first, then see the numbers. Each guess takes a few seconds.",
+  "found_title": "What I found",
+  "found_dollar": "Copper and the US dollar moved in opposite directions in {opposite_share}% of months since {index_from}. The link is real but loose.",
+  "found_record": "As quoted at the time, copper is at a record high in {latest_month}. After taking out US inflation, it is not.",
+  "found_ratio": "Copper costs {ratio_latest} times as much as aluminium, the highest in {years} years. That has happened too rarely to say what comes next.",
+  "found_more": "See the evidence",
+  "found_more_record": "Go to guess 2",
   "reset": "Clear my guesses",
   "guess1": {
    "title": "Guess 1",
@@ -127,9 +133,24 @@ window.CMA_STRINGS = {
   "next": "Next: {title}"
  },
  "dollar": {
-  "intro": "This page compares monthly changes in the copper price with monthly changes in the US dollar. The dollar is measured two ways: a broad dollar index (from {index_from}) and euros per dollar (from {euro_from}). For both, a higher number means a stronger dollar.",
-  "finding_1": "Mostly yes, but only in part. Since {index_from}, copper and the broad dollar index moved in opposite directions in {opposite_share}% of months. The correlation of their monthly changes is {r}, with a 95 percent range of {low} to {high}. In months when the dollar index rose one percent, copper was on average {beta}% lower, with wide variation from month to month. The dollar index alone tracks about {share}% of copper's monthly moves.",
-  "finding_2": "The link is not steady. The 36-month correlation with the broad dollar index has ranged from {min} to {max}. It is {last} now.",
+  "intro": "This page compares monthly changes in the copper price with monthly changes in the US dollar. A higher dollar number means a stronger dollar.",
+  "answer": "Mostly yes, but loosely. In most months, copper got cheaper when the dollar got stronger. The link is far from exact.",
+  "main_title": "Do copper and the dollar move in opposite directions?",
+  "main_y": "Index, {base_month} = 100",
+  "label_copper": "Copper price",
+  "label_copper_short": "Copper",
+  "label_dollar": "Broad dollar index",
+  "label_dollar_short": "Dollar",
+  "m_cu": "{value}, latest",
+  "m_dol": "{value}, latest",
+  "main_note": "Both lines start at 100 in {base_month}. A higher dollar line means a stronger dollar. This chart shows levels. The figures below use monthly changes.",
+  "tip_cu": "Copper: {value} (about {usd} a tonne)",
+  "tip_dol": "Broad dollar index: {value}",
+  "main_aria": "Line chart of copper and the broad dollar index from {from} to {to}, both set to 100 in {base_month}. Focus the chart and use the arrow keys to move along it.",
+  "details_lead": "The exact figures, ranges and methods behind the page.",
+  "measured": "The dollar is measured two ways: a broad dollar index (from {index_from}) and euros per dollar (from {euro_from}). For both, a higher number means a stronger dollar.",
+  "finding_1": "Since {index_from}, copper and the broad dollar index moved in opposite directions in {opposite_share}% of months. When the dollar index rose one percent, copper was on average {beta}% lower, with wide variation from month to month. The dollar is linked to about {share}% of copper's monthly moves. Other things drive the rest.",
+  "finding_2": "The link is not steady. How closely the two move together was tightest around {min_month} and almost gone around {max_month}. On a scale from minus 1 (always opposite) to 1 (always together), it scores {r} over the whole period and {last} now.",
   "finding_3": "For a European buyer, the euro price of copper swung a little less from month to month than the dollar price: {sd_eur}% against {sd_usd}%. Both figures cover the same {sd_months} months, {sd_from} to {sd_to}. Copper tended to fall when the dollar rose, and that softens the swing for euro buyers.",
   "chart_title": "Does the link between copper and the dollar stay the same over time?",
   "y_label": "Correlation of monthly changes, 36-month window",
@@ -150,7 +171,7 @@ window.CMA_STRINGS = {
   "no_value": "no value",
   "aria_chart": "Line chart of the 36-month correlation between monthly copper changes and the dollar, from {from} to {to}. Two lines: the broad dollar index and euros per dollar. Focus the chart and use the arrow keys to move along it.",
   "numbers_title": "The numbers",
-  "numbers_hint": "Ranges in brackets are 95 percent ranges. A correlation of 0 means no link, and a negative one means opposite moves.",
+  "numbers_hint": "The 95 percent ranges are in brackets. A correlation of 0 means no link, and a negative one means opposite moves.",
   "col_measure": "What was measured",
   "col_result": "Result",
   "col_months": "Months",
@@ -200,10 +221,15 @@ window.CMA_STRINGS = {
   "next": "Next: {title}"
  },
  "ratio": {
-  "intro": "The copper-to-aluminium ratio is the copper price divided by the aluminium price. Both are in US dollars per tonne, as monthly averages. In {latest_month} it was {ratio_latest}. This page asks about prices only: after the ratio was high, did it tend to fall back over the next 6 or 12 months? It says nothing about demand, or about anyone switching from one metal to the other.",
-  "finding_1": "The result is weak. After a high ratio, the ratio fell more than usual in {n_neg} of {n_all} comparisons ({n_rules} rules, two time horizons). Do not read that as {n_all} separate results. The rules overlap: they use the same history, and the thresholds are nested. The counts that matter are these. Only {n_excl} of the {n_all} 95 percent ranges stay clear of zero. Only {n_holm} still counts after allowing for the many rules tried.",
-  "finding_2": "It rests on very few cases. Each rule has between {ep_min} and {ep_max} independent episodes, not hundreds. An episode is a run of high months, counted once.",
-  "finding_3": "Today is outside the record. The ratio was {ratio_latest} in {latest_month}. The highest ratio before the last two years was {prev_high} in {prev_month}. The highest threshold tested, {top_threshold}, has only {top_ep_min} to {top_ep_max} episodes behind it. Nothing here says what happens at today's level.",
+  "intro": "The copper-to-aluminium ratio is the copper price divided by the aluminium price. Both are in US dollars per tonne, as monthly averages. This page asks about prices only. It says nothing about demand or about anyone switching from one metal to the other.",
+  "hook": "Copper costs {ratio_latest} times as much as aluminium. That is the highest in {years} years.",
+  "answer": "Whether a high ratio predicts anything has happened too rarely to judge.",
+  "details_lead": "The tests, the episode lists and the slope figures behind the answer.",
+  "weak_note": "Most rows cross zero. A row is only a clear result if its whole line sits on one side of zero. Even then, a row with a hollow dot rests on a few episodes only. Read the pattern across rows, not the best row.",
+  "ep_explain": "An episode is one stretch of months when the ratio stayed high, counted once. Episodes can be very long. For a ratio of {t} or more, one episode began in {month} and ran for {n} months in the 12-month test.",
+  "finding_1": "The result is weak. After a high ratio, the ratio fell back more than usual in {n_neg} of {n_all} tests. Do not read that as {n_all} separate results, because the tests overlap. They use the same history, and a test with a higher cut-off is part of a test with a lower one. Only {n_excl} of the {n_all} likely ranges stay clear of zero. Only {n_holm} still counts after allowing for the many tests tried.",
+  "finding_2": "It rests on very few cases. Each test has between {ep_min} and {ep_max} separate periods when the ratio was high, not hundreds. A period is a run of high months, counted once.",
+  "finding_3": "Today is outside the record. The highest ratio before the last two years was {prev_high} in {prev_month}. The highest threshold tested, {top_threshold}, has only {top_ep_min} to {top_ep_max} high periods behind it. Nothing here says what happens at today's level.",
   "chart_title": "After the ratio was high, did it fall more than usual?",
   "horizon_legend": "Time ahead",
   "h_6": "6 months",
@@ -220,7 +246,7 @@ window.CMA_STRINGS = {
   "ep_one": "1 episode",
   "ep_many": "{n} episodes",
   "x_label": "Change in the ratio over the next {h} months: high months minus other months (about percentage points)",
-  "zero_label": "0 means no difference",
+  "zero_label": "A row whose line crosses zero gives no clear answer",
   "left_hint": "Left of zero: the ratio fell more after a high reading than after other months. Right of zero: it fell less, or rose more.",
   "key_filled": "5 or more episodes",
   "key_hollow": "Fewer than 5 episodes (5 is a convenience cut-off)",
@@ -249,7 +275,7 @@ window.CMA_STRINGS = {
   "all_col_diff": "Difference (95 percent range)",
   "all_col_p": "Adjusted p-value",
   "ctx_title": "How unusual is today's ratio?",
-  "ctx_hint": "Compare the recent years with the decades before. A fixed threshold mostly describes the recent years, because the ratio sits at a much higher level now than for most of the history.",
+  "ctx_hint": "The line shows the copper price divided by the aluminium price, month by month. It sits much higher now than for most of the last {years} years.",
   "ctx_y": "Copper price divided by aluminium price",
   "ctx_label": "Copper-to-aluminium ratio",
   "ctx_label_short": "Ratio",
@@ -283,9 +309,9 @@ window.CMA_STRINGS = {
    "items": [
     "It does not show substitution. This project has no demand data, so nothing here says whether anyone switches between the two metals. A falling ratio is a price move, not proof of switching.",
     "It is not a trading or forecasting signal. Most high months fall in one recent period. Different rules and time horizons give different answers. Read the pattern across rows, not the best row.",
-    "It does not explain why the ratio fell. In some episodes copper fell. In others aluminium rose. This page does not test causes such as demand, energy costs or exchange rates.",
+    "It does not explain why the ratio fell. Sometimes copper fell. Other times aluminium rose. This page does not test causes such as demand, energy costs or exchange rates.",
     "Prices are nominal monthly averages in US dollars. Inflation largely cancels in a ratio of two prices in one currency. This was not checked.",
-    "Windows overlap, because neighbouring months share most of their next 6 or 12 months. The page counts independent episodes and uses standard errors that allow for the overlap. A p-value for a rule with few episodes should not be taken at face value."
+    "The tests overlap, because neighbouring months share most of their next 6 or 12 months. The page counts separate high periods and allows for the overlap. A result that rests on a few periods should not be taken at face value."
    ]
   },
   "sources": {
@@ -297,9 +323,10 @@ window.CMA_STRINGS = {
   "next": "Next: {title}"
  },
  "demand": {
-  "intro": "This page adds up the copper that electric cars and data centres might need each year in 2030, with 2035 beside it. It is a scenario built from stated assumptions. It is not a forecast and not investment advice. Results are shown in thousand tonnes (kt) and as a share of today's world mine output, {mine} million tonnes (USGS estimate for 2025).",
-  "finding_1": "In the reference case, the extra copper for electric cars in 2030 is equivalent to {ev_pct}% of today's mine output. The copper in new data-centre capacity is equivalent to {dc_pct}%. The two effects together, on their own baselines, are equivalent to {tot_pct}%.",
-  "finding_2": "Change one assumption at a time and the total runs from {r1_lo}% to {r1_hi}% of today's mine output. Change every assumption to its extreme at once and it runs from {r2_lo}% to {r2_hi}%. That second range is not a plausible case.",
+  "intro": "This page adds up the copper that electric cars and data centres might need each year in 2030, with 2035 beside it. It is a scenario built from stated assumptions. Results are shown in thousand tonnes (kt) and as a share of today's world mine output, {mine} million tonnes (USGS estimate for 2025).",
+  "answer": "In the reference case, electric cars and data centres need extra copper equivalent to {tot_pct}% of today's mine output in 2030. Other assumptions give {r1_lo}% to {r1_hi}%.",
+  "explorer_open": "Change the assumptions",
+  "details_lead": "The sensitivity chart, the copper inputs and the known limits.",
   "finding_3": "The reference case is a convenience choice, not the most likely case. It uses the IEA Current Policies Scenario for cars and the IEA Base Case for data centres. It uses the middle copper figures, a straight line to 2030 for car sales and an even yearly data-centre build.",
   "finding_4": "For 2035, the same reference case gives an electric-car figure equivalent to {ev35_pct}% of today's mine output. The IEA data-centre values for 2035 are exploratory.",
   "warn": "A scenario, not a forecast and not investment advice.",
@@ -441,7 +468,15 @@ window.CMA_STRINGS = {
   "next": "Next: {title}"
  },
  "quality": {
-  "intro": "This page shows every automatic check on the data, with the open problems first. It also lists where each source comes from and how far to trust it.",
+  "intro": "Every automatic check on the data is on this page, with the open problems first.",
+  "answer": "Mostly yes. No check failed. {n_warn} warnings stay open, and each one is explained below.",
+  "bar_title": "Result of every check",
+  "bar_aria": "Bar of all {n} checks: {n_pass} passed, {n_info} information, {n_warn} warnings, {n_fail} failed.",
+  "bar_pass": "Passed",
+  "bar_info": "Information",
+  "bar_warn": "Warnings",
+  "bar_fail": "Failed",
+  "details_lead": "How the data moves, the known limits, every check and the full source list.",
   "summary": "{n_pass} checks passed, {n_info} are information only, {n_warn} are warnings and {n_fail} failed. Every warning is explained below.",
   "flow_title": "How the data moves",
   "flow_text": "Raw files are loaded as they are into {raw} tables. SQL cleans them into {staging} staging tables, builds {mart} analysis tables and runs the checks. Python notebooks do the statistics and write {result} result tables. Those feed this site.",
@@ -488,6 +523,11 @@ window.CMA_STRINGS = {
   "chk_col_detail": "Detail",
   "chk_count": "{n} checks shown",
   "next_back": "Back to the Story"
+ },
+ "foot": {
+  "details": "Show the details",
+  "sources": "Sources",
+  "not_advice": "Not a forecast, not investment advice."
  },
  "footer": {
   "name": "Behindokht Alipour",

@@ -9,7 +9,7 @@
   function sum(a, f) { return a.reduce(function (t, x) { return t + f(x); }, 0); }
 
   CMA.pages.ratio = function (root) {
-    var D = window.CMA_DATA.ratio, Q = window.CMA_DATA.quality;
+    var D = window.CMA_DATA.ratio;
     var TH = CMA.rows(D.threshold), EP = CMA.rows(D.episodes), SL = CMA.rows(D.slopes), SC = CMA.rows(D.scenario_today), SR = CMA.rows(D.series);
     var F = {};
     CMA.rows(D.facts).forEach(function (r) { F[r.fact_id] = r; });
@@ -31,7 +31,7 @@
       n_all: nAll, n_rules: nRules, n_neg: nNeg, n_excl: nExcl, n_holm: nHolm,
       ep_min: Math.min.apply(null, eps), ep_max: Math.max.apply(null, eps),
       prev_high: CMA.f2(F.ratio_highest_before_last_24m.value), prev_month: ym(F.ratio_highest_before_last_24m.month),
-      top_threshold: CMA.n1(topT), top_ep_min: Math.min.apply(null, topEps), top_ep_max: Math.max.apply(null, topEps)
+      top_threshold: CMA.n1(topT), years: Math.floor(F.series_months.value / 12), top_ep_min: Math.min.apply(null, topEps), top_ep_max: Math.max.apply(null, topEps)
     };
 
     root.textContent = "";
@@ -40,8 +40,10 @@
     wrap.appendChild(h("header", { class: "page-head" },
       h("p", { class: "eyebrow", text: CMA.t("pages.ratio.eyebrow") }),
       h("h2", { id: "ratio-title", tabindex: "-1", text: CMA.t("pages.ratio.title") }),
+      h("p", { class: "hook", text: T("hook", vars) }),
+      h("p", { class: "answer", text: T("answer") }),
       h("p", { class: "intro", text: T("intro", vars) })));
-    wrap.appendChild(h("section", { class: "findings", "aria-label": "Findings" },
+    var findingsEl = (h("section", { class: "findings", "aria-label": "Findings" },
       h("p", { class: "finding", text: T("finding_1", vars) }),
       h("p", { class: "finding", text: T("finding_2", vars) }),
       h("p", { class: "finding", text: T("finding_3", vars) })));
@@ -88,11 +90,19 @@
     card.appendChild(xnote);
     card.appendChild(h("p", { class: "small muted", text: T("left_hint") }));
     card.appendChild(h("p", { class: "small muted", text: T("pick_hint") }));
+    card.appendChild(h("p", { text: T("weak_note") }));
+    var longEp = (function () {
+      var rule = TH.filter(function (r) { return r.rule_type === "fixed_ratio" && r.threshold === 3; })[0];
+      if (!rule) { return null; }
+      var list = EP.filter(function (e) { return e.rule_id === rule.rule_id && e.horizon_m === 12; }).sort(function (a, b) { return b.months_on - a.months_on; });
+      return list.length ? { t: CMA.n1(rule.threshold), month: ym(list[0].first_month), n: list[0].months_on } : null;
+    })();
+    if (longEp) { card.appendChild(h("p", { text: T("ep_explain", longEp) })); }
     var detail = h("div", { class: "detail", "aria-live": "polite" });
     card.appendChild(detail);
     var allTable = h("details", { class: "tableview" });
     card.appendChild(allTable);
-    wrap.appendChild(card);
+    var foldItems = [card];
 
     var lastW = 0;
     function drawChart() {
@@ -109,7 +119,7 @@
         s.appendChild(svg("line", { x1: X(v), x2: X(v), y1: top, y2: top + rowH * rows.length, class: v === 0 ? "zeroline" : "gridline" }));
         var tt = svg("text", { x: X(v), y: top + rowH * rows.length + 20, "text-anchor": "middle", class: "ax" }); tt.textContent = CMA.minus(String(v)); s.appendChild(tt);
       }
-      var zl = svg("text", { x: X(0) + 4, y: 16, "text-anchor": "end", class: "ax" }); zl.textContent = T("zero_label"); s.appendChild(zl);
+      if (!narrow) { var zl = svg("text", { x: X(0) + 4, y: 16, "text-anchor": "end", class: "ax" }); zl.textContent = T("zero_label"); s.appendChild(zl); }
       rows.forEach(function (r, i) {
         var y0 = top + i * rowH, cy = y0 + rowH / 2 + 6, selected = r.rule_id === state.sel[state.family];
         var d = CMA.s1(r.diff_logpts), rl = CMA.s1(r.diff_ci_low).replace("+", ""), rh = CMA.s1(r.diff_ci_high);
@@ -199,7 +209,7 @@
     // =============================== context: how unusual is today?
     var cx = h("div", { class: "card chart-card" });
     cx.appendChild(h("h3", { class: "qtitle", text: T("ctx_title") }));
-    cx.appendChild(h("p", { class: "hint", text: T("ctx_hint") }));
+    cx.appendChild(h("p", { class: "hint", text: T("ctx_hint", vars) }));
     var chost = h("div", { class: "chart-host" });
     cx.appendChild(chost);
     var n = SR.length, vals = SR.map(function (r) { return r.ratio; });
@@ -211,7 +221,6 @@
     cx.appendChild(h("ol", { class: "marklist" }, marks.map(function (m) { return h("li", { text: m.lines[0] + ": " + m.lines[1] }); })));
     var xTicks = [];
     SR.forEach(function (r, i) { var y = +r.month.slice(0, 4); if (r.month.slice(5, 7) === "01" && y % 10 === 0) { xTicks.push({ i: i, label: String(y) }); } });
-    wrap.appendChild(cx);
     CMA.lineChart(chost, {
       n: n, yMax: 5, yTicks: [0, 1, 2, 3, 4, 5], yFormat: CMA.n0, yLabel: T("ctx_y"), xTicks: xTicks, marginRight: 24,
       series: [{ id: "ratio", color: "--green", values: vals, label: { text: T("ctx_label"), short: T("ctx_label_short") } }],
@@ -235,7 +244,7 @@
       scBody.appendChild(h("tr", {}, h("td", { text: cap(r.reference) }), h("td", { class: "res num", text: CMA.n1(r.reference_ratio) }),
         h("td", { class: "res num", text: CMA.pctChange(r.copper_change_needed_pct) }), h("td", { class: "res num", text: CMA.pctChange(r.aluminium_change_needed_pct) })));
     });
-    wrap.appendChild(h("section", { class: "numbers", "aria-labelledby": "ratio-sc" },
+    var scEl = (h("section", { class: "numbers", "aria-labelledby": "ratio-sc" },
       h("h3", { id: "ratio-sc", text: T("sc_title") }),
       h("p", { class: "verdict", text: T("sc_warn") }),
       h("p", { class: "hint", text: T("sc_hint", vars) }),
@@ -258,7 +267,7 @@
           h("td", { class: "res num", text: CMA.n0(r.r_squared * 100) + "%" }), h("td", { class: "mon num", text: String(r.months) })));
       });
     });
-    wrap.appendChild(h("section", { class: "numbers", "aria-labelledby": "ratio-sl" },
+    foldItems.push(h("section", { class: "numbers", "aria-labelledby": "ratio-sl" },
       h("h3", { id: "ratio-sl", text: T("slope_title") }),
       h("p", { class: "hint", text: T("slope_hint", sVars) }),
       h("div", { class: "numwrap" }, h("table", { class: "numtable" },
@@ -266,18 +275,14 @@
           h("th", { class: "res", scope: "col", text: T("slope_col_r2") }), h("th", { class: "mon", scope: "col", text: T("slope_col_months") }))),
         slBody))));
 
-    // =============================== what this does not show, sources, next
+    // =============================== the page in its final order: hook and answer, one simple chart, findings, the arithmetic, limits, details, foot
+    wrap.appendChild(cx);
+    wrap.appendChild(findingsEl);
+    wrap.appendChild(scEl);
     wrap.appendChild(h("aside", { class: "note", "aria-labelledby": "ratio-ns" },
-      h("h3", { id: "ratio-ns", text: T("notshow.title") }), h("ul", {}, window.CMA_STRINGS.ratio.notshow.items.map(function (s) { return h("li", { text: s }); }))));
-    var srcRows = {};
-    CMA.rows(Q.sources).forEach(function (r) { srcRows[r.source_id] = r; });
-    var chips = Object.keys(window.CMA_STRINGS.ratio.sources.names).map(function (id) {
-      var r = srcRows[id];
-      return h("li", { class: "chip" }, h("b", { text: id }), " " + T("sources.names." + id) + ", " + CMA.t("story.sources.reliability", { reliability: r ? r.reliability : "unrated" }));
-    });
-    wrap.appendChild(h("section", { class: "sources", "aria-labelledby": "ratio-src" },
-      h("h3", { id: "ratio-src", text: CMA.t("story.sources.title") }), h("ul", { class: "chips" }, chips),
-      h("p", { class: "attrib", text: T("sources.attribution") })));
+      h("h3", { id: "ratio-ns", text: T("notshow.title") }), h("ul", {}, window.CMA_STRINGS.ratio.notshow.items.map(function (x) { return h("li", { text: x }); }))));
+    wrap.appendChild(CMA.fold(T("details_lead"), foldItems));
+    CMA.pageFoot(wrap, window.CMA_STRINGS.ratio.sources.names, T("sources.attribution"));
     wrap.appendChild(h("nav", { class: "next", "aria-label": "Next page" },
       h("a", { class: "btn secondary", href: "#dollar", text: CMA.t("nav.dollar") }),
       h("a", { class: "btn", href: "#demand", text: T("next", { title: CMA.t("pages.demand.title") }) })));
