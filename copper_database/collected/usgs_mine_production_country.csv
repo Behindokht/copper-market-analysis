@@ -1,0 +1,33 @@
+source_id,publication,country,year,status,tonnes_thousand,is_aggregate
+S07,MCS 2025,United States,2023,reported,1130,0
+S07,MCS 2025,United States,2024,estimated,1100,0
+S07,MCS 2025,Australia,2023,reported,778,0
+S07,MCS 2025,Australia,2024,estimated,800,0
+S07,MCS 2025,Canada,2023,reported,500,0
+S07,MCS 2025,Canada,2024,estimated,450,0
+S07,MCS 2025,Chile,2023,reported,5250,0
+S07,MCS 2025,Chile,2024,estimated,5300,0
+S07,MCS 2025,China,2023,reported,1820,0
+S07,MCS 2025,China,2024,estimated,1800,0
+S07,MCS 2025,Congo (Kinshasa),2023,reported,2930,0
+S07,MCS 2025,Congo (Kinshasa),2024,estimated,3300,0
+S07,MCS 2025,India,2023,reported,27,0
+S07,MCS 2025,India,2024,estimated,30,0
+S07,MCS 2025,Indonesia,2023,reported,907,0
+S07,MCS 2025,Indonesia,2024,estimated,1100,0
+S07,MCS 2025,Kazakhstan,2023,reported,740,0
+S07,MCS 2025,Kazakhstan,2024,estimated,740,0
+S07,MCS 2025,Mexico,2023,reported,699,0
+S07,MCS 2025,Mexico,2024,estimated,700,0
+S07,MCS 2025,Peru,2023,reported,2760,0
+S07,MCS 2025,Peru,2024,estimated,2600,0
+S07,MCS 2025,Poland,2023,reported,395,0
+S07,MCS 2025,Poland,2024,estimated,410,0
+S07,MCS 2025,Russia,2023,reported,890,0
+S07,MCS 2025,Russia,2024,estimated,930,0
+S07,MCS 2025,Zambia,2023,reported,712,0
+S07,MCS 2025,Zambia,2024,estimated,680,0
+S07,MCS 2025,Other countries,2023,reported,3020,1
+S07,MCS 2025,Other countries,2024,estimated,2700,1
+S07,MCS 2025,World total,2023,reported,22600,1
+S07,MCS 2025,World total,2024,estimated,23000,1

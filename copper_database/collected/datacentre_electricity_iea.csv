@@ -1,0 +1,6 @@
+source_id,scenario,year,twh,qualifier,share_of_global_electricity_pct,share_qualifier,note
+S12,Estimate,2024,415,around,1.5,about,IEA estimate for 2024
+S12,Base Case,2030,945,around,3,just under,Described as a doubling from 2024
+S12,Lift-Off Case,2035,1700,exceeds,4.4,approx,IEA sensitivity case
+S12,High Efficiency Case,2035,970,around,2.6,approx,IEA sensitivity case
+S12,Headwinds Case,2035,700,approx (plateau),2,less than,IEA sensitivity case

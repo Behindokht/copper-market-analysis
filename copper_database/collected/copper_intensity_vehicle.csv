@@ -1,0 +1,8 @@
+source_id,vehicle_type,drivetrain,copper_kg_low,copper_kg_high,note
+S11,Compact ICE car,ICE,8,10,Copper Alliance and IDTechEx via S11
+S11,Mid-size ICE car,ICE,18,22,Article uses a 20 kg mid-size baseline
+S11,Luxury ICE car,ICE,25,30,
+S11,Hybrid electric (HEV),HEV,39,45,
+S11,Plug-in hybrid (PHEV),PHEV,59,68,
+S11,Battery electric (BEV),BEV,82,91,Article cites about 83 kg for a mid-size sedan
+S11,Electric pickup (Ford F-150 Lightning),BEV,150,160,Single model example

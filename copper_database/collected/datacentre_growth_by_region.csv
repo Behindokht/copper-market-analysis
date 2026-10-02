@@ -1,0 +1,5 @@
+source_id,region,period,increase_twh,increase_pct,scenario,note
+S12,United States,2024-2030,240,130,Base Case,Approximate values as stated by the IEA on the report page; kept as a cross-check against the annex
+S12,China,2024-2030,175,170,Base Case,
+S12,Europe,2024-2030,45,70,Base Case,
+S12,Japan,2024-2030,15,80,Base Case,Japan is not in the annex regional sheet so it cannot be cross-checked

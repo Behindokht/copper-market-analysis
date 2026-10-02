@@ -1,0 +1,7 @@
+source_id,metric,value_low,value_high,unit,year,type,note
+S13,Copper intensity of non-crypto data centres,30,40,tonnes per MW,,assumption,Reported S&P Global figure
+S13,Possible reduction in intensity from a shift to fibre,4,5,tonnes per MW,,assumption,Reported S&P Global figure
+S13,Copper demand from data centres,1.1,1.1,million tonnes,2025,estimate,Reported S&P Global figure
+S13,Copper demand from data centres,1.7,2.7,million tonnes per year,2040,forecast,Reported S&P Global range
+S13,Extra copper demand from digital infrastructure,4,4,million tonnes,2040,forecast,Combined AI computation; digital industries; EVs and defence
+S13,Possible supply shortfall,10,10,million tonnes,2040,forecast,Reported S&P Global scenario; contested by other analysts
