@@ -262,13 +262,32 @@
     var nsEl = (h("aside", { class: "note", "aria-labelledby": "dm-ns" },
       h("h3", { id: "dm-ns", text: T("notshow.title") }), h("ul", {}, window.CMA_STRINGS.demand.notshow.items.map(function (x) { return h("li", { text: x }); }))));
     // the page in its final order: answer, the bars, the ranges, findings, capacity basis, open issues, limits, details, foot
-    wrap.appendChild(xcard);
-    wrap.appendChild(rcard);
-    wrap.appendChild(findingsEl);
-    wrap.appendChild(basisHost);
-    wrap.appendChild(issues);
-    wrap.appendChild(nsEl);
-    wrap.appendChild(CMA.fold(T("details_lead"), [sensEl, limitsEl, inputsEl]));
+    // ---- the main view: one chart, the reference case in 2030 and 2035, the two effects stacked, then the range for 2030
+    if (ref30.dcExtra < 0 || ref35.dcExtra < 0) { throw new Error("the main chart expects a positive data-centre extra in the reference case"); }
+    var maxT = Math.ceil(Math.max(ref30.total, ref35.total) / 500000) * 500000;
+    function stack(year, c) {
+      var wEv = c.ev / maxT * 100, wDc = c.dcExtra / maxT * 100;
+      return h("li", { class: "srow" },
+        h("div", { class: "bname", text: T("bar_label", { year: year }) }),
+        h("div", { class: "strack" },
+          h("span", { class: "seg ev", style: "width:" + wEv + "%", title: T("seg_ev") }),
+          h("span", { class: "seg dcx", style: "width:" + wDc + "%", title: T("seg_dc") })),
+        h("div", { class: "segvals small" },
+          h("span", {}, h("i", { class: "sw2 ev" }), T("seg_ev") + ": " + T("seg_value", { kt: kt(c.ev) })),
+          h("span", {}, h("i", { class: "sw2 dcx" }), T("seg_dc") + ": " + T("seg_value", { kt: kt(c.dcExtra) }))),
+        h("div", { class: "bval num", text: T("bar_total", { kt: kt(c.total), pct: pct(c.total) }) }));
+    }
+    var mainCard = h("div", { class: "card chart-card" },
+      h("h3", { class: "qtitle", text: T("main_title") }),
+      h("p", { class: "hint", text: T("main_hint") }),
+      h("ul", { class: "stacks", role: "img", "aria-label": T("main_aria", { y1: 2030, y2: 2035,
+        t1: T("bar_total", { kt: kt(ref30.total), pct: pct(ref30.total) }), t2: T("bar_total", { kt: kt(ref35.total), pct: pct(ref35.total) }) }) },
+        stack(2030, ref30), stack(2035, ref35)),
+      h("p", { class: "finding", text: T("range_line", { lo: vars.r1_lo, hi: vars.r1_hi }) }),
+      h("p", { class: "small muted", text: T("state_ref") }));
+    wrap.appendChild(mainCard);
+    // everything else sits one click deeper
+    wrap.appendChild(CMA.fold(T("more_title"), [xcard, rcard, findingsEl, basisHost, issues, nsEl, sensEl, limitsEl, inputsEl]));
     CMA.sources.add(window.CMA_STRINGS.demand.sources.names, T("sources.attribution"));
     CMA.bridge(wrap, T("bridge"));
   };

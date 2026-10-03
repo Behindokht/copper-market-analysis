@@ -78,6 +78,11 @@ def flat(d, prefix=""):
 
 
 keys = dict(flat(S))
+prov = DOCS / "data" / "provenance.js"
+DATASET_KEYS = set()
+if prov.exists():
+    _pt = prov.read_text(encoding="utf-8")
+    DATASET_KEYS = set(json.loads(_pt[_pt.index("{", _pt.index("provenance =")): _pt.rindex("}") + 1])["datasets"])
 used = set()
 for p in (DOCS / "js").rglob("*.js"):
     if p.name.startswith("strings"):
@@ -90,10 +95,12 @@ for p in (DOCS / "js").rglob("*.js"):
     if p.parent.name == "pages":
         for m in re.finditer(r"\bT\(\s*\"([\w.]+)\"(\s*\+)?", t):   # a page helper T("key") means t("<page>.key"); T("prefix" + id) is a built key
             used.add(p.stem + "." + m.group(1) + ("*" if m.group(2) else ""))
-    for m in re.finditer(r"\"(pages|nav|story|footer|site|hero)\.[\w.]*\"", t):
+    for m in re.finditer(r"\"(pages|nav|story|footer|site|hero)\.[\w.]*\"(?!\s*\+)", t):   # a string followed by + is a prefix, handled above
+        if m.group(0).strip('"') in DATASET_KEYS:      # a dataset key for a source chip, not a text key
+            continue
         used.add(m.group(0).strip('"'))
 for u in sorted(used):
-    if u.endswith("*") or u.endswith("."):
+    if u.endswith("*") or u.endswith(".") or u.endswith("_"):
         continue
     if u not in keys and not any(k.startswith(u + ".") for k in keys):
         problems.append(f"TEXT key used in code but missing in strings.en.js: {u}")

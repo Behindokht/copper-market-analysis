@@ -26,7 +26,7 @@
       var narrow = W < 560;
       host.setAttribute("data-narrow", narrow ? "true" : "false");
       var H = narrow ? 320 : 410;
-      var ml = 58, mr = narrow ? 14 : (cfg.marginRight || 14), mt = 26, mb = 34, pw = W - ml - mr, ph = H - mt - mb;
+      var ml = 58, mr = narrow ? 14 : (cfg.marginRight || 14), mt = (cfg.events && cfg.events.length) ? 52 : 26, mb = 34, pw = W - ml - mr, ph = H - mt - mb;
       var yMin = cfg.yMin || 0;
       var X = function (i) { return ml + (i / (cfg.n - 1)) * pw; };
       var Y = function (v) { return mt + ph - ((v - yMin) / (cfg.yMax - yMin)) * ph; };
@@ -105,7 +105,7 @@
         var cx = X(m.i), cy = Y(sr.values[m.i]);
         if (narrow) {
           s.appendChild(svg("circle", { class: "endmark", cx: cx, cy: cy, r: 9, fill: color("--card"), stroke: color(sr.color), "stroke-width": 2.5 }));
-          var nt = svg("text", { x: cx, y: cy + 4, "text-anchor": "middle", class: "badge endmark", fill: color("--ink") }); nt.textContent = (cfg.events && cfg.events.length) ? String.fromCharCode(65 + mi) : String(mi + 1);   // letters when the chart also has numbered event markers s.appendChild(nt);
+          var nt = svg("text", { x: cx, y: cy + 4, "text-anchor": "middle", class: "badge endmark", fill: color("--ink") }); nt.textContent = (cfg.events && cfg.events.length) ? String.fromCharCode(65 + mi) : String(mi + 1); s.appendChild(nt);   // letters when the chart also has numbered event markers
           box(cx - 10, cy - 10, cx + 10, cy + 10);
           return;
         }
@@ -171,16 +171,16 @@
         s.appendChild(t);
       });
 
-      // numbered event badges, for the "Around this time" list under the chart (not callouts: they only mark a month on a line)
-      (cfg.events || []).forEach(function (ev) {
-        var es = cfg.series.filter(function (x) { return x.id === ev.series; })[0];
-        var v = es.values[ev.i];
-        if (v == null) { return; }
-        var ex = X(ev.i), ey = Y(v) - 16;
-        s.appendChild(svg("line", { x1: ex, x2: ex, y1: ey + 8, y2: Y(v), class: "leader" }));
-        s.appendChild(svg("circle", { class: "endmark evdot", cx: ex, cy: ey, r: 8.5, fill: color("--card"), stroke: color("--ink"), "stroke-width": 1.4 }));
-        var et = svg("text", { class: "endmark badge", x: ex, y: ey + 3.8, "text-anchor": "middle", fill: color("--ink") }); et.textContent = String(ev.n); s.appendChild(et);
-        box(ex - 10, ey - 10, ex + 10, ey + 10);
+      // event markers: a thin dotted line through the whole plot and a numbered badge above it; badges that would touch drop to a second row
+      var evs = (cfg.events || []).slice().sort(function (p, q) { return p.i - q.i; }), lastX = -1e9, row = 0;
+      evs.forEach(function (ev) {
+        var ex = X(ev.i);
+        row = ex - lastX < 19 ? row + 1 : 0;
+        lastX = ex;
+        var ey = 30 + row * 19;
+        s.insertBefore(svg("line", { x1: ex, x2: ex, y1: ey + 8.5, y2: mt + ph, class: "evline" }), s.firstChild.nextSibling);
+        s.appendChild(svg("circle", { class: "evdot", cx: ex, cy: ey, r: 8.5, fill: color("--card"), stroke: color("--ink"), "stroke-width": 1.3 }));
+        var et = svg("text", { class: "badge", x: ex, y: ey + 3.8, "text-anchor": "middle", fill: color("--ink") }); et.textContent = String(ev.n); s.appendChild(et);
       });
 
       // a small spark at the latest point of the main line, fired once when the reveal ends

@@ -19,7 +19,7 @@
     box.appendChild(h("p", { class: "answer", text: T("answer", { others: others.join(" and "), is_are: others.length === 1 ? "is" : "are", gold_month: CMA.monthLong(goldMonth) }) }));
 
     var list = h("ul", { class: "bars" }, rows.map(function (r) {
-      var cls = r.commodity === "copper" ? "dc" : "ev";
+      var cls = r.commodity === "copper" ? "dc" : "grey";
       var pct = CMA.n0(r.latest_pct_of_real_peak);
       return h("li", { class: "brow " + cls, "aria-label": T("bar_aria", { name: names[r.commodity], pct: pct, month: CMA.monthLong(r.real_peak_month + "-01"), year: r.series_start.slice(0, 4) }) },
         h("div", { class: "bname" }, names[r.commodity], r.at_nominal_record ? h("span", { class: "pill warn", style: "margin-left:10px", text: T("bar_quoted") }) : null),

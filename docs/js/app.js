@@ -25,7 +25,8 @@
         h("div", {}, h("h2", { text: f.name }), h("p", { text: f.tagline })),
         h("div", {}, h("h2", { text: f.links_title }),
           h("p", {}, h("a", { href: f.repo_url, text: f.repo_label, rel: "noopener" })),
-          h("p", {}, h("a", { href: f.portfolio_url, text: f.portfolio_label, rel: "noopener" }))),
+          h("p", {}, h("a", { href: f.portfolio_url, text: f.portfolio_label, rel: "noopener" })),
+          h("p", {}, h("a", { href: "#method", text: f.method_label }))),
         h("div", {}, h("h2", { text: f.contact_title }), h("p", {}, f.email_label + " ", mailText), h("p", {}, mailLink))),
       h("details", {}, h("summary", { text: f.credits_summary }), f.credits.map(function (c) { return h("p", { class: "small", text: c }); })),
       h("p", { class: "fine", text: f.disclaimer })));
@@ -65,12 +66,21 @@
   function view(name) {
     document.getElementById("story").hidden = name !== "story";
     document.getElementById("quality").hidden = name !== "quality";
+    document.getElementById("method").hidden = name !== "method";
     if (!built[name]) { built[name] = true; CMA.pages[name](document.getElementById(name)); }
   }
 
   // the hash is a chapter anchor, "quality", or an older page name
   function show(hash, moveFocus) {
     var id = LEGACY[hash] && hash !== "story" ? LEGACY[hash] : hash;
+    if (id === "method") {
+      view("method");
+      mark(null);
+      document.title = t("method.title") + " | " + t("site.title");
+      window.scrollTo(0, 0);
+      if (moveFocus) { var hm = document.getElementById("method-title"); if (hm) { hm.focus({ preventScroll: true }); } }
+      return;
+    }
     if (id === "quality") {
       view("quality");
       mark("quality");

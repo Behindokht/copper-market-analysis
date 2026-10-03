@@ -24,21 +24,36 @@
     var vars = { peak_month: CMA.monthLong(CMA.realRecord().month), top2_share: CMA.n0(top2), demand_pct: CMA.n0(ref.headline_total_pct_of_mine) };
     box.appendChild(h("p", { class: "answer", text: T("verdict", vars) }));
 
-    var items = [["s_record", "record"], ["s_just", "just-copper"], ["s_dollar", "dollar"], ["s_aluminium", "aluminium"], ["s_supply", "supply"], ["s_demand", "demand"]];
+    var items = [["s_record", "record", ["story.record_facts", "chapters.euro"]], ["s_just", "just-copper", ["chapters.records"]], ["s_dollar", "dollar", ["story.guess_dollar", "dollar.correlations"]],
+      ["s_aluminium", "aluminium", ["ratio.threshold"]], ["s_supply", "supply", ["supply.countries"]], ["s_demand", "demand", ["demand.sensitivity"]]];
     box.appendChild(h("section", { class: "found", "aria-labelledby": "sum-list" },
       h("h3", { id: "sum-list", text: T("list_title") }),
       h("ul", {}, items.map(function (it) {
-        return h("li", {}, T(it[0], vars) + " ", h("a", { href: "#" + it[1], text: T("go") }));
+        return h("li", {}, T(it[0], vars) + " ", CMA.chip(it[2]), " ", h("a", { href: "#" + it[1], text: T("go") }));
       }))));
 
     function list(titleKey, key, id) {
       return h("section", { class: "cancan", "aria-labelledby": id },
         h("h3", { id: id, text: T(titleKey) }), h("ul", {}, window.CMA_STRINGS.summary[key].map(function (x) { return h("li", { text: CMA.fill(x, vars) }); })));
     }
-    box.appendChild(h("div", { class: "cangrid" }, list("can_title", "can", "sum-can"), list("cannot_title", "cannot", "sum-cannot")));
+    // the visitor's own guesses, if they made any (nothing if they skipped)
+    var guessBox = h("section", { class: "guesses", "aria-labelledby": "sum-guess", hidden: true });
+    box.appendChild(guessBox);
+    var G = {};
+    CMA.rows(D.story.guess_dollar).forEach(function (r) { G[r.fact_id] = r; });
+    CMA.summaryGuesses = function () {
+      var g1 = CMA.store.get("g1"), g2 = CMA.store.get("g2"), lines = [];
+      if (g1 !== null && !isNaN(+g1)) { lines.push(T("guess1", { guess: Math.round(+g1), actual: CMA.n0(G.r2_dollar_index.value) })); }
+      if (g2) { lines.push(T("guess2", { choice: t("story.guess2.opt_" + g2), answer: t("story.guess2.opt_b") })); }
+      guessBox.textContent = "";
+      guessBox.hidden = !lines.length;
+      if (lines.length) { guessBox.appendChild(h("h3", { id: "sum-guess", text: T("guess_title") })); guessBox.appendChild(h("ul", {}, lines.map(function (l) { return h("li", { text: l }); }))); }
+    };
+    CMA.summaryGuesses();
+    box.appendChild(list("cannot_title", "cannot", "sum-cannot"));
 
     box.appendChild(h("section", { class: "card", "aria-labelledby": "sum-app" },
       h("h3", { id: "sum-app", text: T("appendix_title") }), h("p", { text: T("appendix_text") }),
-      h("a", { class: "btn", href: "#quality", text: T("appendix_link") })));
+      h("div", { class: "row" }, h("a", { class: "btn", href: "#quality", text: T("appendix_link") }), h("a", { class: "btn secondary", href: "#method", text: T("method_link") }))));
   };
 })();

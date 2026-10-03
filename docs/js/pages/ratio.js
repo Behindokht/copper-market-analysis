@@ -272,8 +272,9 @@
 
     // =============================== the page in its final order: hook and answer, one simple chart, findings, the arithmetic, limits, details, foot
     wrap.appendChild(cx);
-    wrap.appendChild(findingsEl);
+    wrap.appendChild(h("p", { class: "finding", text: T("plain", vars) }));
     wrap.appendChild(scEl);
+    foldItems.unshift(h("section", { "aria-labelledby": "ratio-why" }, h("h3", { id: "ratio-why", text: T("findings_title") }), findingsEl));
     wrap.appendChild(h("aside", { class: "note", "aria-labelledby": "ratio-ns" },
       h("h3", { id: "ratio-ns", text: T("notshow.title") }), h("ul", {}, window.CMA_STRINGS.ratio.notshow.items.map(function (x) { return h("li", { text: x }); }))));
     wrap.appendChild(CMA.fold(T("details_lead"), foldItems));

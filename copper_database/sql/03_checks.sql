@@ -957,3 +957,77 @@ SELECT 'events', 'every event has a month (YYYY-MM), a label, a description and 
        COUNT(*) || ' bad rows'
 FROM events
 WHERE month NOT GLOB '[12][0-9][0-9][0-9]-[01][0-9]' OR label IS NULL OR description IS NULL OR status NOT IN ('proposed', 'approved');
+
+-- check: plaque price equals the World Bank price requires=res_story_copper_record_facts
+SELECT 'res_story_copper_record_facts', 'the latest price on the plaque equals the World Bank copper price for that month',
+       CASE WHEN ABS(f.value - w.value) < 0.01 THEN 'PASS' ELSE 'FAIL' END,
+       substr(f.month, 1, 7) || ': ' || f.value || ' in the result table, ' || w.value || ' in staging'
+FROM res_story_copper_record_facts f JOIN stg_wb_prices_monthly w ON w.date = f.month AND w.commodity = 'Copper'
+WHERE f.fact_id = 'nominal_latest';
+
+-- check: the record as quoted is the highest World Bank price requires=res_story_copper_record_facts
+SELECT 'res_story_copper_record_facts', 'the record as quoted is the highest monthly World Bank copper price since 1960',
+       CASE WHEN ABS(f.value - (SELECT MAX(value) FROM stg_wb_prices_monthly WHERE commodity = 'Copper')) < 0.01 THEN 'PASS' ELSE 'FAIL' END,
+       substr(f.month, 1, 7) || ': ' || f.value
+FROM res_story_copper_record_facts f WHERE f.fact_id = 'nominal_record';
+
+-- check: one real record in both result tables requires=res_interlude_records
+SELECT 'res_interlude_records', 'copper''s real record is the same month and value as in the story facts (plaque, chapter 1 and summary use it)',
+       CASE WHEN substr(f.month, 1, 7) = i.real_peak_month AND ABS(f.value - i.real_peak) < 0.5 THEN 'PASS' ELSE 'FAIL' END,
+       i.real_peak_month || ' ' || ROUND(i.real_peak, 0) || ' vs ' || substr(f.month, 1, 7) || ' ' || f.value
+FROM res_story_copper_record_facts f, res_interlude_records i
+WHERE f.fact_id = 'real_peak_all' AND i.commodity = 'copper';
+
+-- check: interlude prices equal the World Bank prices requires=res_interlude_records
+SELECT 'res_interlude_records', 'the latest price of each of the five series equals the World Bank price for that month',
+       CASE WHEN SUM(ABS(i.latest_nominal - w.value) < 0.01) = COUNT(*) AND COUNT(*) = 5 THEN 'PASS' ELSE 'FAIL' END,
+       SUM(ABS(i.latest_nominal - w.value) < 0.01) || ' of ' || COUNT(*) || ' series match'
+FROM res_interlude_records i JOIN stg_wb_prices_monthly w ON w.commodity = i.world_bank_name AND w.date = i.latest_month || '-01';
+
+-- check: the euro record requires=res_euro_record
+SELECT 'res_euro_record', 'the latest euro price equals the panel and is the highest since January 1999',
+       CASE WHEN ABS(e.value - ROUND(p.copper_eur_t_avg, 0)) < 0.5 AND p.copper_eur_t_avg >= (SELECT MAX(copper_eur_t_avg) FROM mart_monthly_panel) - 0.01 THEN 'PASS' ELSE 'FAIL' END,
+       e.month || ': ' || e.value || ' EUR per tonne'
+FROM res_euro_record e JOIN mart_monthly_panel p ON p.month = e.month || '-01'
+WHERE e.fact_id = 'eur_latest';
+
+-- check: supply adds up requires=res_supply_countries
+SELECT 'res_supply_countries', 'countries plus other countries add up to the USGS world total (0.5% tolerance) and match staging',
+       CASE WHEN ABS(c.listed - w.production_2025e_kt) / w.production_2025e_kt < 0.005 AND c.mismatch = 0 THEN 'PASS' ELSE 'FAIL' END,
+       c.listed || ' kt listed, world ' || w.production_2025e_kt || ' kt; ' || c.mismatch || ' rows differ from staging'
+FROM (SELECT SUM(r.production_2025e_kt) AS listed,
+             SUM(CASE WHEN ABS(r.production_2025e_kt - u.value) > 0.01 THEN 1 ELSE 0 END) AS mismatch
+      FROM res_supply_countries r JOIN stg_usgs_copper u ON u.country = r.country AND u.statistic_detail = 'Mine production' AND u.year = 2025
+      WHERE r.country <> 'World total') c,
+     (SELECT production_2025e_kt FROM res_supply_countries WHERE country = 'World total') w;
+
+-- check: the dollar direction counts reconcile requires=res_story_guess_dollar
+SELECT 'res_story_guess_dollar', 'opposite, same direction and unchanged months add up to the months compared',
+       CASE WHEN o.value + s.value + u.value = m.value THEN 'PASS' ELSE 'FAIL' END,
+       o.value || ' + ' || s.value || ' + ' || u.value || ' of ' || m.value
+FROM res_story_guess_dollar o, res_story_guess_dollar s, res_story_guess_dollar u, res_story_guess_dollar m
+WHERE o.fact_id = 'opposite_months' AND s.fact_id = 'same_direction_months' AND u.fact_id = 'unchanged_months' AND m.fact_id = 'months_total';
+
+-- check: the scatter has the months of the correlation requires=res_dollar_scatter
+SELECT 'res_dollar_correlations', 'the dollar chapter scatter has the same months as the correlation with the broad dollar index',
+       CASE WHEN (SELECT COUNT(*) FROM res_dollar_scatter) = c.months THEN 'PASS' ELSE 'FAIL' END,
+       (SELECT COUNT(*) FROM res_dollar_scatter) || ' points, ' || c.months || ' months'
+FROM res_dollar_correlations c WHERE c.comparison LIKE 'Copper vs broad dollar index%';
+
+-- check: the ratio tests requires=res_cu_al_threshold_table
+SELECT 'res_cu_al_threshold_table', 'every rule has both horizons and an adjusted p-value between 0 and 1',
+       CASE WHEN COUNT(*) = 2 * COUNT(DISTINCT rule_id) AND MIN(p_holm) >= 0 AND MAX(p_holm) <= 1 THEN 'PASS' ELSE 'FAIL' END,
+       COUNT(*) || ' rows, ' || COUNT(DISTINCT rule_id) || ' rules, ' || SUM(p_holm < 0.05) || ' below 0.05 after adjustment'
+FROM res_cu_al_threshold_table;
+
+-- check: the demand total requires=res_demand_sensitivity
+SELECT 'res_demand_sensitivity', 'the reference total is the EV transition plus the data-centre extra over the 2024 build',
+       CASE WHEN ABS(headline_total_t - ev_transition_t - dc_extra_vs_base_t) < 1 THEN 'PASS' ELSE 'FAIL' END,
+       ROUND(headline_total_t, 0) || ' t = ' || ROUND(ev_transition_t, 0) || ' + ' || ROUND(dc_extra_vs_base_t, 0)
+FROM res_demand_sensitivity WHERE bar_order = 0;
+
+-- check: the checks shown on the site requires=res_dashboard_checks
+SELECT 'res_dashboard_checks', 'the list of checks shown on the site has no failed check',
+       CASE WHEN SUM(status = 'FAIL') = 0 THEN 'PASS' ELSE 'FAIL' END,
+       SUM(status = 'PASS') || ' passed, ' || SUM(status = 'WARN') || ' warnings, ' || SUM(status = 'FAIL') || ' failed'
+FROM res_dashboard_checks;

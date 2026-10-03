@@ -203,6 +203,7 @@ fieldset.opts legend { padding: 0; margin-bottom: 8px; font-weight: 500; }
 .chart .callout { font-size: 12px; fill: var(--ink); }
 .chart .callout .strong { font-weight: 600; }
 .chart .badge { font-size: 11px; font-weight: 600; }
+.chart .evline { stroke: var(--ink); stroke-width: 1; stroke-dasharray: 1.5 3; opacity: .55; }
 .chart .gapline { stroke: var(--muted); stroke-width: 1; stroke-dasharray: 3 3; }
 .chart.will-draw .reveal-rect { transform: scaleX(0); transform-box: fill-box; transform-origin: left center; }
 .chart.will-draw.draw .reveal-rect { transform: scaleX(1); transition: transform 1200ms cubic-bezier(.45, 0, .2, 1); }
@@ -381,7 +382,7 @@ ol.eventlist { list-style: none; counter-reset: ev; margin: var(--s2) 0 0; paddi
 .bubble.out .disc { fill: var(--copper); stroke: var(--copper); }
 .bubble.res .disc { fill: var(--verdigris); stroke: var(--verdigris); }
 .bubble:hover .disc, .bubble:focus-visible .disc { fill-opacity: .8; stroke: var(--ink); stroke-width: 2.4; }
-.maplab { font: 500 20px var(--sans); fill: var(--ink); paint-order: stroke; stroke: var(--card); stroke-width: 4px; stroke-linejoin: round; pointer-events: none; }
+.maplab { font: 500 17px var(--sans); fill: var(--ink); paint-order: stroke; stroke: var(--card); stroke-width: 4px; stroke-linejoin: round; pointer-events: none; }
 .mapwrap.narrow .maplab { display: none; }
 .toplist h4 { margin-bottom: var(--s2); }
 .toplist ol { list-style: none; margin: 0; padding: 0; }
@@ -405,6 +406,53 @@ ol.eventlist { list-style: none; counter-reset: ev; margin: var(--s2) 0 0; paddi
 .scatter .fitline { fill: none; stroke: var(--ink); stroke-width: 1.6; }
 .scatter .bigl { font: 400 22px var(--display); fill: var(--ink); font-variation-settings: "opsz" 30; paint-order: stroke; stroke: var(--card); stroke-width: 5px; stroke-linejoin: round; }
 .scatter .ring { fill: none; stroke: var(--ink); stroke-width: 1.6; }
+
+
+/* source chips: a tap or focus opens where the number comes from */
+details.chipx { display: inline-block; position: relative; vertical-align: baseline; margin-left: 6px; }
+details.chipx > summary { list-style: none; display: inline-block; cursor: pointer; font: 500 10.5px var(--mono); letter-spacing: .04em; padding: 1px 6px; border: 1px solid currentColor; border-radius: 2px; color: var(--copper-text); line-height: 1.5; }
+details.chipx > summary::-webkit-details-marker { display: none; }
+.glass details.chipx > summary, .hero details.chipx > summary { color: var(--copper-bright); }
+.chip-panel { position: absolute; z-index: 30; left: 0; top: calc(100% + 6px); width: min(340px, 80vw); background: var(--card); color: var(--ink); border: 1px solid var(--muted); border-radius: 3px; padding: 10px 12px; box-shadow: 0 4px 14px rgba(27, 20, 16, .22); font: 400 13px/1.45 var(--sans); text-align: left; letter-spacing: 0; text-transform: none; }
+.chip-panel p { margin: 0 0 6px; }
+.chip-panel code { font: 500 12px var(--mono); }
+.plaque .chip-panel { right: 0; left: auto; }
+.price details.chipx { vertical-align: middle; }
+
+/* the method appendix */
+ol.flow { list-style: none; margin: var(--s3) 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 150px), 1fr)); gap: var(--s3); }
+.flow li { position: relative; border-top: 2px solid var(--ink); padding-top: var(--s2); display: grid; gap: 4px; align-content: start; }
+.flow-n { color: var(--copper-text); }
+.flow-c { color: var(--muted); font-size: .9rem; }
+.guesses { margin: var(--s3) 0; padding: var(--s3) var(--s4); background: var(--card); border: 1px solid var(--rule); border-left: 2px solid var(--verdigris); border-radius: 3px; }
+.guesses ul { margin: 6px 0 0; padding-left: 1.2em; }
+
+/* the interlude: copper in copper, the rest in ink-grey */
+.brow.grey .bfill { background: var(--muted); }
+
+
+/* demand main view: stacked bars */
+ul.stacks { list-style: none; margin: var(--s3) 0 0; padding: 0; }
+.srow { padding: 12px 0; border-bottom: 1px solid var(--rule); }
+.strack { display: flex; height: 22px; background: var(--track); border-radius: 2px; overflow: hidden; margin: 6px 0; }
+.strack .seg { display: block; height: 100%; }
+.seg.ev, .sw2.ev { background: var(--copper); }
+.seg.dcx, .sw2.dcx { background: var(--muted); }
+.strack .seg + .seg { border-left: 2px solid var(--card); }
+.segvals { display: flex; flex-wrap: wrap; gap: 4px 18px; color: var(--muted); }
+.sw2 { display: inline-block; width: 10px; height: 10px; border-radius: 1px; margin-right: 6px; vertical-align: -1px; }
+
+
+.maplab.pair { font-weight: 600; fill: var(--copper-text); }
+.mapbox .pairline { stroke: var(--copper-text); stroke-width: 1; stroke-dasharray: 2 3; }
+.toplist { margin-top: var(--s4); }
+.toplist ol { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 230px), 1fr)); column-gap: var(--s5); }
+
+
+.maplab.pair { font-weight: 600; fill: var(--copper-text); }
+.mapbox .pairline { stroke: var(--copper-text); stroke-width: 1; stroke-dasharray: 2 3; }
+.toplist { margin-top: var(--s4); }
+.toplist ol { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 230px), 1fr)); column-gap: var(--s5); }
 
 /* note, chips, next, tiles */
 .note { background: var(--card); border: 1px solid var(--rule); border-left: 3px solid var(--copper); border-radius: 3px; padding: 16px 20px; margin: 26px 0; }

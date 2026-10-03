@@ -23,6 +23,7 @@ It fails (exit 1) if:
      equal the months of the full-sample euro correlation and match its first and last month; checked in the results CSVs and docs/data/dollar.js
   11. the Dollar page's chart series, correlation sample, regression sample must start and end in the same months (the intro dates come from this sample)
   12. the real record of copper (month, value, distance from today) agrees in the story facts and the interlude records
+  13. a source chip on the site names a dataset without a provenance entry or without a check, or provenance.js cites a check that is not in the checks the site shows
 It also prints the files that contain IEA-derived figures (so the IEA terms can be confirmed), the files that carry figures from
 secondary articles, and the e-mail addresses found in published files.
 """
@@ -320,6 +321,26 @@ def main():
             if (facts["real_peak_all"]["month"][:7] != cu["real_peak_month"] or abs(float(facts["real_peak_all"]["value"]) - float(cu["real_peak"])) > 0.5
                     or abs((100 - float(cu["latest_pct_of_real_peak"])) - below) > 0.1):
                 problems.append("REAL RECORD: res_story_copper_record_facts.csv and res_interlude_records.csv do not agree on copper's real record")
+
+    # 13 source chips: every chip names datasets that have a provenance entry with at least one real check, and every check there is in the checks the site shows
+    pj = ROOT / "docs" / "data" / "provenance.js"
+    if pj.exists():
+        import csv as _csv
+        prov = js_datasets(pj.read_text(encoding="utf-8"))["datasets"]
+        shown = {int(r["check_no"]): r for r in _csv.DictReader((ROOT / "results" / "res_dashboard_checks.csv").open(encoding="utf-8"))}
+        for key, e in prov.items():
+            for c in e["checks"]:
+                r = shown.get(c["no"])
+                if r is None or r["status"] != c["status"] or r["table_name"] != e["table"]:
+                    problems.append(f"CHIP provenance {key}: check {c['no']} is not in res_dashboard_checks with that table and status (rebuild, rerun notebook 04, then tools/build_provenance.py)")
+        for jsf in (ROOT / "docs" / "js").rglob("*.js"):
+            for m in re.finditer(r"CMA\.chip\(\s*\[([^\]]*)\]", jsf.read_text(encoding="utf-8")):
+                for key in re.findall(r"\"([\w.]+)\"", m.group(1)):
+                    e = prov.get(key)
+                    if e is None:
+                        problems.append(f"CHIP {jsf.name}: chip names {key}, which has no provenance entry")
+                    elif not any(c["status"] != "INFO" for c in e["checks"]):
+                        problems.append(f"CHIP {jsf.name}: chip names {key} ({e['table']}), which has no check")
 
     # report
     iea = sorted(f for f in files if mf.get(f, {}).get("iea_figures"))

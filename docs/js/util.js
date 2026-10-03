@@ -139,6 +139,26 @@
     }
     return { month: R.real_peak_all.month, value: R.real_peak_all.value, abovePct: R.real_peak_vs_latest_pct.value, belowPct: 100 - cu.latest_pct_of_real_peak, sharePct: cu.latest_pct_of_real_peak };
   };
+  // a small source chip: the source IDs, and on open the result table, the notebook and the checks on that table (all from provenance.js)
+  CMA.chip = function (keys) {
+    var P = window.CMA_DATA.provenance.datasets, reg = {};
+    CMA.rows(window.CMA_DATA.quality.sources).forEach(function (r) { reg[r.source_id] = r; });
+    var srcs = [];
+    keys.forEach(function (k) {
+      if (!P[k]) { throw new Error("no provenance for " + k); }
+      P[k].sources.forEach(function (sid) { if (srcs.indexOf(sid) < 0 && reg[sid]) { srcs.push(sid); } });
+    });
+    var panel = CMA.h("div", { class: "chip-panel" });
+    srcs.forEach(function (sid) { panel.appendChild(CMA.h("p", {}, CMA.h("b", { text: CMA.t("story.chip_source") + " " + sid + ": " }), reg[sid].name)); });
+    keys.forEach(function (k) {
+      var e = P[k];
+      panel.appendChild(CMA.h("p", {}, CMA.h("b", { text: CMA.t("story.chip_table") + ": " }), CMA.h("code", { text: e.table }), e.notebook ? " (" + CMA.t("story.chip_notebook").toLowerCase() + " " + e.notebook + ")" : ""));
+      var real = e.checks.filter(function (c) { return c.status !== "INFO"; });
+      if (!real.length) { panel.appendChild(CMA.h("p", { class: "muted", text: CMA.t("story.chip_none") })); }
+      real.forEach(function (c) { panel.appendChild(CMA.h("p", { class: "small" }, CMA.t("story.chip_check", { no: c.no, description: c.description }) + " ", CMA.h("span", { class: "pill " + c.status.toLowerCase(), text: c.status }))); });
+    });
+    return CMA.h("details", { class: "chipx" }, CMA.h("summary", { "aria-label": CMA.t("story.chip_label"), text: srcs.join(" ") }), panel);
+  };
   CMA.bridge = function (box, text) { box.appendChild(CMA.h("p", { class: "bridge", text: text })); };
   CMA.pages = CMA.pages || {};
 })();

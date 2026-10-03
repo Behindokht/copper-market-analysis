@@ -13,6 +13,7 @@
     { id: "summary", label: "summary_index", numeral: "vi", page: "summary" }
   ];
   CMA.CHAPTER_IDS = CHAPTERS.map(function (c) { return c.id; });
+  CMA.CHAPTER_COUNT = CHAPTERS.filter(function (c) { return c.label === "chapter" || c.label === "summary_index"; }).length;
 
   CMA.pages.story = function (root) {
     var D = window.CMA_DATA.story;
@@ -29,16 +30,16 @@
     CMA.spark.build(sparkSvg);
     var plaque = h("aside", { class: "plaque glass lens rise", style: "--i:5", "aria-label": t("hero.plaque_aria") },
       h("p", { class: "mono", text: t("hero.plaque_label", { month: CMA.monthLong(R.nominal_latest.month) }) }),
-      h("p", { class: "price num" }, CMA.usd0(R.nominal_latest.value), h("small", { text: t("hero.plaque_unit") })),
+      h("p", { class: "price num" }, CMA.usd0(R.nominal_latest.value), h("small", { text: t("hero.plaque_unit") }), CMA.chip(["story.record_facts"])),
       h("p", { class: "unit", text: t("hero.plaque_line") }),
       h("dl", { class: "cert" },
-        h("div", {}, h("dt", { text: t("hero.cert_nominal") }), h("dd", { text: t("hero.cert_nominal_v", { n: CMA.n0(R.series_months.value) }) })),
-        h("div", {}, h("dt", { text: t("hero.cert_real") }), h("dd", { text: t("hero.cert_real_v", { pct: CMA.n0(realRec.belowPct), month: CMA.monthLong(realRec.month) }) }))));
+        h("div", {}, h("dt", { text: t("hero.cert_nominal") }), h("dd", {}, t("hero.cert_nominal_v", { n: CMA.n0(R.series_months.value) }), CMA.chip(["story.record_facts"]))),
+        h("div", {}, h("dt", { text: t("hero.cert_real") }), h("dd", {}, t("hero.cert_real_v", { pct: CMA.n0(realRec.belowPct), month: CMA.monthLong(realRec.month) }), CMA.chip(["story.record_facts", "chapters.records"])))));
     var hero = h("section", { class: "hero" }, h("div", { class: "wrap hero-grid" },
       h("div", {},
         h("p", { class: "eyebrow rise", style: "--i:1", text: t("hero.eyebrow") }),
         h("h1", { class: "rise", style: "--i:2" }, h("em", { text: t("hero.title_em") }), h("span", { class: "spark-anchor" }, sparkSvg), t("hero.title_rest")),
-        h("p", { class: "lede rise", style: "--i:3", text: t("hero.lead") }),
+        h("p", { class: "lede rise", style: "--i:3", text: t("hero.lead", { years: Math.floor(R.series_months.value / 12) }) }),
         h("ul", { class: "facts rise", style: "--i:4" },
           h("li", {}, h("b", { class: "num", text: CMA.n0(R.series_months.value) }), h("span", { class: "mono", text: t("hero.fact_months", { year: R.series_months.month.slice(0, 4) }) })),
           h("li", {}, h("b", { class: "num", text: CMA.n0(nChecks) }), h("span", { class: "mono", text: t("hero.fact_checks") })))),
@@ -87,7 +88,7 @@
     bodies.record.appendChild(skip2);
     bodies.record.appendChild(reveal2);
     radios.forEach(function (lab) {
-      lab.querySelector("input").addEventListener("change", function (e) { CMA.store.set("g2", e.target.value); showRecord(e.target.value); refreshReset(); });
+      lab.querySelector("input").addEventListener("change", function (e) { CMA.store.set("g2", e.target.value); showRecord(e.target.value); refreshReset(); if (CMA.summaryGuesses) { CMA.summaryGuesses(); } });
     });
     var saved2 = CMA.store.get("g2");
     if (saved2 && optsDef.some(function (o) { return o[0] === saved2; })) {
@@ -157,10 +158,24 @@
     slider.addEventListener("input", function () { guess = +slider.value; out.textContent = guess + "%"; });
     lockBtn.addEventListener("click", function () {
       if (locked) { setLocked(false); slider.focus(); return; }
-      guess = +slider.value; haveGuess = true; CMA.store.set("g1", String(guess)); setLocked(true); refreshReset(); showDollar();
+      guess = +slider.value; haveGuess = true; CMA.store.set("g1", String(guess)); setLocked(true); refreshReset(); showDollar(); if (CMA.summaryGuesses) { CMA.summaryGuesses(); }
     });
     var saved1 = CMA.store.get("g1");
     if (saved1 !== null && !isNaN(+saved1)) { guess = +saved1; haveGuess = true; slider.value = guess; out.textContent = guess + "%"; setLocked(true); showDollar(); }
+
+    function revealWhenPassed(el, show) {
+      // once the box is above the top of the screen (scrolled past, or jumped past with the nav), the visitor chose not to guess.
+      // A scroll check, not an IntersectionObserver: a jump from below the screen to above it never crosses an observer threshold.
+      var raf = 0, done = false;
+      var check = function () {
+        if (done || document.getElementById("story").hidden) { return; }
+        if (el.getBoundingClientRect().bottom < 0) { done = true; window.removeEventListener("scroll", onScroll); show(); }
+      };
+      var onScroll = function () { cancelAnimationFrame(raf); raf = requestAnimationFrame(check); };
+      window.addEventListener("scroll", onScroll, { passive: true });
+    }
+    revealWhenPassed(bodies.record.querySelector("fieldset.opts"), function () { showRecord(null); });
+    revealWhenPassed(slider.parentNode, function () { if (!haveGuess) { showDollar(); } });
 
     // =============================== chapters 3 to 6
     CMA.chapters.ratio(bodies.aluminium);
