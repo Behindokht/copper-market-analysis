@@ -935,3 +935,25 @@ SELECT 'mart_dc_copper_cases', 'IT-capacity basis gives a lower data-centre resu
 FROM mart_dc_copper_cases t
 JOIN mart_dc_copper_cases i ON i.iea_case = t.iea_case AND i.year = t.year AND i.path = t.path AND i.intensity_case = t.intensity_case AND i.base_build_case = t.base_build_case AND i.basis = 'IT equipment'
 WHERE t.basis = 'Whole data centre' AND t.iea_case = 'Base' AND t.year = 2030 AND t.path = 'even' AND t.intensity_case = 'mid' AND t.base_build_case = '2023-24';
+
+-- check: every USGS country has an ISO mapping (the supply map needs it)
+SELECT 'usgs_country_iso', 'every USGS country name (production 2025 and reserves) is in the ISO mapping table',
+       CASE WHEN COUNT(*) = 0 THEN 'PASS' ELSE 'FAIL' END,
+       CASE WHEN COUNT(*) = 0 THEN 'all matched' ELSE 'unmatched: ' || GROUP_CONCAT(country, '; ') END
+FROM (SELECT DISTINCT country FROM stg_usgs_copper WHERE statistic_detail IN ('Mine production', 'Reserves') AND value IS NOT NULL AND country NOT LIKE 'World%')
+WHERE country NOT IN (SELECT usgs_name FROM usgs_country_iso);
+
+-- check: ISO mapping rows are well formed
+SELECT 'usgs_country_iso', 'placeable rows have a 3-letter ISO code and an M49 code; the not placeable row has neither',
+       CASE WHEN COUNT(*) = 0 THEN 'PASS' ELSE 'FAIL' END,
+       COUNT(*) || ' bad rows'
+FROM usgs_country_iso
+WHERE (placeable = 1 AND (iso_a3 IS NULL OR length(iso_a3) <> 3 OR m49 IS NULL))
+   OR (placeable = 0 AND (iso_a3 IS NOT NULL OR m49 IS NOT NULL));
+
+-- check: events are dated, labelled and have a status
+SELECT 'events', 'every event has a month (YYYY-MM), a label, a description and a status of proposed or approved',
+       CASE WHEN COUNT(*) = 0 THEN 'PASS' ELSE 'FAIL' END,
+       COUNT(*) || ' bad rows'
+FROM events
+WHERE month NOT GLOB '[12][0-9][0-9][0-9]-[01][0-9]' OR label IS NULL OR description IS NULL OR status NOT IN ('proposed', 'approved');

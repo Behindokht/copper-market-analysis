@@ -1,0 +1,4 @@
+event_id,statement,holds
+E3,February 2011 is the highest month as quoted up to then; it holds until 2021-05,True
+E5,May 2021 is the first month above February 2011,True
+E8,August 2026 is the highest month as quoted since 1960,True

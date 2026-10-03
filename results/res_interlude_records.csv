@@ -1,0 +1,6 @@
+commodity,world_bank_name,series_start,latest_month,latest_nominal,nominal_peak_month,nominal_peak,latest_pct_of_nominal_peak,latest_real,real_peak_month,real_peak,latest_pct_of_real_peak,at_nominal_record,at_real_record,note
+copper,Copper,1960-01,2026-08,14326.0,2026-08,14326.0,100.0,14326.0,1974-04,21062.06,68.0,True,False,
+gold,Gold,1960-01,2026-08,4411.0,2026-02,5020.0,87.9,4411.0,2026-02,5122.27,86.1,False,False,fixed official price of $35 an ounce until 1967 (S27); not a market price in those years
+aluminium,Aluminum,1960-01,2026-08,3251.0,2026-05,3666.0,88.7,3251.0,1988-06,10131.53,32.1,False,False,
+brent,"Crude oil, Brent",1960-01,2026-08,90.9,2008-07,133.9,67.9,90.9,2008-06,204.35,44.5,False,False,
+tin,Tin,1960-01,2026-08,55385.0,2026-08,55385.0,100.0,55385.0,1978-10,75968.74,72.9,True,False,

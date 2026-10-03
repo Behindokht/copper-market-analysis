@@ -1,0 +1,16 @@
+usgs_name,display_name,iso_a3,m49,placeable,source_id,note
+United States,United States,USA,840,1,S28,
+Australia,Australia,AUS,036,1,S28,
+Canada,Canada,CAN,124,1,S28,
+Chile,Chile,CHL,152,1,S28,
+China,China,CHN,156,1,S28,
+Congo (Kinshasa),DR Congo,COD,180,1,S28,USGS name kept in the data; the site writes DR Congo
+India,India,IND,356,1,S28,
+Indonesia,Indonesia,IDN,360,1,S28,
+Kazakhstan,Kazakhstan,KAZ,398,1,S28,
+Mexico,Mexico,MEX,484,1,S28,
+Peru,Peru,PER,604,1,S28,
+Poland,Poland,POL,616,1,S28,
+Russia,Russia,RUS,643,1,S28,
+Zambia,Zambia,ZMB,894,1,S28,
+Other countries,Other countries,,,0,S06,USGS total for countries not listed one by one; cannot be placed on the map

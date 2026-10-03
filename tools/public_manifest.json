@@ -441,6 +441,63 @@
    ],
    "note": "World Bank monthly copper (CC BY 4.0; credit 'adapted from World Bank Commodity Price Data') and the FRED broad dollar index (public domain), each also indexed to 100 in the first month; 248 months; never LME",
    "large_ok": true
+  },
+  "results/res_interlude_records.csv": {
+   "sources": [
+    "S02",
+    "S04",
+    "S27"
+   ],
+   "note": "each commodity's latest price against its own record since 1960, as quoted and in August 2026 dollars (World Bank prices, US CPI); derived"
+  },
+  "results/res_euro_record.csv": {
+   "sources": [
+    "S02",
+    "S16"
+   ],
+   "note": "facts on copper in euros: whether August 2026 is the highest month since January 1999; derived from World Bank copper and the FRED euro rate"
+  },
+  "results/res_supply_countries.csv": {
+   "sources": [
+    "S06",
+    "S28"
+   ],
+   "note": "USGS mine production 2025 (estimates) and reserves by country, shares of the world total and a simple reserve-life ratio; ISO and M49 codes from the UN"
+  },
+  "results/res_event_record_checks.csv": {
+   "sources": [
+    "S02"
+   ],
+   "note": "checks that the price records named in the events table are true in the World Bank series"
+  },
+  "copper_database/collected/events.csv": {
+   "sources": [
+    "S02",
+    "S22",
+    "S23",
+    "S24",
+    "S25",
+    "S26"
+   ],
+   "note": "proposed markers for the chapter 1 price chart, each with a source; wording 'around this time', never a cause"
+  },
+  "copper_database/collected/usgs_country_iso.csv": {
+   "sources": [
+    "S06",
+    "S28"
+   ],
+   "note": "USGS country names mapped to ISO alpha-3 and M49 codes; 'Other countries' flagged as not placeable"
+  },
+  "notebooks/05_chapter_facts.ipynb": {
+   "sources": [
+    "S02",
+    "S04",
+    "S06",
+    "S16",
+    "S27",
+    "S28"
+   ],
+   "note": "outputs show derived figures: records by commodity, the euro record, production and reserves by country, record checks; no LME values"
   }
  }
 }

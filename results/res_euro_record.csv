@@ -1,0 +1,6 @@
+fact_id,month,value,unit,note
+eur_series_start,1999-01,332.0,months,first month with a euro price
+eur_latest,2026-08,12356.0,EUR per tonne,latest monthly average
+eur_previous_high,2026-07,11856.0,EUR per tonne,highest month before the latest
+eur_latest_is_record,2026-08,1.0,1 = yes,the latest month is the highest since the euro series starts
+eur_latest_vs_previous_high_pct,2026-08,4.2,percent,how far the latest month is above the previous high
