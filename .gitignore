@@ -41,3 +41,6 @@ Thumbs.db
 
 # Private single-file previews (built by tools/build_preview.py)
 preview/
+
+# Design reference (look study, photo of unconfirmed licence): never published
+/design_reference/

@@ -3,20 +3,32 @@
 // Style: plain English, short sentences, hard figures, no dashes as punctuation. tools/check_site.py enforces the basics.
 window.CMA_STRINGS = {
  "site": {
-  "brand": "Copper market analysis",
+  "brand": "Copper",
+  "brand_sub": "Behindokht Alipour",
   "title": "Copper market analysis"
  },
  "nav": {
   "story": "Story",
-  "dollar": "Dollar vs copper",
-  "ratio": "Copper vs aluminium",
-  "demand": "Demand scenario",
+  "dollar": "Dollar",
+  "ratio": "Ratio",
+  "demand": "Demand",
   "quality": "Data quality"
  },
  "hero": {
-  "title": "Copper: who needs it, who supplies it, and what does the price do when they collide?",
+  "eyebrow": "Data analysis portfolio. SQL and Python.",
+  "title_em": "Copper",
+  "title_rest": ": who needs it, who supplies it, and what does the price do when they collide?",
   "lead": "A look at the copper market, with the data checks in plain view. Start with two guesses. Then see the numbers.",
-  "byline": "A portfolio project by Behindokht Alipour"
+  "fact_months": "monthly prices since {year}",
+  "fact_checks": "automatic data checks",
+  "plaque_aria": "Latest copper price",
+  "plaque_label": "World Bank copper, {month}",
+  "plaque_unit": "USD/t",
+  "plaque_line": "Per tonne, as quoted at the time.",
+  "cert_nominal": "Nominal",
+  "cert_nominal_v": "Highest of {n} months",
+  "cert_real": "Real, US CPI",
+  "cert_real_v": "{pct}% below {month}"
  },
  "pages": {
   "dollar": {
@@ -48,8 +60,12 @@ window.CMA_STRINGS = {
   "found_more": "See the evidence",
   "found_more_record": "Go to guess 2",
   "reset": "Clear my guesses",
+  "index_guess": "Guess",
+  "index_next": "Next",
+  "tile_dollar": "{opposite_share}% of months moved in opposite directions. The dollar is linked to about {share}% of copper's monthly moves.",
+  "tile_ratio": "The result is weak. Only {n_holm} of {n_all} tests still counts after allowing for the many tests tried.",
+  "tile_link": "Read the analysis",
   "guess1": {
-   "title": "Guess 1",
    "question": "How much of copper's monthly ups and downs is linked to the US dollar?",
    "hint": "The left end is none of the moves. The right end is all of them. Drag the slider, then lock in your guess.",
    "slider_label": "Your guess, in percent",
@@ -73,7 +89,6 @@ window.CMA_STRINGS = {
    "meter_aria": "Scale from none to all of copper's monthly moves. Your guess is {guess} percent. The broad dollar index tracks {actual} percent. The euro alone tracks {euro} percent."
   },
   "guess2": {
-   "title": "Guess 2",
    "question": "Is copper at a record high right now?",
    "hint": "Think of the average monthly price since 1960. First as quoted at the time. Then with US inflation taken out.",
    "legend": "Pick one answer",
@@ -129,8 +144,7 @@ window.CMA_STRINGS = {
     "S19": "BLS note on the missing October 2025 CPI"
    },
    "attribution": "Copper prices: adapted from World Bank Commodity Price Data (CC BY 4.0). US inflation: U.S. Bureau of Labor Statistics, Consumer Price Index for All Urban Consumers, retrieved from FRED, Federal Reserve Bank of St. Louis. Dollar index and 10-year yield: Board of Governors of the Federal Reserve System (US), retrieved from FRED. Full credits and licences are in the footer."
-  },
-  "next": "Next: {title}"
+  }
  },
  "dollar": {
   "intro": "This page compares monthly changes in the copper price with monthly changes in the US dollar. A higher dollar number means a stronger dollar.",
@@ -545,7 +559,7 @@ window.CMA_STRINGS = {
   "disclaimer": "Historical results are not forecasts and not investment advice. A link in a sample is not proof that one thing causes another.",
   "credits_summary": "Credits and licences",
   "credits": [
-   "Fonts: Merriweather (headings) and Open Sans (text), self-hosted. Both use the SIL Open Font License 1.1. Merriweather: Copyright The Merriweather Project Authors. Open Sans: Copyright The Open Sans Project Authors.",
+   "Fonts: Newsreader (titles), IBM Plex Sans (text) and IBM Plex Mono (labels), self-hosted. All use the SIL Open Font License 1.1. Newsreader: Copyright 2020 The Newsreader Project Authors. IBM Plex: Copyright IBM Corp.",
    "Copper prices: adapted from World Bank Commodity Price Data, licensed under CC BY 4.0. Changes made: prices are deflated with US CPI, rebased or turned into monthly changes, as each page says.",
    "US inflation (CPIAUCSL): U.S. Bureau of Labor Statistics, Consumer Price Index for All Urban Consumers: All Items in U.S. City Average, retrieved from FRED, Federal Reserve Bank of St. Louis. Public domain, citation requested.",
    "Dollar index (DTWEXBGS), euro exchange rate (EXUSEU) and 10-year yield (GS10): Board of Governors of the Federal Reserve System (US), retrieved from FRED, Federal Reserve Bank of St. Louis. Public domain, citation requested.",

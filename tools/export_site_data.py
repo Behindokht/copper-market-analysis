@@ -128,4 +128,8 @@ def main():
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    code = main()
+    sys.path.insert(0, str(ROOT / "tools"))
+    import photo_flag
+    photo_flag.write()
+    sys.exit(code)

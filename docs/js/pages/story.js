@@ -17,11 +17,32 @@
 
     root.textContent = "";
 
-    // ---- hero
-    root.appendChild(h("div", { class: "hero" }, h("div", { class: "wrap" },
-      h("h1", { text: t("hero.title") }),
-      h("p", { class: "lead", text: t("hero.lead") }),
-      h("p", { class: "byline", text: t("hero.byline") }))));
+    // ---- opener: dark, with the copper plate photo when docs/img/copper-plate.jpg exists (see tools/photo_flag.py), plain ink if not
+    var RT = {};
+    CMA.rows(window.CMA_DATA.ratio.facts).forEach(function (r) { RT[r.fact_id] = r; });
+    var nChecks = window.CMA_DATA.quality.checks.rows.length;
+    var sparkSvg = CMA.svg("svg", { class: "spark spark-title", viewBox: "-40 -40 80 80", "aria-hidden": "true" });
+    CMA.spark.build(sparkSvg);
+    var plaque = h("aside", { class: "plaque glass lens rise", style: "--i:5", "aria-label": t("hero.plaque_aria") },
+      h("p", { class: "mono", text: t("hero.plaque_label", { month: CMA.monthLong(R.nominal_latest.month) }) }),
+      h("p", { class: "price num" }, CMA.n0(R.nominal_latest.value).replace(/^/, "$"), h("small", { text: t("hero.plaque_unit") })),
+      h("p", { class: "unit", text: t("hero.plaque_line") }),
+      h("dl", { class: "cert" },
+        h("div", {}, h("dt", { text: t("hero.cert_nominal") }), h("dd", { text: t("hero.cert_nominal_v", { n: CMA.n0(R.series_months.value) }) })),
+        h("div", {}, h("dt", { text: t("hero.cert_real") }), h("dd", { text: t("hero.cert_real_v", { pct: CMA.n1(Math.abs(R.latest_vs_real_peak_since_1990_pct.value)), month: CMA.monthShort(R.real_peak_since_1990.month) }) }))));
+    var hero = h("section", { class: "hero" }, h("div", { class: "wrap hero-grid" },
+      h("div", {},
+        h("p", { class: "eyebrow rise", style: "--i:1", text: t("hero.eyebrow") }),
+        h("h1", { class: "rise", style: "--i:2" }, h("em", { text: t("hero.title_em") }), h("span", { class: "spark-anchor" }, sparkSvg), t("hero.title_rest")),
+        h("p", { class: "lede rise", style: "--i:3", text: t("hero.lead") }),
+        h("ul", { class: "facts rise", style: "--i:4" },
+          h("li", {}, h("b", { class: "num", text: CMA.n0(R.series_months.value) }), h("span", { class: "mono", text: t("hero.fact_months", { year: R.series_months.month.slice(0, 4) }) })),
+          h("li", {}, h("b", { class: "num", text: CMA.n0(nChecks) }), h("span", { class: "mono", text: t("hero.fact_checks") })))),
+      plaque));
+    if (window.CMA_PHOTO) { hero.classList.add("has-photo"); hero.style.setProperty("--photo", 'url("' + window.CMA_PHOTO + '")'); }
+    root.appendChild(hero);
+    if (CMA.glass) { CMA.glass.init(root); }
+    setTimeout(function () { CMA.spark.fire(sparkSvg); }, 1050);
 
     var wrap = h("div", { class: "wrap" });
     root.appendChild(wrap);
@@ -31,8 +52,6 @@
       h("p", { class: "intro", text: t("story.intro") })));
 
     // ---- "What I found": three plain sentences, each with a link to its page; numbers from the data files
-    var RT = {};
-    CMA.rows(window.CMA_DATA.ratio.facts).forEach(function (r) { RT[r.fact_id] = r; });
     var foundVars = {
       opposite_share: CMA.n0(F.opposite_direction_share.value), index_from: CMA.monthLong(F.r2_dollar_index.period_from + "-01"),
       latest_month: CMA.monthLong(R.nominal_latest.month), ratio_latest: CMA.f2(RT.ratio_latest.value), years: Math.floor(RT.series_months.value / 12)
@@ -60,13 +79,14 @@
     var out = h("output", { class: "guess-value", for: "g1-slider", text: "50%" });
     var lockBtn = h("button", { class: "btn", type: "button", id: "g1-lock", text: t("story.guess1.lock") });
     var reveal1 = h("div", { class: "reveal", hidden: true, "aria-live": "polite" });
-    wrap.appendChild(h("article", { class: "card", id: "guess1", "aria-labelledby": "g1-title" },
-      h("p", { class: "eyebrow", text: t("story.guess1.title") }),
-      h("h3", { id: "g1-title", text: t("story.guess1.question") }),
-      h("p", { class: "hint", text: t("story.guess1.hint") }),
-      h("div", { class: "row" },
-        h("label", { for: "g1-slider", class: "sr", text: t("story.guess1.slider_label") }), slider, out, lockBtn),
-      reveal1));
+    wrap.appendChild(h("section", { class: "story", id: "guess1", "aria-labelledby": "g1-title" },
+      h("div", { class: "index" }, t("story.index_guess"), h("b", { text: "i" })),
+      h("div", { class: "story-body" },
+        h("h2", { id: "g1-title", text: t("story.guess1.question") }),
+        h("p", { class: "hint", text: t("story.guess1.hint") }),
+        h("div", { class: "row" },
+          h("label", { for: "g1-slider", class: "sr", text: t("story.guess1.slider_label") }), slider, out, lockBtn),
+        reveal1)));
 
     function renderReveal1() {
       var actual = g1.r2_dollar_index.value, euro = g1.r2_euro.value;
@@ -123,11 +143,12 @@
       return h("label", { class: "opt" }, h("input", { type: "radio", name: "g2", value: o[0] }), h("span", { text: t("story.guess2." + o[1]) }));
     });
     var fs = h("fieldset", { class: "opts" }, h("legend", { text: t("story.guess2.legend") }), radios);
-    wrap.appendChild(h("article", { class: "card", id: "guess2", "aria-labelledby": "g2-title" },
-      h("p", { class: "eyebrow", text: t("story.guess2.title") }),
-      h("h3", { id: "g2-title", text: t("story.guess2.question") }),
-      h("p", { class: "hint", text: t("story.guess2.hint") }),
-      fs, reveal2));
+    wrap.appendChild(h("section", { class: "story", id: "guess2", "aria-labelledby": "g2-title" },
+      h("div", { class: "index" }, t("story.index_guess"), h("b", { text: "ii" })),
+      h("div", { class: "story-body" },
+        h("h2", { id: "g2-title", text: t("story.guess2.question") }),
+        h("p", { class: "hint", text: t("story.guess2.hint") }),
+        fs, reveal2)));
 
     var chartBuilt = false;
     function renderReveal2(choice) {
@@ -147,8 +168,8 @@
       card.appendChild(h("h3", { class: "qtitle", text: t("story.guess2.chart_title") }));
       var realLabel = t("story.guess2.series_real", { base_month: baseMonth });
       card.appendChild(h("div", { class: "key" },
-        h("span", { style: "color:var(--copper)" }, h("span", { class: "sw" }), h("span", { style: "color:var(--forest)", text: t("story.guess2.series_nominal") })),
-        h("span", { style: "color:var(--green)" }, h("span", { class: "sw" }), h("span", { style: "color:var(--forest)", text: realLabel }))));
+        h("span", { style: "color:var(--copper)" }, h("span", { class: "sw" }), h("span", { style: "color:var(--ink)", text: t("story.guess2.series_nominal") })),
+        h("span", { style: "color:var(--verdigris)" }, h("span", { class: "sw dash" }), h("span", { style: "color:var(--ink)", text: realLabel }))));
       var host = h("div", { class: "chart-host" });
       card.appendChild(host);
       var gapIdx = real.findIndex(function (v) { return v == null; });
@@ -168,7 +189,7 @@
         n: n, yMax: 22000, yTicks: [0, 5000, 10000, 15000, 20000], yFormat: CMA.usd0, yLabel: t("story.guess2.y_label"), xTicks: xTicks,
         series: [
           { id: "nominal", color: "--copper", values: nominal, label: { text: t("story.guess2.label_nominal"), short: t("story.guess2.label_nominal_short") } },
-          { id: "real", color: "--green", values: real, label: { text: t("story.guess2.label_real", { base_month: baseMonth }), short: t("story.guess2.label_real_short") } }
+          { id: "real", color: "--verdigris", dash: "6 5", values: real, label: { text: t("story.guess2.label_real", { base_month: baseMonth }), short: t("story.guess2.label_real_short") } }
         ],
         marks: [
           { series: "real", i: iPeak, lines: lines1974(), dx: 12, dy: 4, anchor: "start" },
@@ -216,9 +237,16 @@
 
     if (!reveal2.hidden) { nsBox.hidden = false; }
     refreshReset();
+    // ---- the next questions, as two tiles; the figures come from the data files
+    var th = CMA.rows(window.CMA_DATA.ratio.threshold);
+    var tv = { opposite_share: CMA.n0(F.opposite_direction_share.value), share: CMA.n0(F.r2_dollar_index.value),
+      n_all: th.length, n_holm: th.filter(function (r) { return r.p_holm < 0.05; }).length };
+    function tile(page, textKey) {
+      return h("article", { class: "tile" }, h("span", { class: "mono", text: t("pages." + page + ".eyebrow") }), h("h3", { text: t("pages." + page + ".title") }),
+        h("p", { text: t("story." + textKey, tv) }), h("a", { href: "#" + page, text: t("story.tile_link") }));
+    }
+    wrap.appendChild(h("section", { class: "more", "aria-label": t("story.index_next") },
+      h("div", { class: "index", text: t("story.index_next") }), h("div", { class: "tiles" }, tile("dollar", "tile_dollar"), tile("ratio", "tile_ratio"))));
     CMA.pageFoot(wrap, window.CMA_STRINGS.story.sources.names, t("story.sources.attribution"));
-
-    wrap.appendChild(h("nav", { class: "next", "aria-label": "Next page" },
-      h("span"), h("a", { class: "btn", href: "#dollar", text: t("story.next", { title: t("pages.dollar.title") }) })));
   };
 })();

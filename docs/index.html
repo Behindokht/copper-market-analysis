@@ -9,29 +9,31 @@
 </head>
 <body>
 <a class="skip" href="#main">Skip to the content</a>
-<header class="top">
-  <div class="wrap bar">
+<header class="nav rise" style="--i:0">
+  <div class="nav-bar glass">
     <a class="brand" href="#story" id="brand"></a>
     <nav class="main" id="nav" aria-label="Pages"></nav>
   </div>
 </header>
 <main id="main" tabindex="-1">
   <section class="page" id="story" aria-labelledby="story-title"></section>
-  <section class="page" id="dollar" aria-labelledby="dollar-title" hidden></section>
-  <section class="page" id="ratio" aria-labelledby="ratio-title" hidden></section>
-  <section class="page" id="demand" aria-labelledby="demand-title" hidden></section>
-  <section class="page" id="quality" aria-labelledby="quality-title" hidden></section>
+  <section class="page no-hero" id="dollar" aria-labelledby="dollar-title" hidden></section>
+  <section class="page no-hero" id="ratio" aria-labelledby="ratio-title" hidden></section>
+  <section class="page no-hero" id="demand" aria-labelledby="demand-title" hidden></section>
+  <section class="page no-hero" id="quality" aria-labelledby="quality-title" hidden></section>
 </main>
 <footer class="foot" id="footer"></footer>
 <div class="sr" id="live" aria-live="polite"></div>
 <noscript><div class="wrap"><p>This site draws its charts with JavaScript. The numbers behind every chart are in the repository.</p></div></noscript>
 <script src="js/strings.en.js"></script>
+<script src="js/photo.js"></script>
 <script src="data/story.js"></script>
 <script src="data/quality.js"></script>
 <script src="data/dollar.js"></script>
 <script src="data/ratio.js"></script>
 <script src="data/demand.js"></script>
 <script src="js/util.js"></script>
+<script src="js/glass.js"></script>
 <script src="js/charts.js"></script>
 <script src="js/pages/story.js"></script>
 <script src="js/pages/dollar.js"></script>

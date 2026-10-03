@@ -1,5 +1,5 @@
 /* A small line chart in plain SVG: direct labels, call-outs, a visible gap marker, a hover and keyboard crosshair with a tooltip card.
-   Colours come from the CSS tokens (--copper, --green, ...), so the stylesheet stays the single source of truth. */
+   Colours come from the CSS tokens (--copper, --verdigris, ...), so the stylesheet stays the single source of truth. */
 (function () {
   var CMA = window.CMA;
   var h = CMA.h, svg = CMA.svg;
@@ -12,9 +12,11 @@
        tip: function (i) -> {title, lines: [text]},
        aria: text, onMove: function (i) }                                   */
   CMA.lineChart = function (host, cfg) {
-    var cur = null, tip = null, ro = null, lastW = 0, raf = 0;
+    var cur = null, tip = null, ro = null, lastW = 0, raf = 0, io = null;
+    var state = (CMA.reduce || !("IntersectionObserver" in window)) ? "done" : "pending";   // pending, running, done: the reveal plays once
     host.classList.add("chart");
 
+    var sparkEl = null;
     function color(c) { return getComputedStyle(document.documentElement).getPropertyValue(c).trim() || c; }
     function textW(s) { return 6.4 * s.length; }
 
@@ -30,6 +32,12 @@
       var Y = function (v) { return mt + ph - ((v - yMin) / (cfg.yMax - yMin)) * ph; };
       host.textContent = "";
       var s = svg("svg", { viewBox: "0 0 " + W + " " + H, role: "img", tabindex: "0", "aria-label": cfg.aria, focusable: "true" });
+      var clipId = "clip-" + Math.random().toString(36).slice(2, 8);
+      var defs = svg("defs");
+      var clip = svg("clipPath", { id: clipId });
+      clip.appendChild(svg("rect", { class: "reveal-rect", x: 0, y: 0, width: W, height: H }));
+      defs.appendChild(clip);
+      s.appendChild(defs);
 
       cfg.yTicks.forEach(function (v) {
         s.appendChild(svg("line", { x1: ml, x2: ml + pw, y1: Y(v), y2: Y(v), class: v === yMin ? "axisline" : (v === 0 ? "zeroline" : "gridline") }));
@@ -62,6 +70,8 @@
       }
 
       // lines, broken wherever a value is missing
+      var lines = svg("g", { "clip-path": "url(#" + clipId + ")" });
+      s.appendChild(lines);
       cfg.series.forEach(function (sr) {
         var d = "", pen = false;
         sr.values.forEach(function (v, i) {
@@ -69,7 +79,7 @@
           d += (pen ? "L" : "M") + X(i).toFixed(1) + " " + Y(v).toFixed(1);
           pen = true;
         });
-        s.appendChild(svg("path", { d: d, fill: "none", stroke: color(sr.color), "stroke-width": 2.2, "stroke-linejoin": "round", "stroke-linecap": "round", "stroke-dasharray": sr.dash || null }));
+        lines.appendChild(svg("path", { d: d, fill: "none", stroke: color(sr.color), "stroke-width": 2.2, "stroke-linejoin": "round", "stroke-linecap": "round", "stroke-dasharray": sr.dash || null }));
       });
 
       // open circles on both sides of the gap, so the break reads as a break
@@ -94,12 +104,12 @@
         var sr = cfg.series.filter(function (x) { return x.id === m.series; })[0];
         var cx = X(m.i), cy = Y(sr.values[m.i]);
         if (narrow) {
-          s.appendChild(svg("circle", { cx: cx, cy: cy, r: 9, fill: color("--card"), stroke: color(sr.color), "stroke-width": 2.5 }));
-          var nt = svg("text", { x: cx, y: cy + 4, "text-anchor": "middle", class: "badge", fill: color("--forest") }); nt.textContent = String(mi + 1); s.appendChild(nt);
+          s.appendChild(svg("circle", { class: "endmark", cx: cx, cy: cy, r: 9, fill: color("--card"), stroke: color(sr.color), "stroke-width": 2.5 }));
+          var nt = svg("text", { x: cx, y: cy + 4, "text-anchor": "middle", class: "badge endmark", fill: color("--ink") }); nt.textContent = String(mi + 1); s.appendChild(nt);
           box(cx - 10, cy - 10, cx + 10, cy + 10);
           return;
         }
-        s.appendChild(svg("circle", { cx: cx, cy: cy, r: 5.5, fill: color(sr.color), stroke: color("--card"), "stroke-width": 2.2 }));
+        s.appendChild(svg("circle", { class: "endmark", cx: cx, cy: cy, r: 5.5, fill: color(sr.color), stroke: color("--card"), "stroke-width": 2.2 }));
         var widest = m.lines.reduce(function (a, b) { return textW(b) > a ? textW(b) : a; }, 0);
         var anchor = m.anchor || "start", dx = m.dx || 0;
         if (anchor === "start" && cx + dx + widest > W - 4) { anchor = "end"; dx = -Math.abs(dx); }
@@ -113,7 +123,7 @@
           var ly = (m.dy || 0) > 0 ? cy + m.dy - 14 : cy + m.dy + 14.5 * (m.lines.length - 1) + 5;
           s.appendChild(svg("line", { x1: cx, y1: cy + ((m.dy || 0) > 0 ? 6 : -6), x2: cx + dx, y2: ly, class: "leader" }));
         }
-        var t = svg("text", { x: cx + dx, y: cy + (m.dy || 0), "text-anchor": anchor, class: "callout", fill: color("--forest") });
+        var t = svg("text", { x: cx + dx, y: cy + (m.dy || 0), "text-anchor": anchor, class: "callout endmark", fill: color("--ink") });
         t.setAttribute("style", "paint-order:stroke;stroke:" + color("--card") + ";stroke-width:3px;stroke-linejoin:round");
         m.lines.forEach(function (line, k) {
           var ts = svg("tspan", { x: cx + dx, dy: k === 0 ? 0 : 14.5, class: k === 0 ? "strong" : "" }); ts.textContent = line; t.appendChild(ts);
@@ -155,15 +165,24 @@
         }
         if (!best) { return; }
         box(best.x - 2, best.y0, best.x1 + 2, best.y1);
-        var t = svg("text", { x: best.x, y: best.base, "text-anchor": "start", class: "lbl", fill: color("--forest") });
+        var t = svg("text", { x: best.x, y: best.base, "text-anchor": "start", class: "lbl endmark", fill: color("--ink") });
         t.textContent = ltext;
         t.setAttribute("style", "paint-order:stroke;stroke:" + color("--card") + ";stroke-width:3.5px;stroke-linejoin:round");
         s.appendChild(t);
       });
 
+      // a small spark at the latest point of the main line, fired once when the reveal ends
+      var sp = svg("g", { class: "spark", "aria-hidden": "true" });
+      var s0 = cfg.series[0], li = s0.values.length - 1;
+      while (li > 0 && s0.values[li] == null) { li--; }
+      sp.setAttribute("transform", "translate(" + X(li).toFixed(1) + " " + Y(s0.values[li]).toFixed(1) + ") scale(" + (narrow ? 0.45 : 0.6) + ")");
+      CMA.spark.build(sp);
+      s.appendChild(sp);
+      sparkEl = sp;
+
       // crosshair
       var cross = svg("g", { class: "cross", visibility: "hidden" });
-      var vline = svg("line", { y1: mt, y2: mt + ph, stroke: color("--forest-muted"), "stroke-width": 1 });
+      var vline = svg("line", { y1: mt, y2: mt + ph, stroke: color("--muted"), "stroke-width": 1 });
       cross.appendChild(vline);
       var dots = cfg.series.map(function (sr) {
         var c = svg("circle", { r: 4.5, fill: color(sr.color), stroke: color("--card"), "stroke-width": 2 }); cross.appendChild(c); return c;
@@ -216,6 +235,26 @@
         else if (e.key === "Escape") { hide(); }
       });
       if (cur != null && document.activeElement === s) { show(cur, false); }
+      host.classList.remove("will-draw", "draw", "done");
+      if (state === "pending") { host.classList.add("will-draw"); }
+      if (state === "pending" && !io) {
+        io = new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) { io.disconnect(); startReveal(); } }); }, { threshold: 0.35 });
+        io.observe(host);
+      }
+    }
+    function startReveal() {
+      if (state !== "pending") { return; }
+      state = "running";
+      host.classList.add("draw");
+      var rect = host.querySelector(".reveal-rect");
+      if (rect) { rect.addEventListener("transitionend", finish, { once: true }); }
+      setTimeout(finish, 1400);
+    }
+    function finish() {
+      if (state === "done") { return; }
+      state = "done";
+      host.classList.add("done");
+      if (sparkEl) { CMA.spark.fire(sparkEl); }
     }
 
     draw();

@@ -5,7 +5,9 @@
   var built = {};
 
   function buildHeader() {
-    document.getElementById("brand").textContent = t("site.brand");
+    var brand = document.getElementById("brand");
+    brand.appendChild(document.createTextNode(t("site.brand")));
+    brand.appendChild(h("span", { text: t("site.brand_sub") }));
     var nav = document.getElementById("nav");
     ROUTES.forEach(function (r) { nav.appendChild(h("a", { href: "#" + r, "data-route": r, text: t("nav." + r) })); });
   }
@@ -38,6 +40,7 @@
   function show(route, moveFocus) {
     if (ROUTES.indexOf(route) < 0) { route = "story"; }
     ROUTES.forEach(function (r) { document.getElementById(r).hidden = r !== route; });
+    window.__route = route;
     Array.prototype.forEach.call(document.querySelectorAll("#nav a"), function (a) {
       if (a.getAttribute("data-route") === route) { a.setAttribute("aria-current", "page"); } else { a.removeAttribute("aria-current"); }
     });

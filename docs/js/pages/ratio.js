@@ -82,8 +82,8 @@
     var famHint = h("p", { class: "hint" });
     card.appendChild(famHint);
     card.appendChild(h("div", { class: "key" },
-      h("span", { style: "color:var(--green)" }, h("span", { class: "sw dot" }), h("span", { style: "color:var(--forest)", text: T("key_filled") })),
-      h("span", { style: "color:var(--green)" }, h("span", { class: "sw dot hollow" }), h("span", { style: "color:var(--forest)", text: T("key_hollow") }))));
+      h("span", { style: "color:var(--copper)" }, h("span", { class: "sw dot" }), h("span", { style: "color:var(--ink)", text: T("key_filled") })),
+      h("span", { style: "color:var(--copper)" }, h("span", { class: "sw dot hollow" }), h("span", { style: "color:var(--ink)", text: T("key_hollow") }))));
     var host = h("div", { class: "dots" });
     card.appendChild(host);
     var xnote = h("p", { class: "small muted", style: "margin-top:6px" });
@@ -128,7 +128,7 @@
         g.appendChild(svg("rect", { x: 0, y: y0, width: W, height: rowH, class: "rowbg", rx: 4 }));
         var l1 = svg("text", { x: 10, y: cy - 4, class: "rowlab" }); l1.textContent = rowLabel(r); g.appendChild(l1);
         var l2 = svg("text", { x: 10, y: cy + 13, class: "rowsub" }); l2.textContent = epText(r.episodes); g.appendChild(l2);
-        var color = getComputedStyle(document.documentElement).getPropertyValue("--green").trim();
+        var color = getComputedStyle(document.documentElement).getPropertyValue("--copper").trim();
         var card_ = getComputedStyle(document.documentElement).getPropertyValue("--card").trim();
         g.appendChild(svg("line", { x1: X(r.diff_ci_low), x2: X(r.diff_ci_high), y1: cy, y2: cy, stroke: color, "stroke-width": 2.5, "stroke-linecap": "round" }));
         [r.diff_ci_low, r.diff_ci_high].forEach(function (e) { g.appendChild(svg("line", { x1: X(e), x2: X(e), y1: cy - 6, y2: cy + 6, stroke: color, "stroke-width": 2.5, "stroke-linecap": "round" })); });
@@ -223,7 +223,7 @@
     SR.forEach(function (r, i) { var y = +r.month.slice(0, 4); if (r.month.slice(5, 7) === "01" && y % 10 === 0) { xTicks.push({ i: i, label: String(y) }); } });
     CMA.lineChart(chost, {
       n: n, yMax: 5, yTicks: [0, 1, 2, 3, 4, 5], yFormat: CMA.n0, yLabel: T("ctx_y"), xTicks: xTicks, marginRight: 24,
-      series: [{ id: "ratio", color: "--green", values: vals, label: { text: T("ctx_label"), short: T("ctx_label_short") } }],
+      series: [{ id: "ratio", color: "--copper", values: vals, label: { text: T("ctx_label"), short: T("ctx_label_short") } }],
       marks: marks,
       tip: function (i) {
         var r = SR[i];

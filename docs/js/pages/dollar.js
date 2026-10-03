@@ -77,8 +77,8 @@
     var card = h("div", { class: "card chart-card" });
     card.appendChild(h("h3", { class: "qtitle", text: T("main_title") }));
     card.appendChild(h("div", { class: "key" },
-      h("span", { style: "color:var(--copper)" }, h("span", { class: "sw" }), h("span", { style: "color:var(--forest)", text: T("label_copper") })),
-      h("span", { style: "color:var(--green)" }, h("span", { class: "sw" }), h("span", { style: "color:var(--forest)", text: T("label_dollar") }))));
+      h("span", { style: "color:var(--copper)" }, h("span", { class: "sw" }), h("span", { style: "color:var(--ink)", text: T("label_copper") })),
+      h("span", { style: "color:var(--verdigris)" }, h("span", { class: "sw dash" }), h("span", { style: "color:var(--ink)", text: T("label_dollar") }))));
     var host = h("div", { class: "chart-host" });
     card.appendChild(host);
     var N = SER.length, cu = SER.map(function (r) { return r.copper_indexed; }), dol = SER.map(function (r) { return r.dollar_indexed; });
@@ -97,7 +97,7 @@
       n: N, yMin: 50, yMax: top, yTicks: yTicks, yFormat: CMA.n0, yLabel: T("main_y", { base_month: baseMonth }), xTicks: xTicks, marginRight: 24,
       series: [
         { id: "copper", color: "--copper", values: cu, label: { text: T("label_copper"), short: T("label_copper_short") } },
-        { id: "dollar", color: "--green", values: dol, label: { text: T("label_dollar"), short: T("label_dollar_short") } }
+        { id: "dollar", color: "--verdigris", dash: "6 4", values: dol, label: { text: T("label_dollar"), short: T("label_dollar_short") } }
       ],
       marks: marks,
       tip: function (i) {
@@ -126,8 +126,8 @@
     var rcard = h("div", { class: "card chart-card" });
     rcard.appendChild(h("h3", { class: "qtitle", text: T("chart_title") }));
     rcard.appendChild(h("div", { class: "key" },
-      h("span", { style: "color:var(--copper)" }, h("span", { class: "sw" }), h("span", { style: "color:var(--forest)", text: T("label_index") })),
-      h("span", { style: "color:var(--green)" }, h("span", { class: "sw dash" }), h("span", { style: "color:var(--forest)", text: T("label_euro") }))));
+      h("span", { style: "color:var(--copper)" }, h("span", { class: "sw" }), h("span", { style: "color:var(--ink)", text: T("label_index") })),
+      h("span", { style: "color:var(--verdigris)" }, h("span", { class: "sw dash" }), h("span", { style: "color:var(--ink)", text: T("label_euro") }))));
     var rhost = h("div", { class: "chart-host" });
     rcard.appendChild(rhost);
     rcard.appendChild(h("p", { class: "small muted", style: "margin-top:10px", text: T("below_hint") }));
@@ -148,7 +148,7 @@
       refLabel: ryT.indexOf(0) >= 0 ? { v: 0, text: T("zero_label") } : null,
       series: [
         { id: "index", color: "--copper", values: idxVals, label: { text: T("label_index"), short: T("label_index_short") } },
-        { id: "euro", color: "--green", dash: "6 4", values: eurVals, label: { text: T("label_euro"), short: T("label_euro_short") } }
+        { id: "euro", color: "--verdigris", dash: "6 4", values: eurVals, label: { text: T("label_euro"), short: T("label_euro_short") } }
       ],
       marks: rmarks,
       tip: function (i) {

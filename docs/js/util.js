@@ -84,5 +84,20 @@
     }
     wrap.appendChild(CMA.h("p", { class: "small muted notadvice", text: CMA.t("foot.not_advice") }));
   };
+  // motion plays once and never loops; with reduced motion there is none, and everything is visible at rest
+  CMA.reduce = !!(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+  var RAYS = [[-78, 22, 0], [-56, 30, 30], [-38, 18, 10], [-18, 28, 55], [4, 20, 20], [26, 26, 45], [50, 16, 70], [-100, 14, 25], [72, 12, 60]];
+  CMA.spark = {
+    build: function (el) {
+      RAYS.forEach(function (r) {
+        var a = r[0] * Math.PI / 180, len = r[1], r0 = 8;
+        var l = CMA.svg("line", { x1: (Math.cos(a) * r0).toFixed(2), y1: (Math.sin(a) * r0).toFixed(2), x2: (Math.cos(a) * (r0 + len)).toFixed(2), y2: (Math.sin(a) * (r0 + len)).toFixed(2) });
+        l.style.setProperty("--len", len); l.style.setProperty("--neg", -len); l.style.setProperty("--d", r[2] + "ms");
+        el.appendChild(l);
+      });
+      el.appendChild(CMA.svg("circle", { cx: 0, cy: 0, r: 2.6 }));
+    },
+    fire: function (el) { if (CMA.reduce) { return; } el.classList.remove("go"); void el.getBoundingClientRect(); el.classList.add("go"); }
+  };
   CMA.pages = CMA.pages || {};
 })();

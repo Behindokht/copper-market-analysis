@@ -9,6 +9,7 @@ Checks on the static site in docs/ (run before every commit that touches it):  p
   5. the strings never contain a hard-coded percentage: every number on the site comes from the data files
   6. the Story's first guess never uses the word that would turn an association into a cause
   7. the contrast of every colour pair in use passes (tools/contrast_report.py)
+  10. every font file covers every character used by the site (tools/font_coverage.py)
   9. wording: the demand text never says gap, deficit or shortage
   8. plain text style: no em dash or en dash in any site file, none of the stiff words in the banned list, and no sentence over 25 words
      in the page text (lists of credits and attributions are citations and are exempt from the length rule)
@@ -57,7 +58,7 @@ for rel in re.findall(r"url\(\"\.\./(fonts/[^\"]+)\"\)", css):
     if not (DOCS / rel).exists():
         problems.append(f"FONT missing file docs/{rel}")
 for fam in families:
-    lic = DOCS / "fonts" / ("OFL-" + fam.replace(" ", "") + ".txt")
+    lic = DOCS / "fonts" / ("OFL-" + fam.replace(" ", "-") + ".txt")
     if not lic.exists():
         problems.append(f"FONT licence text missing for {fam}: expected {lic.relative_to(ROOT).as_posix()}")
     elif "SIL OPEN FONT LICENSE" not in lic.read_text(encoding="utf-8", errors="replace").upper():
@@ -146,8 +147,16 @@ for k, v in keys.items():
             if isinstance(s_, str) and re.search(r"\b(gap|gaps|deficit|deficits|shortage|shortages|shortfall)\b", s_, re.I):
                 problems.append(f"WORDING {k}: the demand pages never say gap, deficit or shortage")
 
+# 10. every font file covers every character the site can show
+venv = ROOT / ".venv" / "Scripts" / "python.exe"
+r = subprocess.run([str(venv) if venv.exists() else sys.executable, str(ROOT / "tools" / "font_coverage.py")], capture_output=True, text=True, encoding="utf-8", errors="replace")
+if r.returncode != 0:
+    problems.extend(line for line in r.stdout.splitlines() if line.startswith("FONT COVERAGE"))
+elif r.stdout.startswith("SKIPPED"):
+    print("note: font coverage check skipped (fontTools missing)")
+
 # 7. contrast
-r = subprocess.run([sys.executable, str(ROOT / "tools" / "contrast_report.py")], capture_output=True, text=True, encoding="utf-8", errors="replace")
+r = subprocess.run([str(venv) if venv.exists() else sys.executable, str(ROOT / "tools" / "contrast_report.py")], capture_output=True, text=True, encoding="utf-8", errors="replace")
 if r.returncode != 0:
     problems.append("CONTRAST " + (r.stdout.strip().splitlines()[-1] if r.stdout.strip() else r.stderr.strip()))
 
