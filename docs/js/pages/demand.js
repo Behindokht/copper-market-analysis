@@ -6,7 +6,7 @@
 
   function num(x) { return x == null ? "" : CMA.minus(String(Math.round(x * 100) / 100)); }
 
-  CMA.pages.demand = function (root) {
+  CMA.chapters.demand = function (box) {
     var D = window.CMA_DATA.demand, Q = window.CMA_DATA.quality;
     var EV = CMA.rows(D.ev_cases), DC = CMA.rows(D.dc_cases), AS = CMA.rows(D.assumptions), CT = CMA.rows(D.context);
     var SE = CMA.rows(D.sensitivity), RG = CMA.rows(D.ranges), KI = CMA.rows(Q.known_issues);
@@ -52,14 +52,9 @@
       r2_lo: CMA.n1(rg["all_combinations:low"].total_pct_of_mine), r2_hi: CMA.n1(rg["all_combinations:high"].total_pct_of_mine)
     };
 
-    root.textContent = "";
-    var wrap = h("div", { class: "wrap" });
-    root.appendChild(wrap);
-    wrap.appendChild(h("header", { class: "page-head" },
-      h("p", { class: "eyebrow", text: CMA.t("pages.demand.eyebrow") }),
-      h("h2", { id: "demand-title", tabindex: "-1", text: CMA.t("pages.demand.title") }),
-      h("p", { class: "answer", text: T("answer", vars) }),
-      h("p", { class: "intro", text: T("intro", vars) })));
+    var wrap = box;
+    wrap.appendChild(h("p", { class: "answer", text: T("answer", vars) }));
+    wrap.appendChild(h("p", { class: "intro", text: T("intro", vars) }));
     wrap.appendChild(h("p", { class: "verdict", text: T("warn") }));
     var findingsEl = h("section", { class: "findings", "aria-label": "Findings" },
       h("p", { class: "finding", text: T("finding_3", vars) }), h("p", { class: "finding", text: T("finding_4", vars) }));
@@ -274,9 +269,7 @@
     wrap.appendChild(issues);
     wrap.appendChild(nsEl);
     wrap.appendChild(CMA.fold(T("details_lead"), [sensEl, limitsEl, inputsEl]));
-    CMA.pageFoot(wrap, window.CMA_STRINGS.demand.sources.names, T("sources.attribution"));
-    wrap.appendChild(h("nav", { class: "next", "aria-label": "Next page" },
-      h("a", { class: "btn secondary", href: "#ratio", text: CMA.t("nav.ratio") }),
-      h("a", { class: "btn", href: "#quality", text: T("next", { title: CMA.t("pages.quality.title") }) })));
+    CMA.sources.add(window.CMA_STRINGS.demand.sources.names, T("sources.attribution"));
+    CMA.bridge(wrap, T("bridge"));
   };
 })();

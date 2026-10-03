@@ -30,6 +30,14 @@ PAGES = {
         "copper_series": "res_story_copper_series",
         "record_facts": "res_story_copper_record_facts",
     },
+    "chapters": {
+        "records": "res_interlude_records",
+        "euro": "res_euro_record",
+        "events": "res_events",
+    },
+    "supply": {
+        "countries": "res_supply_countries",
+    },
     "dollar": {
         "correlations": "res_dollar_correlations",
         "regressions": "res_dollar_regressions",

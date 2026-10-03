@@ -99,5 +99,34 @@
     },
     fire: function (el) { if (CMA.reduce) { return; } el.classList.remove("go"); void el.getBoundingClientRect(); el.classList.add("go"); }
   };
+  // chapters of the story page: each one fills the box it is given; the sources of all chapters end up in one list at the foot of the page
+  CMA.chapters = CMA.chapters || {};
+  CMA.sources = {
+    names: {}, notes: [], box: null,
+    reset: function () { CMA.sources.names = {}; CMA.sources.notes = []; CMA.sources.box = null; },
+    add: function (names, attribution) {
+      Object.keys(names || {}).forEach(function (id) { CMA.sources.names[id] = names[id]; });
+      if (attribution && CMA.sources.notes.indexOf(attribution) < 0) { CMA.sources.notes.push(attribution); }
+      CMA.sources.refresh();                      // chapters can be built after the list is on the page (a guess opens its chapter later)
+    },
+    refresh: function () {
+      var bx = CMA.sources.box;
+      if (!bx) { return; }
+      var reg = {};
+      CMA.rows(window.CMA_DATA.quality.sources).forEach(function (r) { reg[r.source_id] = r; });
+      bx.textContent = "";
+      bx.appendChild(CMA.h("ul", { class: "chips" }, Object.keys(CMA.sources.names).sort().map(function (id) {
+        return CMA.h("li", { class: "chip" }, CMA.h("b", { text: id }), " " + CMA.sources.names[id] + ", " + CMA.t("story.sources.reliability", { reliability: reg[id] ? reg[id].reliability : "unrated" }));
+      })));
+      CMA.sources.notes.forEach(function (n) { bx.appendChild(CMA.h("p", { class: "attrib", text: n })); });
+    },
+    render: function (wrap) {
+      CMA.sources.box = CMA.h("div", {});
+      wrap.appendChild(CMA.h("details", { class: "srcfold", id: "sources" }, CMA.h("summary", { text: CMA.t("foot.sources") }), CMA.sources.box));
+      wrap.appendChild(CMA.h("p", { class: "small muted notadvice", text: CMA.t("foot.not_advice") }));
+      CMA.sources.refresh();
+    }
+  };
+  CMA.bridge = function (box, text) { box.appendChild(CMA.h("p", { class: "bridge", text: text })); };
   CMA.pages = CMA.pages || {};
 })();

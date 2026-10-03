@@ -1,15 +1,18 @@
-/* App shell: header, navigation, page switching by #hash, footer. Pages 2 to 5 are placeholders until they are built. */
+/* App shell: navigation, footer, and two views: the story (one long page with chapter anchors) and the data-quality appendix.
+   The nav jumps to chapters and marks the one the reader is in. */
 (function () {
   var CMA = window.CMA, t = CMA.t, h = CMA.h;
-  var ROUTES = ["story", "dollar", "ratio", "demand", "quality"];
-  var built = {};
+  var NAV = [["record", "record"], ["just-copper", "just"], ["dollar", "dollar"], ["aluminium", "aluminium"], ["supply", "supply"], ["demand", "demand"], ["summary", "summary"], ["quality", "quality"]];
+  var LEGACY = { ratio: "aluminium", story: "record" };      // old page links still land in the right place
+  var built = {}, spy = null, current = null;
 
   function buildHeader() {
     var brand = document.getElementById("brand");
     brand.appendChild(document.createTextNode(t("site.brand")));
     brand.appendChild(h("span", { text: t("site.brand_sub") }));
     var nav = document.getElementById("nav");
-    ROUTES.forEach(function (r) { nav.appendChild(h("a", { href: "#" + r, "data-route": r, text: t("nav." + r) })); });
+    nav.setAttribute("aria-label", t("nav.chapters_aria"));
+    NAV.forEach(function (n) { nav.appendChild(h("a", { href: "#" + n[0], "data-target": n[0], text: t("nav." + n[1]) })); });
   }
 
   function buildFooter() {
@@ -28,36 +31,70 @@
       h("p", { class: "fine", text: f.disclaimer })));
   }
 
-  function placeholder(route) {
-    var el = document.getElementById(route);
-    el.appendChild(h("div", { class: "wrap" },
-      h("header", { class: "page-head" },
-        h("p", { class: "eyebrow", text: t("pages." + route + ".eyebrow") }),
-        h("h2", { id: route + "-title", tabindex: "-1", text: t("pages." + route + ".title") })),
-      h("div", { class: "placeholder", text: t("pages.placeholder") })));
+  function mark(target) {
+    Array.prototype.forEach.call(document.querySelectorAll("#nav a"), function (a) {
+      if (a.getAttribute("data-target") === target) { a.setAttribute("aria-current", target === "quality" ? "page" : "location"); } else { a.removeAttribute("aria-current"); }
+    });
+    current = target;
+    var active = document.querySelector('#nav a[aria-current]');
+    if (active && active.scrollIntoView && document.getElementById("nav").scrollWidth > document.getElementById("nav").clientWidth) {
+      var nav = document.getElementById("nav");
+      nav.scrollLeft = active.offsetLeft - nav.clientWidth / 2 + active.clientWidth / 2;
+    }
   }
 
-  function show(route, moveFocus) {
-    if (ROUTES.indexOf(route) < 0) { route = "story"; }
-    ROUTES.forEach(function (r) { document.getElementById(r).hidden = r !== route; });
-    window.__route = route;
-    Array.prototype.forEach.call(document.querySelectorAll("#nav a"), function (a) {
-      if (a.getAttribute("data-route") === route) { a.setAttribute("aria-current", "page"); } else { a.removeAttribute("aria-current"); }
-    });
-    if (!built[route]) {
-      built[route] = true;
-      if (CMA.pages[route]) { CMA.pages[route](document.getElementById(route)); } else { placeholder(route); }
-    }
-    document.title = t("nav." + route) + " | " + t("site.title");
-    if (moveFocus) {
+  // which chapter is the reader in: the last one whose top has passed a line a little below the nav bar
+  function watch() {
+    if (spy) { return; }
+    var update = function () {
+      if (document.getElementById("story").hidden) { return; }
+      var line = 140, id = CMA.CHAPTER_IDS[0], any = false;
+      CMA.CHAPTER_IDS.forEach(function (cid) {
+        var el = document.getElementById(cid);
+        if (el && el.getBoundingClientRect().top <= line) { id = cid; any = true; }
+      });
+      mark(any ? id : null);
+    };
+    var tick = 0;
+    spy = function () { cancelAnimationFrame(tick); tick = requestAnimationFrame(update); };
+    window.addEventListener("scroll", spy, { passive: true });
+    window.addEventListener("resize", spy);
+    update();
+  }
+
+  function view(name) {
+    document.getElementById("story").hidden = name !== "story";
+    document.getElementById("quality").hidden = name !== "quality";
+    if (!built[name]) { built[name] = true; CMA.pages[name](document.getElementById(name)); }
+  }
+
+  // the hash is a chapter anchor, "quality", or an older page name
+  function show(hash, moveFocus) {
+    var id = LEGACY[hash] && hash !== "story" ? LEGACY[hash] : hash;
+    if (id === "quality") {
+      view("quality");
+      mark("quality");
+      document.title = t("nav.quality") + " | " + t("site.title");
       window.scrollTo(0, 0);
-      var head = document.getElementById(route + "-title");
-      if (head) { head.focus({ preventScroll: true }); }
+      if (moveFocus) { var hq = document.getElementById("quality-title"); if (hq) { hq.focus({ preventScroll: true }); } }
+      return;
+    }
+    view("story");
+    document.title = t("site.title");
+    watch();
+    var el = CMA.CHAPTER_IDS.indexOf(id) >= 0 ? document.getElementById(id) : null;
+    if (el) {
+      el.scrollIntoView({ behavior: CMA.reduce || !moveFocus ? "auto" : "smooth", block: "start" });
+      mark(id);
+      if (moveFocus) { var hd = document.getElementById(id + "-title"); if (hd) { hd.focus({ preventScroll: true }); } }
+    } else {
+      window.scrollTo(0, 0);
+      if (spy) { spy(); }
     }
   }
 
   buildHeader();
   buildFooter();
   window.addEventListener("hashchange", function () { show(location.hash.slice(1), true); });
-  show(location.hash.slice(1) || "story", false);
+  show(location.hash.slice(1), false);
 })();

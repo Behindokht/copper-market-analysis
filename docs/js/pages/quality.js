@@ -115,8 +115,7 @@
     wrap.appendChild(CMA.fold(T("details_lead"), fold));
     CMA.pageFoot(wrap, null);
 
-    wrap.appendChild(h("nav", { class: "next", "aria-label": "Next page" },
-      h("a", { class: "btn secondary", href: "#demand", text: CMA.t("nav.demand") }),
-      h("a", { class: "btn", href: "#story", text: T("next_back") })));
+    wrap.appendChild(h("nav", { class: "next", "aria-label": "Back" },
+      h("a", { class: "btn secondary", href: "#summary", text: T("next_back") })));
   };
 })();

@@ -498,6 +498,59 @@
     "S28"
    ],
    "note": "outputs show derived figures: records by commodity, the euro record, production and reserves by country, record checks; no LME values"
+  },
+  "results/res_events.csv": {
+   "sources": [
+    "S02",
+    "S22",
+    "S23",
+    "S24",
+    "S26"
+   ],
+   "note": "the six approved markers for the chapter 1 price chart, each with its source and the as-quoted price that month (World Bank, CC BY 4.0)"
+  },
+  "docs/data/chapters.js": {
+   "sources": [
+    "S02",
+    "S04",
+    "S16",
+    "S22",
+    "S23",
+    "S24",
+    "S26",
+    "S27"
+   ],
+   "note": "interlude records by commodity, the euro record and the approved chart events (derived; World Bank prices, US CPI, the euro rate)"
+  },
+  "docs/data/supply.js": {
+   "sources": [
+    "S06",
+    "S28"
+   ],
+   "note": "USGS 2025 mine output (estimates) and reserves by country with shares and a simple reserve-life ratio"
+  },
+  "docs/data/map.js": {
+   "sources": [
+    "S29",
+    "S30"
+   ],
+   "note": "world outline projected to Equal Earth as plain SVG paths (Natural Earth 1:110m, public domain, via world-atlas, ISC) and the circle positions",
+   "large_datasets": []
+  },
+  "tools/geo/countries-110m.json": {
+   "sources": [
+    "S29",
+    "S30"
+   ],
+   "note": "Natural Earth 1:110m country boundaries as TopoJSON (world-atlas 2.0.2); public domain data, ISC package",
+   "large_ok": true
+  },
+  "tools/geo/README.md": {
+   "sources": [
+    "S29",
+    "S30"
+   ],
+   "note": "where the map data comes from and its licences"
   }
  }
 }

@@ -16,7 +16,7 @@
   }
   function range(lo, hi) { return " (" + CMA.f2(lo) + " to " + CMA.f2(hi) + ")"; }
 
-  CMA.pages.dollar = function (root) {
+  CMA.chapters.dollar = function (box) {
     var D = window.CMA_DATA.dollar, St = window.CMA_DATA.story;
     var corr = CMA.rows(D.correlations), reg = CMA.rows(D.regressions), stab = CMA.rows(D.stability), roll = CMA.rows(D.rolling), SER = CMA.rows(D.series);
     var lag = CMA.rows(D.lead_lag), cum = CMA.rows(D.eur_cumulative), vr = CMA.rows(D.eur_variance), cpi = CMA.rows(D.cpi_sensitivity), me = CMA.rows(D.month_end);
@@ -64,14 +64,9 @@
       sd_eur: CMA.n1(sdEur), sd_usd: CMA.n1(sdUsd), sd_months: sdMonths, sd_from: ym(sdFrom), sd_to: ym(sdTo)
     };
 
-    root.textContent = "";
-    var wrap = h("div", { class: "wrap" });
-    root.appendChild(wrap);
-    wrap.appendChild(h("header", { class: "page-head" },
-      h("p", { class: "eyebrow", text: CMA.t("pages.dollar.eyebrow") }),
-      h("h2", { id: "dollar-title", tabindex: "-1", text: CMA.t("pages.dollar.title") }),
-      h("p", { class: "answer", text: T("answer") }),
-      h("p", { class: "intro", text: T("intro") })));
+    var wrap = box;
+    wrap.appendChild(h("p", { class: "answer", text: T("answer") }));
+    wrap.appendChild(h("p", { class: "intro", text: T("intro") }));
 
     // ---- the one simple chart: copper and the broad dollar index, both set to 100 at the start
     var card = h("div", { class: "card chart-card" });
@@ -225,9 +220,7 @@
         ntbody))));
     wrap.appendChild(CMA.fold(T("details_lead"), fold));
 
-    CMA.pageFoot(wrap, window.CMA_STRINGS.dollar.sources.names, T("sources.attribution"));
-    wrap.appendChild(h("nav", { class: "next", "aria-label": "Next page" },
-      h("a", { class: "btn secondary", href: "#story", text: CMA.t("nav.story") }),
-      h("a", { class: "btn", href: "#ratio", text: T("next", { title: CMA.t("pages.ratio.title") }) })));
+    CMA.sources.add(window.CMA_STRINGS.dollar.sources.names, T("sources.attribution"));
+    CMA.bridge(wrap, T("bridge"));
   };
 })();

@@ -1,9 +1,7 @@
 event_id,month,label,description,kind,status,source_id
-E1,1973-10,Oil embargo begins,An Arab oil embargo on the United States starts on 19 October 1973. Oil prices nearly quadruple by January 1974.,event,proposed,S22
-E2,2008-09,Lehman Brothers fails,"The investment bank files for bankruptcy on 15 September 2008, in the middle of the global financial crisis.",event,proposed,S23
-E3,2011-02,Record as quoted,Copper reaches its highest monthly average as quoted so far. That record holds until May 2021.,record,proposed,S02
-E4,2020-03,Pandemic declared,"The World Health Organization says COVID-19 can be characterized as a pandemic, on 11 March 2020.",event,proposed,S24
-E5,2021-05,2011 record passed,Copper's monthly average passes the February 2011 high for the first time.,record,proposed,S02
-E6,2025-07,US copper tariff,The United States sets a 50% tariff on imports of semi-finished copper products from 1 August 2025. Refined copper is left for a later decision.,event,proposed,S25
-E7,2025-09,Grasberg mine accident,A mud rush at the Grasberg Block Cave mine in Indonesia on 8 September 2025 disrupts operations. The operator declares force majeure to its customers.,event,proposed,S26
-E8,2026-08,New record as quoted,"Copper's monthly average sets a new high as quoted, the highest since the series starts in 1960.",record,proposed,S02
+E1,1973-10,Oil embargo begins,An Arab oil embargo on the United States starts on 19 October 1973. Oil prices nearly quadruple by January 1974.,event,approved,S22
+E2,2008-09,Lehman Brothers fails,"The investment bank files for bankruptcy on 15 September 2008, in the middle of the global financial crisis.",event,approved,S23
+E3,2011-02,Record as quoted,Copper reaches its highest monthly average as quoted so far. That record holds until May 2021.,record,approved,S02
+E4,2020-03,Pandemic declared,"The World Health Organization says COVID-19 can be characterized as a pandemic, on 11 March 2020.",event,approved,S24
+E7,2025-09,Grasberg mine accident,A mud rush at the Grasberg Block Cave mine in Indonesia on 8 September 2025 disrupts operations. The operator declares force majeure to its customers.,event,approved,S26
+E8,2026-08,New record as quoted,"Copper's monthly average sets a new high as quoted, the highest since the series starts in 1960.",record,approved,S02

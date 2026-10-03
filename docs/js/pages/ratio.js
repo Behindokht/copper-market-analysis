@@ -8,7 +8,7 @@
   function range(lo, hi, f) { f = f || CMA.f1; return " (" + f(lo) + " to " + f(hi) + ")"; }
   function sum(a, f) { return a.reduce(function (t, x) { return t + f(x); }, 0); }
 
-  CMA.pages.ratio = function (root) {
+  CMA.chapters.ratio = function (box) {
     var D = window.CMA_DATA.ratio;
     var TH = CMA.rows(D.threshold), EP = CMA.rows(D.episodes), SL = CMA.rows(D.slopes), SC = CMA.rows(D.scenario_today), SR = CMA.rows(D.series);
     var F = {};
@@ -34,15 +34,10 @@
       top_threshold: CMA.n1(topT), years: Math.floor(F.series_months.value / 12), top_ep_min: Math.min.apply(null, topEps), top_ep_max: Math.max.apply(null, topEps)
     };
 
-    root.textContent = "";
-    var wrap = h("div", { class: "wrap" });
-    root.appendChild(wrap);
-    wrap.appendChild(h("header", { class: "page-head" },
-      h("p", { class: "eyebrow", text: CMA.t("pages.ratio.eyebrow") }),
-      h("h2", { id: "ratio-title", tabindex: "-1", text: CMA.t("pages.ratio.title") }),
-      h("p", { class: "hook", text: T("hook", vars) }),
-      h("p", { class: "answer", text: T("answer") }),
-      h("p", { class: "intro", text: T("intro", vars) })));
+    var wrap = box;
+    wrap.appendChild(h("p", { class: "hook", text: T("hook", vars) }));
+    wrap.appendChild(h("p", { class: "answer", text: T("answer") }));
+    wrap.appendChild(h("p", { class: "intro", text: T("intro", vars) }));
     var findingsEl = (h("section", { class: "findings", "aria-label": "Findings" },
       h("p", { class: "finding", text: T("finding_1", vars) }),
       h("p", { class: "finding", text: T("finding_2", vars) }),
@@ -282,9 +277,7 @@
     wrap.appendChild(h("aside", { class: "note", "aria-labelledby": "ratio-ns" },
       h("h3", { id: "ratio-ns", text: T("notshow.title") }), h("ul", {}, window.CMA_STRINGS.ratio.notshow.items.map(function (x) { return h("li", { text: x }); }))));
     wrap.appendChild(CMA.fold(T("details_lead"), foldItems));
-    CMA.pageFoot(wrap, window.CMA_STRINGS.ratio.sources.names, T("sources.attribution"));
-    wrap.appendChild(h("nav", { class: "next", "aria-label": "Next page" },
-      h("a", { class: "btn secondary", href: "#dollar", text: CMA.t("nav.dollar") }),
-      h("a", { class: "btn", href: "#demand", text: T("next", { title: CMA.t("pages.demand.title") }) })));
+    CMA.sources.add(window.CMA_STRINGS.ratio.sources.names, T("sources.attribution"));
+    CMA.bridge(wrap, T("bridge"));
   };
 })();

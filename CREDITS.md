@@ -19,7 +19,14 @@ Nothing is loaded from the web when the site runs.
 | Broad dollar index (DTWEXBGS), euro exchange rate (EXUSEU), 10-year yield (GS10) | Board of Governors of the Federal Reserve System (US), retrieved from FRED, Federal Reserve Bank of St. Louis | Public domain, citation requested |
 | Missing October 2025 US CPI | U.S. Bureau of Labor Statistics, 2025 federal government shutdown impact on the CPI (FAQ) | Public domain (US government work) |
 
-Pages not built yet will add their sources here when they go live (IEA, USGS and the secondary articles are listed in `copper_database/collected/sources.csv` with their reliability and licence notes).
+| Mine output and reserves by country | US Geological Survey, Mineral Commodity Summaries 2026, copper | US government work; generally public domain (see `sources.csv`, S06) |
+| World outline for the supply map | Natural Earth, 1:110m admin 0 country boundaries, version 4.1.0 (<https://www.naturalearthdata.com/>) | Public domain. Made with Natural Earth |
+| Map data as TopoJSON | world-atlas 2.0.2 (<https://github.com/topojson/world-atlas>) | ISC licence; the data is Natural Earth. The outline is projected to Equal Earth by `tools/build_map.py` |
+| Country codes (ISO alpha-3 and UN M49) | United Nations Statistics Division, M49 standard | Codes cited |
+| Dates and facts in the chart events | Federal Reserve History (S22, S23, S27), World Health Organization (S24), Freeport-McMoRan news release (S26) | Facts cited with a link, no text copied; see `collected/events.csv` and `sources.csv` |
+| Electric-car and data-centre scenario inputs | International Energy Agency (S05, S15, S21); copper per car and per MW from secondary articles (S11, S13) | IEA terms to be confirmed before publishing; see `copper_database/README.md` |
+
+The full list, with reliability and licence notes, is in `copper_database/collected/sources.csv` and on the data-quality page of the site.
 
 ## Not published
 

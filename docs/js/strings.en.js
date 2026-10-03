@@ -8,17 +8,21 @@ window.CMA_STRINGS = {
   "title": "Copper market analysis"
  },
  "nav": {
-  "story": "Story",
+  "record": "Record",
+  "just": "Not only copper",
   "dollar": "Dollar",
-  "ratio": "Ratio",
+  "aluminium": "Aluminium",
+  "supply": "Supply",
   "demand": "Demand",
-  "quality": "Data quality"
+  "summary": "Summary",
+  "quality": "Data quality",
+  "chapters_aria": "Chapters of the story"
  },
  "hero": {
   "eyebrow": "Data analysis portfolio. SQL and Python.",
   "title_em": "Copper",
-  "title_rest": ": who needs it, who supplies it, and what does the price do when they collide?",
-  "lead": "A look at the copper market, with the data checks in plain view. Start with two guesses. Then see the numbers.",
+  "title_rest": " is at a record price. Is it as special as it looks?",
+  "lead": "A look at the copper market, with the data checks in plain view. Make two guesses along the way. Each takes a few seconds.",
   "fact_months": "monthly prices since {year}",
   "fact_checks": "automatic data checks",
   "plaque_aria": "Latest copper price",
@@ -31,40 +35,39 @@ window.CMA_STRINGS = {
   "cert_real_v": "{pct}% below {month}"
  },
  "pages": {
+  "record": {
+   "title": "Is copper at a record high right now?"
+  },
+  "just": {
+   "title": "Is it just copper?"
+  },
   "dollar": {
-   "eyebrow": "Dollar vs copper",
    "title": "Does copper get cheaper when the US dollar gets stronger?"
   },
   "ratio": {
-   "eyebrow": "Copper vs aluminium",
    "title": "Does a high copper-to-aluminium price ratio say anything about the next year?"
   },
+  "supply": {
+   "title": "Who supplies copper, and how much is left?"
+  },
   "demand": {
-   "eyebrow": "Demand scenario",
    "title": "How much extra copper could electric cars and data centres need by 2030?"
   },
-  "quality": {
-   "eyebrow": "Data quality",
-   "title": "Can you trust these numbers? The checks and the sources"
+  "summary": {
+   "title": "What does it all add up to?"
   },
-  "placeholder": "This page comes next."
+  "quality": {
+   "eyebrow": "Appendix",
+   "title": "Can you trust these numbers? The checks and the sources"
+  }
  },
  "story": {
-  "eyebrow": "Story",
-  "title": "How well do you already know copper's price?",
-  "intro": "Guess first, then see the numbers. Each guess takes a few seconds.",
-  "found_title": "What I found",
-  "found_dollar": "Copper and the US dollar moved in opposite directions in {opposite_share}% of months since {index_from}. The link is real but loose.",
-  "found_record": "As quoted at the time, copper is at a record high in {latest_month}. After taking out US inflation, it is not.",
-  "found_ratio": "Copper costs {ratio_latest} times as much as aluminium, the highest in {years} years. That has happened too rarely to say what comes next.",
-  "found_more": "See the evidence",
-  "found_more_record": "Go to guess 2",
   "reset": "Clear my guesses",
-  "index_guess": "Guess",
-  "index_next": "Next",
-  "tile_dollar": "{opposite_share}% of months moved in opposite directions. The dollar is linked to about {share}% of copper's monthly moves.",
-  "tile_ratio": "The result is weak. Only {n_holm} of {n_all} tests still counts after allowing for the many tests tried.",
-  "tile_link": "Read the analysis",
+  "skip": "Skip to the answer",
+  "chapter": "Chapter",
+  "interlude": "Interlude",
+  "summary_index": "Summary",
+  "guess_label": "Guess",
   "guess1": {
    "question": "How much of copper's monthly ups and downs is linked to the US dollar?",
    "hint": "The left end is none of the moves. The right end is all of them. Drag the slider, then lock in your guess.",
@@ -99,7 +102,6 @@ window.CMA_STRINGS = {
    "reveal_title": "What the numbers say",
    "match": "Your answer matches the numbers.",
    "differ": "The numbers say otherwise. The second answer is the right one.",
-   "finding": "As quoted at the time, copper averaged {nominal} a tonne in {latest_month}. That is the highest monthly average in {months} months, since {series_start}. Take out US inflation and the picture changes. {above_count} months were higher. Today is {below_2011}% below February 2011, the high since 1990. April 1974 was {peak_above}% above today.",
    "note_2011": "February 2011 is the high since 1990 after inflation. It is not the highest ever. April 1974 was higher. Inflation is taken out with US CPI, so this is a US-dollar view.",
    "chart_title": "How does today's copper price compare with the past, with and without inflation?",
    "y_label": "US dollars per tonne",
@@ -149,6 +151,7 @@ window.CMA_STRINGS = {
  "dollar": {
   "intro": "This page compares monthly changes in the copper price with monthly changes in the US dollar. A higher dollar number means a stronger dollar.",
   "answer": "Mostly yes, but loosely. In most months, copper got cheaper when the dollar got stronger. The link is far from exact.",
+  "bridge": "The dollar tracks about a third of copper's monthly moves. Another clue sits in the price of its cheaper rival: when copper gets this expensive compared with aluminium, does anything follow?",
   "main_title": "Do copper and the dollar move in opposite directions?",
   "main_y": "Index, {base_month} = 100",
   "label_copper": "Copper price",
@@ -231,13 +234,13 @@ window.CMA_STRINGS = {
     "S01": "LME copper prices (licensed, only one check's result is shown)"
    },
    "attribution": "Copper prices: adapted from World Bank Commodity Price Data (CC BY 4.0). Dollar index (DTWEXBGS), euro exchange rate (EXUSEU) and 10-year yield (GS10): Board of Governors of the Federal Reserve System (US), retrieved from FRED, Federal Reserve Bank of St. Louis. US inflation: U.S. Bureau of Labor Statistics via FRED. The month-end check uses LME cash prices, which are licensed and not published here."
-  },
-  "next": "Next: {title}"
+  }
  },
  "ratio": {
   "intro": "The copper-to-aluminium ratio is the copper price divided by the aluminium price. Both are in US dollars per tonne, as monthly averages. This page asks about prices only. It says nothing about demand or about anyone switching from one metal to the other.",
-  "hook": "Copper costs {ratio_latest} times as much as aluminium. That is the highest in {years} years.",
-  "answer": "Whether a high ratio predicts anything has happened too rarely to judge.",
+  "hook": "Copper costs {ratio_latest} times as much as aluminium, the highest in {years} years.",
+  "answer": "It has happened too rarely to judge whether it predicts anything.",
+  "bridge": "Prices are one side. The other is who digs copper out of the ground, and how much is left.",
   "details_lead": "The tests, the episode lists and the slope figures behind the answer.",
   "weak_note": "Most rows cross zero. A row is only a clear result if its whole line sits on one side of zero. Even then, a row with a hollow dot rests on a few episodes only. Read the pattern across rows, not the best row.",
   "ep_explain": "An episode is one stretch of months when the ratio stayed high, counted once. Episodes can be very long. For a ratio of {t} or more, one episode began in {month} and ran for {n} months in the 12-month test.",
@@ -333,12 +336,12 @@ window.CMA_STRINGS = {
     "S02": "World Bank commodity prices (copper and aluminium)"
    },
    "attribution": "Copper and aluminium prices: adapted from World Bank Commodity Price Data (CC BY 4.0). Changes made: the ratio, its changes and the episode counts are my own calculations."
-  },
-  "next": "Next: {title}"
+  }
  },
  "demand": {
   "intro": "This page adds up the copper that electric cars and data centres might need each year in 2030, with 2035 beside it. It is a scenario built from stated assumptions. Results are shown in thousand tonnes (kt) and as a share of today's world mine output, {mine} million tonnes (USGS estimate for 2025).",
   "answer": "In the reference case, electric cars and data centres need extra copper equivalent to {tot_pct}% of today's mine output in 2030. Other assumptions give {r1_lo}% to {r1_hi}%.",
+  "bridge": "That is the demand side. Here is what the whole story adds up to, and what it cannot tell you.",
   "explorer_open": "Change the assumptions",
   "details_lead": "The sensitivity chart, the copper inputs and the known limits.",
   "finding_3": "The reference case is a convenience choice, not the most likely case. It uses the IEA Current Policies Scenario for cars and the IEA Base Case for data centres. It uses the middle copper figures, a straight line to 2030 for car sales and an even yearly data-centre build.",
@@ -478,8 +481,7 @@ window.CMA_STRINGS = {
     "S20": "Project modelling assumptions"
    },
    "attribution": "Electric-car and data-centre scenario inputs: International Energy Agency (Global EV Outlook 2026, Energy and AI data annex). World mine output: US Geological Survey, Mineral Commodity Summaries 2026. The results on this page are my own calculations from these inputs and the assumptions listed above."
-  },
-  "next": "Next: {title}"
+  }
  },
  "quality": {
   "intro": "Every automatic check on the data is on this page, with the open problems first.",
@@ -538,6 +540,140 @@ window.CMA_STRINGS = {
   "chk_count": "{n} checks shown",
   "next_back": "Back to the Story"
  },
+ "record": {
+  "answer": "In dollars as quoted at the time, yes: {latest_month} is the highest month since {series_start}, at {nominal} a tonne. In today's money, no: {peak_month} was {peak_above}% higher.",
+  "euro": "In euros it is a record too: {eur_latest} a tonne, {eur_pct}% above the previous high in {eur_prev_month}. That is the highest since the euro series starts in {eur_start}.",
+  "events_title": "Around this time",
+  "events_hint": "These dates sit near turns in the line. The chart does not show that any of them moved the price.",
+  "event_source": "Source",
+  "bridge": "Copper is at a record as quoted. Is that copper's own story, or is everything expensive right now?"
+ },
+ "just": {
+  "answer": "Not only copper. As quoted, {others} {is_are} at a record too, and gold set one in {gold_month}. In today's money, none of the five is at a record.",
+  "chart_title": "How close is each one to its own record, in today's money?",
+  "chart_hint": "Each bar is today's price as a share of the highest price that series has had since it starts, with US inflation taken out.",
+  "bar_value": "{pct}% of its record",
+  "bar_record": "record in today's money: {month}",
+  "bar_start": "series starts {year}",
+  "bar_quoted": "At a record as quoted",
+  "bar_aria": "{name}: {pct} percent of its record in today's money. Record in {month}. Series starts {year}.",
+  "names": {
+   "copper": "Copper",
+   "gold": "Gold",
+   "aluminium": "Aluminium",
+   "brent": "Brent oil",
+   "tin": "Tin"
+  },
+  "note_gold_fixed": "Until {until}, central banks held gold at about $35 an ounce, so its early years are not a free market price.",
+  "note_brent_same": "Until {until}, the Pink Sheet gives one price for Brent, Dubai and the oil average. The early Brent years are not a Brent quote.",
+  "note_aluminium_undescribed": "The Pink Sheet describes aluminium as the LME price, with the cash price before 2005. It does not describe the earliest years.",
+  "notes_title": "About the early years",
+  "sources": {
+   "names": {
+    "S27": "Federal Reserve History: the end of the gold convertibility of the dollar (gold held at $35 an ounce)"
+   }
+  },
+  "details_lead": "The records behind the bars, as quoted and in today's money.",
+  "col_name": "Series",
+  "col_start": "Starts",
+  "col_nominal": "Highest as quoted",
+  "col_nominal_now": "Today as quoted",
+  "col_real": "Highest in today's money",
+  "col_real_now": "Today in today's money",
+  "col_share": "Share of record, today's money",
+  "unit_note": "Prices are World Bank monthly averages in US dollars. Gold is per troy ounce, oil per barrel, the metals per tonne.",
+  "notshow": {
+   "title": "What this chapter does not show",
+   "items": [
+    "It does not show why any of these prices moved.",
+    "Today's money means US dollars with US consumer prices taken out. It says nothing about other currencies.",
+    "The five series start in the same month, but they are different kinds of price. Gold and oil are not metals traded the same way.",
+    "A record is the highest monthly average, not the highest single day."
+   ]
+  },
+  "bridge": "These metals are all priced in US dollars. So does copper's price go with the dollar?"
+ },
+ "supply": {
+  "answer": "{top2_names} mine {top2_share}% of the world's copper. These are USGS estimates for {year}.",
+  "intro": "On the map, the area of each circle shows the size of a country's mine output. The list beside it gives the exact figures.",
+  "map_title": "Which countries mine the most copper?",
+  "switch_legend": "Show",
+  "measure_output": "Mine output, {year} estimate",
+  "measure_reserves": "Reserves",
+  "size_note_output": "Circle area is proportional to mine output.",
+  "size_note_reserves": "Circle area is proportional to reserves.",
+  "list_title_output": "Top 10 by mine output",
+  "list_title_reserves": "Top 10 by reserves",
+  "list_value_output": "{kt} kt, {share}% of the world",
+  "list_value_reserves": "{kt} kt, {share}% of the world",
+  "life": "About {n} years at today's rate",
+  "life_note": "Reserve life is reserves divided by one year of mine output. It is a simple ratio, not a forecast of when a country runs out.",
+  "tip_output": "Mine output, {year} estimate: {kt} kt ({share}% of the world)",
+  "tip_reserves": "Reserves: {kt} kt ({share}% of the world)",
+  "tip_life": "Reserve life: about {n} years at today's rate. A simple ratio, not a forecast.",
+  "other_note": "USGS also gives {kt} kt ({share}%) of output for other countries. It cannot be placed on the map.",
+  "other_note_reserves": "USGS also gives {kt} kt ({share}%) of reserves for other countries. It cannot be placed on the map.",
+  "estimate_note": "Output for {year} is a USGS estimate.",
+  "map_aria": "World map with a circle on each of {n} countries, sized by {measure}.",
+  "text_alt": "Map in words: {list}. The list next to the map and the table below give the exact figures.",
+  "table_summary": "Show all countries as a table",
+  "col_country": "Country",
+  "col_output": "Output, {year} estimate (kt)",
+  "col_output_share": "Share of world output",
+  "col_reserves": "Reserves (kt)",
+  "col_reserves_share": "Share of world reserves",
+  "col_life": "Reserve life (years)",
+  "world_row": "World total",
+  "details_lead": "The full table and how to read reserve life.",
+  "notshow": {
+   "title": "What this chapter does not show",
+   "items": [
+    "It does not show where copper is refined, only where it is mined.",
+    "Reserve life is a simple ratio. It is not a forecast of when a country runs out, because reserves and output both change.",
+    "It says nothing about who owns the mines or how much is recycled.",
+    "The USGS rounds its figures, and the 2025 output figures are estimates."
+   ]
+  },
+  "sources": {
+   "names": {
+    "S06": "USGS Mineral Commodity Summaries 2026, copper (output and reserves)",
+    "S28": "UN M49 country codes",
+    "S29": "Natural Earth country boundaries (public domain)",
+    "S30": "world-atlas, Natural Earth as TopoJSON (ISC licence)"
+   },
+   "attribution": "Mine output and reserves: US Geological Survey, Mineral Commodity Summaries 2026. Map outline: Made with Natural Earth (public domain), redistributed by world-atlas (ISC licence). Country codes: UN Statistics Division M49."
+  },
+  "bridge": "Supply is concentrated in a few countries. On the demand side: how much more copper could electric cars and data centres need?"
+ },
+ "summary": {
+  "verdict": "Less special than it looks. In today's money it is below {peak_month}. Gold and tin are at or near records too. Part of copper's monthly moves go with the dollar. What stands out is how concentrated supply is, and how much electric cars and data centres could add in one scenario.",
+  "list_title": "In one sentence per chapter",
+  "s_record": "Copper is at a record as quoted and in euros, but not in today's money.",
+  "s_just": "Tin and gold are at or near records as quoted too, so it is not only copper.",
+  "s_dollar": "A stronger dollar has usually gone with cheaper copper, but loosely.",
+  "s_aluminium": "A high copper-to-aluminium ratio has been too rare to say what follows.",
+  "s_supply": "Chile and DR Congo mine {top2_share}% of the world's copper.",
+  "s_demand": "Electric cars and data centres could add copper equal to about {demand_pct}% of today's mine output by 2030, in one scenario.",
+  "go": "Go to the chapter",
+  "can_title": "What we can say",
+  "can": [
+   "Copper's monthly average price is at a record as quoted, and in euros.",
+   "In today's money it is below {peak_month}.",
+   "Copper and the dollar have usually moved in opposite directions, and the link is loose.",
+   "A high copper-to-aluminium ratio has been too rare to say what follows.",
+   "Mine supply is concentrated in a few countries."
+  ],
+  "cannot_title": "What we cannot say",
+  "cannot": [
+   "Nothing here explains why the price is at a record.",
+   "The demand scenario is about 2030. It cannot explain today's price.",
+   "These pages make no forecast and give no investment advice.",
+   "A link between two series in a sample is not proof that one moves the other."
+  ],
+  "appendix_title": "Can you trust these numbers?",
+  "appendix_text": "Every number comes from a listed source and passes automatic checks. The appendix shows the checks, the open problems and the sources.",
+  "appendix_link": "Open the appendix"
+ },
  "foot": {
   "details": "Show the details",
   "sources": "Sources",
@@ -563,6 +699,7 @@ window.CMA_STRINGS = {
    "Copper prices: adapted from World Bank Commodity Price Data, licensed under CC BY 4.0. Changes made: prices are deflated with US CPI, rebased or turned into monthly changes, as each page says.",
    "US inflation (CPIAUCSL): U.S. Bureau of Labor Statistics, Consumer Price Index for All Urban Consumers: All Items in U.S. City Average, retrieved from FRED, Federal Reserve Bank of St. Louis. Public domain, citation requested.",
    "Dollar index (DTWEXBGS), euro exchange rate (EXUSEU) and 10-year yield (GS10): Board of Governors of the Federal Reserve System (US), retrieved from FRED, Federal Reserve Bank of St. Louis. Public domain, citation requested.",
+   "World outline for the map: Made with Natural Earth (public domain), redistributed by world-atlas (ISC licence). Mine output and reserves: US Geological Survey. Chart events are dated from the sources linked in the list under the chart.",
    "No LME price data is shown or published on this site. Charts, text and code are my own work."
   ]
  }

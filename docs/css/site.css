@@ -93,7 +93,7 @@ nav.main { display: flex; gap: 2px; margin-left: auto; overflow-x: auto; scrollb
 nav.main::-webkit-scrollbar { display: none; }
 nav.main a { font-size: 13px; font-weight: 500; text-decoration: none; color: var(--ivory-dim); padding: 7px 12px; border-radius: 6px; white-space: nowrap; flex: none; transition: color 160ms var(--ease), background-color 160ms var(--ease); }
 nav.main a:hover { color: var(--ivory); background: rgba(255, 244, 232, .08); }
-nav.main a[aria-current="page"] { color: var(--ivory); box-shadow: inset 0 -1px 0 var(--copper-bright); border-radius: 0; }
+nav.main a[aria-current] { color: var(--ivory); box-shadow: inset 0 -1px 0 var(--copper-bright); border-radius: 0; }
 
 /* ---------- opener (Story page) ---------- */
 .hero { position: relative; color: var(--ivory); background-color: var(--ink); background-size: cover; background-position: 62% 38%; padding-block: 148px var(--s7); }
@@ -209,6 +209,7 @@ fieldset.opts legend { padding: 0; margin-bottom: 8px; font-weight: 500; }
 .chart.will-draw .endmark { opacity: 0; }
 .chart.will-draw.done .endmark { opacity: 1; transition: opacity 200ms var(--ease); }
 .marklist { display: none; margin: 10px 0 0; padding-left: 1.4em; font-size: .875rem; }
+.marklist.letters { list-style: none; padding-left: 0; }
 .chart[data-narrow="true"] ~ .marklist { display: block; }
 .chart-tip { position: absolute; z-index: 5; pointer-events: none; background: var(--card); border: 1px solid var(--muted); border-radius: 3px; padding: 8px 10px; font-size: .8125rem; line-height: 1.45; box-shadow: 0 2px 8px rgba(27, 20, 16, .18); max-width: 260px; }
 .chart-tip strong { display: block; margin-bottom: 2px; }
@@ -345,6 +346,48 @@ details.fold[open] > summary { border-bottom: 1px solid var(--rule); }
 details.srcfold { margin: 22px 0 6px; }
 details.srcfold > summary { cursor: pointer; font-weight: 500; font-size: .9rem; color: var(--copper-text); }
 .notadvice { margin: 6px 0 22px; }
+
+
+/* chapters of the one-page story */
+.chapter { scroll-margin-top: 96px; }
+.chapter .story-body > h2 { margin: var(--s3) 0; }
+.chapter.wide { grid-template-columns: minmax(0, 1fr); gap: var(--s3); }
+.chapter.wide .index b { display: inline; font-size: 1.6rem; margin-left: var(--s2); }
+.skiprow { margin: 10px 0 0; }
+.linkbtn { background: none; border: 0; padding: 0; font: 500 14px var(--sans); color: var(--copper-text); text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+.linkbtn:hover { color: var(--ink); }
+.bridge { font: italic 400 1.25rem/1.5 var(--display); max-width: 36em; margin: var(--s5) 0 var(--s3); padding-top: var(--s3); border-top: 1px solid var(--rule); font-variation-settings: "opsz" 24; }
+.events { margin: var(--s4) 0; }
+.events h3 { margin-bottom: 4px; }
+ol.eventlist { list-style: none; counter-reset: ev; margin: var(--s2) 0 0; padding: 0; }
+.eventlist li { counter-increment: ev; position: relative; padding: 10px 0 10px 40px; border-bottom: 1px solid var(--rule); max-width: 50em; }
+.eventlist li::before { content: counter(ev); position: absolute; left: 0; top: 10px; width: 24px; height: 24px; border: 1.4px solid var(--ink); border-radius: 50%; background: var(--card); font: 500 12px/21px var(--sans); text-align: center; }
+.evdate { color: var(--muted); margin-right: 6px; }
+.cangrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr)); gap: var(--s4); margin: var(--s4) 0; }
+.cancan { border-top: 1px solid var(--ink); padding-top: var(--s2); }
+.cancan h3 { font-size: 1.3rem; margin-bottom: var(--s2); }
+.cancan ul { margin: 0; padding-left: 1.2em; }
+.cancan li { margin: 6px 0; }
+
+/* supply chapter: the map and the ranked list */
+.supply-grid { display: grid; grid-template-columns: minmax(0, 8fr) minmax(0, 4fr); gap: var(--s4) var(--s5); align-items: start; margin-top: var(--s2); }
+.mapwrap { position: relative; min-width: 0; }
+.mapbox svg { display: block; width: 100%; height: auto; }
+.mapbox .land { fill: var(--rule); stroke: var(--card); stroke-width: .7; }
+.mapnotes { margin-top: var(--s3); }
+.mapnotes p { margin: 0 0 .6em; max-width: 34em; }
+.bubble { outline: none; cursor: default; }
+.bubble .disc { fill-opacity: .55; stroke-width: 1.4; }
+.bubble.out .disc { fill: var(--copper); stroke: var(--copper); }
+.bubble.res .disc { fill: var(--verdigris); stroke: var(--verdigris); }
+.bubble:hover .disc, .bubble:focus-visible .disc { fill-opacity: .8; stroke: var(--ink); stroke-width: 2.4; }
+.maplab { font: 500 20px var(--sans); fill: var(--ink); paint-order: stroke; stroke: var(--card); stroke-width: 4px; stroke-linejoin: round; pointer-events: none; }
+.mapwrap.narrow .maplab { display: none; }
+.toplist h4 { margin-bottom: var(--s2); }
+.toplist ol { list-style: none; margin: 0; padding: 0; }
+.toplist li { display: flex; gap: 12px; padding: 8px 0; border-bottom: 1px solid var(--rule); }
+.toplist .rank { width: 1.6em; color: var(--muted); flex: none; padding-top: 2px; }
+@media (max-width: 880px) { .supply-grid { grid-template-columns: minmax(0, 1fr); } }
 
 /* note, chips, next, tiles */
 .note { background: var(--card); border: 1px solid var(--rule); border-left: 3px solid var(--copper); border-radius: 3px; padding: 16px 20px; margin: 26px 0; }
