@@ -24,7 +24,7 @@ window.CMA_STRINGS = {
   "title_rest": " is at a record price. Is it as special as it looks?",
   "lead": "A look at the copper market, with the data checks in plain view. Make two guesses along the way. Each takes a few seconds.",
   "fact_months": "monthly prices since {year}",
-  "fact_checks": "automatic data checks",
+  "fact_checks": "checks passed",
   "plaque_aria": "Latest copper price",
   "plaque_label": "World Bank copper, {month}",
   "plaque_unit": "USD/t",
@@ -32,7 +32,7 @@ window.CMA_STRINGS = {
   "cert_nominal": "Nominal",
   "cert_nominal_v": "Highest of {n} months",
   "cert_real": "Real, US CPI",
-  "cert_real_v": "{pct}% below {month}"
+  "cert_real_v": "{pct}% below the {month} record"
  },
  "pages": {
   "record": {
@@ -127,11 +127,11 @@ window.CMA_STRINGS = {
    "aria_chart": "Line chart of the monthly copper price from {from} to {to}, as quoted at the time and in {base_month} dollars. Focus the chart and use the left and right arrow keys to move along it."
   },
   "notshow": {
-   "title": "What this page does not show",
+   "title": "What this chapter does not show",
    "items": [
     "Prices are World Bank monthly averages. Single-day highs and lows are not shown.",
     "The inflation-adjusted line uses US consumer prices. It says nothing about copper in euros or other currencies.",
-    "Neither answer tells you where copper goes next. The link with the dollar is a pattern in this sample. It is not a cause and not a forecast.",
+    "It does not tell you where copper goes next. It is not a forecast.",
     "The data start in {series_start}. 'Record' means the highest since then."
    ]
   },
@@ -149,8 +149,32 @@ window.CMA_STRINGS = {
   }
  },
  "dollar": {
-  "intro": "This page compares monthly changes in the copper price with monthly changes in the US dollar. A higher dollar number means a stronger dollar.",
+  "intro": "This chapter compares monthly changes in the copper price with monthly changes in the US dollar. A higher dollar number means a stronger dollar.",
   "answer": "Mostly yes, but loosely. In most months, copper got cheaper when the dollar got stronger. The link is far from exact.",
+  "sc_title": "When the dollar rose, did copper fall?",
+  "sc_hint": "Each dot is one month. The shaded corners hold the months when copper and the dollar moved in opposite directions.",
+  "sc_x": "Broad dollar index, change in the month (%)",
+  "sc_y": "Copper, change in the month (%)",
+  "sc_big": "{share}% of months land here",
+  "sc_count": "{opp} of {n} months",
+  "sc_here": "and here",
+  "sc_line": "Average line: copper {beta}% lower for each one percent rise in the dollar",
+  "sc_unchanged": "In {month} copper did not change, so that month counts in neither group.",
+  "sc_key_opp": "Opposite directions",
+  "sc_key_same": "Same direction",
+  "sc_tip_dollar": "Dollar index: {value}%",
+  "sc_tip_copper": "Copper: {value}%",
+  "sc_aria": "Scatter chart of {n} months, {from} to {to}. Across: the monthly change of the broad dollar index. Down: the monthly change of copper. {opp} months fall in the two opposite-direction corners. Focus the chart and use the arrow keys to step through the months.",
+  "sc_table": "Show the months as a table",
+  "sc_col_month": "Month",
+  "sc_col_dollar": "Dollar index change (%)",
+  "sc_col_copper": "Copper change (%)",
+  "sc_col_dir": "Direction",
+  "sc_dir_opposite": "opposite",
+  "sc_dir_same": "same",
+  "sc_dir_unchanged": "no change",
+  "level_title": "The two prices as levels",
+  "level_hint": "This chart shows levels, not monthly changes. Both lines end higher, which is why the scatter above is the chart that answers the question.",
   "bridge": "The dollar tracks about a third of copper's monthly moves. Another clue sits in the price of its cheaper rival: when copper gets this expensive compared with aluminium, does anything follow?",
   "main_title": "Do copper and the dollar move in opposite directions?",
   "main_y": "Index, {base_month} = 100",
@@ -166,7 +190,7 @@ window.CMA_STRINGS = {
   "main_aria": "Line chart of copper and the broad dollar index from {from} to {to}, both set to 100 in {base_month}. Focus the chart and use the arrow keys to move along it.",
   "details_lead": "The exact figures, ranges and methods behind the page.",
   "measured": "The dollar is measured two ways: a broad dollar index (from {index_from}) and euros per dollar (from {euro_from}). For both, a higher number means a stronger dollar.",
-  "finding_1": "Since {index_from}, copper and the broad dollar index moved in opposite directions in {opposite_share}% of months. When the dollar index rose one percent, copper was on average {beta}% lower, with wide variation from month to month. The dollar is linked to about {share}% of copper's monthly moves. Other things drive the rest.",
+  "finding_1": "Since {index_from}, copper and the broad dollar index moved in opposite directions in {opposite_share}% of months. When the dollar index rose one percent, copper was on average {beta}% lower, with wide variation from month to month. The dollar is linked to about {share}% of copper's monthly moves. The other {rest}% goes with other things.",
   "finding_2": "The link is not steady. How closely the two move together was tightest around {min_month} and almost gone around {max_month}. On a scale from minus 1 (always opposite) to 1 (always together), it scores {r} over the whole period and {last} now.",
   "finding_3": "For a European buyer, the euro price of copper swung a little less from month to month than the dollar price: {sd_eur}% against {sd_usd}%. Both figures cover the same {sd_months} months, {sd_from} to {sd_to}. Copper tended to fall when the dollar rose, and that softens the swing for euro buyers.",
   "chart_title": "Does the link between copper and the dollar stay the same over time?",
@@ -214,9 +238,9 @@ window.CMA_STRINGS = {
   "ci_note": "The 95 percent ranges for correlations come from a block bootstrap: blocks of six months, 5,000 resamples, a fixed seed. This allows for neighbouring months being related. The ranges for copper moves come from regression standard errors that allow for the same thing (Newey-West, three lags).",
   "result_pair": "{a}, then {b}",
   "notshow": {
-   "title": "What this page does not show",
+   "title": "What this chapter does not show",
    "items": [
-    "It does not show that the dollar moves copper. Both can react to the same news, such as growth or interest rates. This page does not test that.",
+    "It does not show that the dollar moves copper. Both can react to the same news, such as growth or interest rates. This chapter does not test that.",
     "Adding the 10-year US yield barely changes the dollar result. That is a check, not proof.",
     "It is not a forecast. The link was close to zero around 2019. It could change again.",
     "Monthly averages smooth prices. A check with month-end prices gives {me_end} instead of {me_avg}. It covers the dollar index only, because euro rates exist only as monthly averages.",
@@ -237,7 +261,7 @@ window.CMA_STRINGS = {
   }
  },
  "ratio": {
-  "intro": "The copper-to-aluminium ratio is the copper price divided by the aluminium price. Both are in US dollars per tonne, as monthly averages. This page asks about prices only. It says nothing about demand or about anyone switching from one metal to the other.",
+  "intro": "The copper-to-aluminium ratio is the copper price divided by the aluminium price. Both are in US dollars per tonne, as monthly averages. This chapter asks about prices only. It says nothing about demand or about anyone switching from one metal to the other.",
   "hook": "Copper costs {ratio_latest} times as much as aluminium, the highest in {years} years.",
   "answer": "It has happened too rarely to judge whether it predicts anything.",
   "bridge": "Prices are one side. The other is who digs copper out of the ground, and how much is left.",
@@ -322,12 +346,12 @@ window.CMA_STRINGS = {
   "slope_col_months": "Months",
   "slope_group": "Next {h} months",
   "notshow": {
-   "title": "What this page does not show",
+   "title": "What this chapter does not show",
    "items": [
     "It does not show substitution. This project has no demand data, so nothing here says whether anyone switches between the two metals. A falling ratio is a price move, not proof of switching.",
     "It is not a trading or forecasting signal. Most high months fall in one recent period. Different rules and time horizons give different answers. Read the pattern across rows, not the best row.",
-    "It does not explain why the ratio fell. Sometimes copper fell. Other times aluminium rose. This page does not test causes such as demand, energy costs or exchange rates.",
-    "Prices are nominal monthly averages in US dollars. Inflation largely cancels in a ratio of two prices in one currency. This was not checked.",
+    "It does not explain why the ratio fell. Sometimes copper fell. Other times aluminium rose. This chapter does not test causes such as demand, energy costs or exchange rates.",
+    "Prices are nominal monthly averages in US dollars. Inflation cancels in a ratio of two prices in the same currency.",
     "The tests overlap, because neighbouring months share most of their next 6 or 12 months. The page counts separate high periods and allows for the overlap. A result that rests on a few periods should not be taken at face value."
    ]
   },
@@ -339,7 +363,7 @@ window.CMA_STRINGS = {
   }
  },
  "demand": {
-  "intro": "This page adds up the copper that electric cars and data centres might need each year in 2030, with 2035 beside it. It is a scenario built from stated assumptions. Results are shown in thousand tonnes (kt) and as a share of today's world mine output, {mine} million tonnes (USGS estimate for 2025).",
+  "intro": "This chapter adds up the copper that electric cars and data centres might need each year in 2030, with 2035 beside it. It is a scenario built from stated assumptions. Results are shown in thousand tonnes (kt) and as a share of today's world mine output, {mine} million tonnes (USGS estimate for 2025).",
   "answer": "In the reference case, electric cars and data centres need extra copper equivalent to {tot_pct}% of today's mine output in 2030. Other assumptions give {r1_lo}% to {r1_hi}%.",
   "bridge": "That is the demand side. Here is what the whole story adds up to, and what it cannot tell you.",
   "explorer_open": "Change the assumptions",
@@ -457,7 +481,7 @@ window.CMA_STRINGS = {
   "in_col_src": "Source",
   "in_col_rel": "Reliability",
   "notshow": {
-   "title": "What this page does not show",
+   "title": "What this chapter does not show",
    "items": [
     "It is not a forecast and not investment advice. It shows what a set of stated assumptions adds up to.",
     "It says nothing about supply. There is no projection of mine output, new mines, closures, recycling or stocks. The only claim is that an amount is equivalent to a share of today's mine output.",
@@ -480,7 +504,7 @@ window.CMA_STRINGS = {
     "S14": "S&P Global, Copper in the Age of AI (not read directly)",
     "S20": "Project modelling assumptions"
    },
-   "attribution": "Electric-car and data-centre scenario inputs: International Energy Agency (Global EV Outlook 2026, Energy and AI data annex). World mine output: US Geological Survey, Mineral Commodity Summaries 2026. The results on this page are my own calculations from these inputs and the assumptions listed above."
+   "attribution": "Electric-car and data-centre scenario inputs: International Energy Agency (Global EV Outlook 2026, Energy and AI data annex). World mine output: US Geological Survey, Mineral Commodity Summaries 2026. The results on this chapter are my own calculations from these inputs and the assumptions listed above."
   }
  },
  "quality": {
@@ -595,6 +619,7 @@ window.CMA_STRINGS = {
  },
  "supply": {
   "answer": "{top2_names} mine {top2_share}% of the world's copper. These are USGS estimates for {year}.",
+  "reserves_line": "Known reserves equal about {years} years of today's output. That is a simple ratio, not a countdown.",
   "intro": "On the map, the area of each circle shows the size of a country's mine output. The list beside it gives the exact figures.",
   "map_title": "Which countries mine the most copper?",
   "switch_legend": "Show",

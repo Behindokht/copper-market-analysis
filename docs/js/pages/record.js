@@ -14,6 +14,7 @@
     var real = S.map(function (r) { return r.real_usd_t_aug2026; });
     var idx = function (month) { return S.findIndex(function (r) { return r.month === month; }); };
     var baseMonth = CMA.monthLong(R.real_latest.month);
+    var realRec = CMA.realRecord();
     var seriesStart = CMA.monthLong(R.series_months.month);
 
     // the answer must be true in the data, or the page stops
@@ -24,7 +25,7 @@
     if (ctx && ctx.choice) { box.appendChild(h("p", { class: "verdict", text: ctx.choice === "b" ? t("story.guess2.match") : t("story.guess2.differ") })); }
     box.appendChild(h("p", { class: "answer", text: t("record.answer", {
       latest_month: baseMonth, series_start: seriesStart, nominal: CMA.usd0(R.nominal_latest.value),
-      peak_month: CMA.monthLong(R.real_peak_all.month), peak_above: CMA.n0(R.real_peak_vs_latest_pct.value) }) }));
+      peak_month: CMA.monthLong(realRec.month), peak_above: CMA.n0(realRec.abovePct) }) }));
     box.appendChild(h("p", { class: "finding", text: t("record.euro", {
       eur_latest: "€" + CMA.n0(E.eur_latest.value), eur_pct: CMA.n1(E.eur_latest_vs_previous_high_pct.value),
       eur_prev_month: CMA.monthLong(E.eur_previous_high.month + "-01"), eur_start: CMA.monthLong(E.eur_series_start.month + "-01") }) }));

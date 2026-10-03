@@ -18,6 +18,7 @@
     var kt = function (v) { return CMA.n0(v); };
 
     box.appendChild(h("p", { class: "answer", text: T("answer", { top2_names: top2.map(function (r) { return r.display_name; }).join(" and "), top2_share: CMA.n0(top2share), year: year }) }));
+    box.appendChild(h("p", { class: "finding", text: T("reserves_line", { years: CMA.n0(world.reserve_life_years) }) }));
     box.appendChild(h("p", { class: "intro", text: T("intro") }));
 
     var mode = "output";

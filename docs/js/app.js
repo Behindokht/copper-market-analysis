@@ -93,8 +93,20 @@
     }
   }
 
+  // anchors land below the floating nav: its height plus 16 px, measured, not guessed
+  function navOffset() {
+    var bar = document.querySelector(".nav-bar");
+    if (bar) { document.documentElement.style.setProperty("--navh", Math.ceil(bar.getBoundingClientRect().bottom + 16) + "px"); }
+  }
+
   buildHeader();
   buildFooter();
+  navOffset();
+  window.addEventListener("resize", navOffset);
   window.addEventListener("hashchange", function () { show(location.hash.slice(1), true); });
   show(location.hash.slice(1), false);
+  // fonts change text heights after the first layout: land on the chapter again once they are in
+  if (document.fonts && document.fonts.ready && location.hash.length > 1) {
+    document.fonts.ready.then(function () { navOffset(); var el = document.getElementById(location.hash.slice(1)); if (el && !document.getElementById("story").hidden) { el.scrollIntoView({ block: "start" }); } });
+  }
 })();

@@ -127,6 +127,18 @@
       CMA.sources.refresh();
     }
   };
+  // the real (inflation-adjusted) record, read once: the plaque, chapter 1 and the summary all use this, and it must agree in both result tables
+  CMA.realRecord = function () {
+    var R = {};
+    CMA.rows(window.CMA_DATA.story.record_facts).forEach(function (r) { R[r.fact_id] = r; });
+    var cu = CMA.rows(window.CMA_DATA.chapters.records).filter(function (r) { return r.commodity === "copper"; })[0];
+    var month = R.real_peak_all.month.slice(0, 7);
+    var belowFromStory = (1 - 1 / (1 + R.real_peak_vs_latest_pct.value / 100)) * 100;
+    if (cu.real_peak_month !== month || Math.abs(cu.real_peak - R.real_peak_all.value) > 0.5 || Math.abs((100 - cu.latest_pct_of_real_peak) - belowFromStory) > 0.1) {
+      throw new Error("the real record differs between the story facts and the interlude records");
+    }
+    return { month: R.real_peak_all.month, value: R.real_peak_all.value, abovePct: R.real_peak_vs_latest_pct.value, belowPct: 100 - cu.latest_pct_of_real_peak, sharePct: cu.latest_pct_of_real_peak };
+  };
   CMA.bridge = function (box, text) { box.appendChild(CMA.h("p", { class: "bridge", text: text })); };
   CMA.pages = CMA.pages || {};
 })();

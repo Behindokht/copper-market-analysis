@@ -21,7 +21,7 @@
     if (R.nominal_record.month !== R.nominal_latest.month || R.real_months_above_latest.value < 1 || E.eur_latest_is_record.value !== 1 || !tinRecord || !nearGold ||
       !(corr["pearson r"] < 0) || th.filter(function (r) { return r.p_holm < 0.05; }).length > th.length / 4) { throw new Error("a summary sentence no longer matches the data"); }
 
-    var vars = { peak_month: CMA.monthLong(R.real_peak_all.month), top2_share: CMA.n0(top2), demand_pct: CMA.n0(ref.headline_total_pct_of_mine) };
+    var vars = { peak_month: CMA.monthLong(CMA.realRecord().month), top2_share: CMA.n0(top2), demand_pct: CMA.n0(ref.headline_total_pct_of_mine) };
     box.appendChild(h("p", { class: "answer", text: T("verdict", vars) }));
 
     var items = [["s_record", "record"], ["s_just", "just-copper"], ["s_dollar", "dollar"], ["s_aluminium", "aluminium"], ["s_supply", "supply"], ["s_demand", "demand"]];

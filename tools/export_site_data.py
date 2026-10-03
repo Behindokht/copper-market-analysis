@@ -49,6 +49,8 @@ PAGES = {
         "cpi_sensitivity": "res_dollar_cpi_sensitivity",
         "month_end": "res_dollar_month_end_check",
         "series": "res_dollar_series",
+        "scatter": "res_dollar_scatter",
+        "scatter_fit": "res_dollar_scatter_fit",
     },
     "ratio": {
         "threshold": "res_cu_al_threshold_table",

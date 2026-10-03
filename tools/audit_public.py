@@ -22,6 +22,7 @@ It fails (exit 1) if:
   10. the Dollar page's euro-price and dollar-price swing figures are not over the same months: the months in res_copper_eur_variance_split must
      equal the months of the full-sample euro correlation and match its first and last month; checked in the results CSVs and docs/data/dollar.js
   11. the Dollar page's chart series, correlation sample, regression sample must start and end in the same months (the intro dates come from this sample)
+  12. the real record of copper (month, value, distance from today) agrees in the story facts and the interlude records
 It also prints the files that contain IEA-derived figures (so the IEA terms can be confirmed), the files that carry figures from
 secondary articles, and the e-mail addresses found in published files.
 """
@@ -303,6 +304,22 @@ def main():
         return out
     if djs.exists() and (not staged or "docs/data/dollar.js" in files):
         problems += sample_check(js_datasets(read("docs/data/dollar.js", False)), "docs/data/dollar.js")
+
+    # 12 one real record: the story facts and the interlude records must name the same month and value (the plaque, chapter 1 and the summary use it)
+    rf, ri = ROOT / "results" / "res_story_copper_record_facts.csv", ROOT / "results" / "res_interlude_records.csv"
+    if rf.exists() and ri.exists():
+        import csv as _csv
+        facts = {r["fact_id"]: r for r in _csv.DictReader(rf.open(encoding="utf-8"))}
+        cu = [r for r in _csv.DictReader(ri.open(encoding="utf-8")) if r["commodity"] == "copper"]
+        if not cu:
+            problems.append("REAL RECORD: copper is missing from res_interlude_records.csv")
+        else:
+            cu = cu[0]
+            above = float(facts["real_peak_vs_latest_pct"]["value"])
+            below = (1 - 1 / (1 + above / 100)) * 100
+            if (facts["real_peak_all"]["month"][:7] != cu["real_peak_month"] or abs(float(facts["real_peak_all"]["value"]) - float(cu["real_peak"])) > 0.5
+                    or abs((100 - float(cu["latest_pct_of_real_peak"])) - below) > 0.1):
+                problems.append("REAL RECORD: res_story_copper_record_facts.csv and res_interlude_records.csv do not agree on copper's real record")
 
     # report
     iea = sorted(f for f in files if mf.get(f, {}).get("iea_figures"))

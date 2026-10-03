@@ -23,7 +23,8 @@
     root.textContent = "";
 
     // ---- opener: dark, with the copper plate photo when docs/img/copper-plate.jpg exists (see tools/photo_flag.py), plain ink if not
-    var nChecks = window.CMA_DATA.quality.checks.rows.length;
+    var realRec = CMA.realRecord();
+    var nChecks = CMA.rows(window.CMA_DATA.quality.checks).filter(function (r) { return r.status === "PASS"; }).length;
     var sparkSvg = CMA.svg("svg", { class: "spark spark-title", viewBox: "-40 -40 80 80", "aria-hidden": "true" });
     CMA.spark.build(sparkSvg);
     var plaque = h("aside", { class: "plaque glass lens rise", style: "--i:5", "aria-label": t("hero.plaque_aria") },
@@ -32,7 +33,7 @@
       h("p", { class: "unit", text: t("hero.plaque_line") }),
       h("dl", { class: "cert" },
         h("div", {}, h("dt", { text: t("hero.cert_nominal") }), h("dd", { text: t("hero.cert_nominal_v", { n: CMA.n0(R.series_months.value) }) })),
-        h("div", {}, h("dt", { text: t("hero.cert_real") }), h("dd", { text: t("hero.cert_real_v", { pct: CMA.n1(Math.abs(R.latest_vs_real_peak_since_1990_pct.value)), month: CMA.monthShort(R.real_peak_since_1990.month) }) }))));
+        h("div", {}, h("dt", { text: t("hero.cert_real") }), h("dd", { text: t("hero.cert_real_v", { pct: CMA.n0(realRec.belowPct), month: CMA.monthLong(realRec.month) }) }))));
     var hero = h("section", { class: "hero" }, h("div", { class: "wrap hero-grid" },
       h("div", {},
         h("p", { class: "eyebrow rise", style: "--i:1", text: t("hero.eyebrow") }),

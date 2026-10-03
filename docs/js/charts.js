@@ -279,4 +279,110 @@
     }
     return { redraw: draw, destroy: function () { if (ro) { ro.disconnect(); } } };
   };
+  /* A quadrant scatter of monthly % changes: x across, y down. The two opposite-direction corners are tinted, their dots copper, the rest grey.
+     cfg: { rows, x, y, fit: {slope_log, intercept_log}, big, count, xLabel, yLabel, aria, tip: function (row) -> {title, lines} } */
+  CMA.scatterChart = function (host, cfg) {
+    var tip = null, cur = null, lastW = 0, raf = 0;
+    host.classList.add("chart");
+    function color(c) { return getComputedStyle(document.documentElement).getPropertyValue(c).trim() || c; }
+    function nice(v, step) { return Math.ceil(Math.abs(v) / step) * step; }
+    var rows = cfg.rows;
+    var xMax = nice(Math.max.apply(null, rows.map(function (r) { return Math.abs(r[cfg.x]); })), 2);
+    var yMax = nice(Math.max.apply(null, rows.map(function (r) { return Math.abs(r[cfg.y]); })), 10);
+
+    function draw() {
+      var W = Math.max(300, Math.round(host.clientWidth || 600));
+      lastW = W;
+      var narrow = W < 560;
+      var H = Math.round(Math.min(480, Math.max(300, W * 0.62)));
+      var ml = narrow ? 40 : 52, mr = 12, mt = 30, mb = 42, pw = W - ml - mr, ph = H - mt - mb;
+      var X = function (v) { return ml + (v + xMax) / (2 * xMax) * pw; };
+      var Y = function (v) { return mt + (yMax - v) / (2 * yMax) * ph; };
+      host.textContent = "";
+      var s = svg("svg", { viewBox: "0 0 " + W + " " + H, role: "img", tabindex: "0", "aria-label": cfg.aria, focusable: "true" });
+      // the two opposite-direction corners
+      s.appendChild(svg("rect", { x: ml, y: mt, width: X(0) - ml, height: Y(0) - mt, class: "quad" }));
+      s.appendChild(svg("rect", { x: X(0), y: Y(0), width: ml + pw - X(0), height: mt + ph - Y(0), class: "quad" }));
+      var xs = narrow ? 4 : 2;
+      for (var v = -xMax; v <= xMax + 1e-9; v += xs) {
+        s.appendChild(svg("line", { x1: X(v), x2: X(v), y1: mt, y2: mt + ph, class: v === 0 ? "zeroline" : "gridline" }));
+        var tx = svg("text", { x: X(v), y: mt + ph + 16, "text-anchor": "middle", class: "ax" }); tx.textContent = CMA.minus(String(v)); s.appendChild(tx);
+      }
+      for (var u = -yMax; u <= yMax + 1e-9; u += 10) {
+        s.appendChild(svg("line", { x1: ml, x2: ml + pw, y1: Y(u), y2: Y(u), class: u === 0 ? "zeroline" : "gridline" }));
+        var ty = svg("text", { x: ml - 6, y: Y(u) + 4, "text-anchor": "end", class: "ax" }); ty.textContent = CMA.minus(String(u)); s.appendChild(ty);
+      }
+      var xl = svg("text", { x: ml + pw, y: H - 6, "text-anchor": "end", class: "ax" }); xl.textContent = cfg.xLabel; s.appendChild(xl);
+      var yl = svg("text", { x: ml, y: 14, "text-anchor": "start", class: "ax" }); yl.textContent = cfg.yLabel; s.appendChild(yl);
+      // the regression line, drawn in % terms (it is fitted on log changes)
+      var d = "";
+      for (var k = 0; k <= 60; k++) {
+        var xv = -xMax + k * (2 * xMax / 60);
+        var yv = 100 * (Math.exp(cfg.fit.intercept_log + cfg.fit.slope_log * Math.log(1 + xv / 100)) - 1);
+        if (yv > yMax || yv < -yMax) { continue; }
+        d += (d ? "L" : "M") + X(xv).toFixed(1) + " " + Y(yv).toFixed(1);
+      }
+      // dots: grey first, copper on top
+      var dots = [];
+      ["same", "unchanged", "opposite"].forEach(function (kind) {
+        rows.forEach(function (r, i) {
+          if (r.direction !== kind) { return; }
+          var c = svg("circle", { cx: X(r[cfg.x]).toFixed(1), cy: Y(r[cfg.y]).toFixed(1), r: narrow ? 2.8 : 3.6, class: "pt " + kind });
+          s.appendChild(c);
+          dots[i] = c;
+        });
+      });
+      s.appendChild(svg("path", { d: d, class: "fitline" }));
+      // the big label in the upper-left corner, a small one in the lower-right
+      var bx = ml + 12, by = mt + 30;
+      var big = svg("text", { x: bx, y: by, class: "bigl" }); big.textContent = cfg.big; s.appendChild(big);
+      var cnt = svg("text", { x: bx, y: by + 20, class: "ax strong" }); cnt.textContent = cfg.count; s.appendChild(cnt);
+      var here = svg("text", { x: ml + pw - 10, y: mt + ph - 12, "text-anchor": "end", class: "ax strong" }); here.textContent = cfg.here; s.appendChild(here);
+      var ring = svg("circle", { r: 7, class: "ring", visibility: "hidden" });
+      s.appendChild(ring);
+      tip = h("div", { class: "chart-tip", hidden: true, role: "presentation" });
+      host.appendChild(s);
+      host.appendChild(tip);
+
+      function show(i, announce) {
+        i = Math.max(0, Math.min(rows.length - 1, i)); cur = i;
+        var r = rows[i], cx = X(r[cfg.x]), cy = Y(r[cfg.y]);
+        ring.setAttribute("cx", cx); ring.setAttribute("cy", cy); ring.setAttribute("visibility", "visible");
+        var info = cfg.tip(r);
+        tip.textContent = "";
+        tip.appendChild(h("strong", { text: info.title }));
+        info.lines.forEach(function (l) { tip.appendChild(h("div", { text: l })); });
+        tip.hidden = false;
+        var sc = host.clientWidth / W;
+        var left = cx * sc + 14, top = cy * sc - 10;
+        if (left + tip.offsetWidth > host.clientWidth - 4) { left = cx * sc - tip.offsetWidth - 14; }
+        tip.style.left = Math.max(4, left) + "px"; tip.style.top = Math.max(4, top) + "px";
+        if (announce) { CMA.say(info.title + ". " + info.lines.join(". ")); }
+      }
+      function hide() { ring.setAttribute("visibility", "hidden"); tip.hidden = true; }
+      s.addEventListener("pointermove", function (e) {
+        var rc = s.getBoundingClientRect(), px = (e.clientX - rc.left) * (W / rc.width), py = (e.clientY - rc.top) * (H / rc.height);
+        var best = -1, bd = 22 * 22;
+        rows.forEach(function (r, i) { var dx = X(r[cfg.x]) - px, dy = Y(r[cfg.y]) - py, dd = dx * dx + dy * dy; if (dd < bd) { bd = dd; best = i; } });
+        if (best >= 0) { show(best, false); } else { hide(); }
+      });
+      s.addEventListener("pointerleave", function () { if (document.activeElement !== s) { hide(); } });
+      s.addEventListener("focus", function () { show(cur == null ? rows.length - 1 : cur, true); });
+      s.addEventListener("blur", hide);
+      s.addEventListener("keydown", function (e) {
+        var step = { ArrowLeft: -1, ArrowRight: 1, ArrowDown: -1, ArrowUp: 1, PageDown: -12, PageUp: 12 }[e.key];
+        if (step != null) { e.preventDefault(); show((cur == null ? rows.length - 1 : cur) + step, true); }
+        else if (e.key === "Home") { e.preventDefault(); show(0, true); }
+        else if (e.key === "End") { e.preventDefault(); show(rows.length - 1, true); }
+        else if (e.key === "Escape") { hide(); }
+      });
+    }
+    draw();
+    if (window.ResizeObserver) {
+      new ResizeObserver(function () {
+        if (Math.abs(host.clientWidth - lastW) < 2) { return; }
+        cancelAnimationFrame(raf); raf = requestAnimationFrame(draw);
+      }).observe(host);
+    }
+  };
 })();

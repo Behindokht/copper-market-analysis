@@ -59,7 +59,7 @@
 
     var vars = {
       index_from: indexFrom, euro_from: euroFrom, opposite_share: CMA.n0(oppShare), r: CMA.f2(cIdx["pearson r"]),
-      beta: CMA.n1(-rIdx.coefficient), share: CMA.n0(shareDollar),
+      beta: CMA.n1(-rIdx.coefficient), share: CMA.n0(shareDollar), rest: String(100 - Math.round(shareDollar)),
       min_month: CMA.monthLong(roll[iMin].month), max_month: CMA.monthLong(roll[iMax].month), last: CMA.f2(idxVals[iLast]),
       sd_eur: CMA.n1(sdEur), sd_usd: CMA.n1(sdUsd), sd_months: sdMonths, sd_from: ym(sdFrom), sd_to: ym(sdTo)
     };
@@ -68,38 +68,28 @@
     wrap.appendChild(h("p", { class: "answer", text: T("answer") }));
     wrap.appendChild(h("p", { class: "intro", text: T("intro") }));
 
-    // ---- the one simple chart: copper and the broad dollar index, both set to 100 at the start
-    var card = h("div", { class: "card chart-card" });
-    card.appendChild(h("h3", { class: "qtitle", text: T("main_title") }));
-    card.appendChild(h("div", { class: "key" },
-      h("span", { style: "color:var(--copper)" }, h("span", { class: "sw" }), h("span", { style: "color:var(--ink)", text: T("label_copper") })),
-      h("span", { style: "color:var(--verdigris)" }, h("span", { class: "sw dash" }), h("span", { style: "color:var(--ink)", text: T("label_dollar") }))));
-    var host = h("div", { class: "chart-host" });
-    card.appendChild(host);
-    var N = SER.length, cu = SER.map(function (r) { return r.copper_indexed; }), dol = SER.map(function (r) { return r.dollar_indexed; });
-    var marks = [
-      { series: "copper", i: N - 1, lines: [CMA.monthLong(SER[N - 1].month), T("m_cu", { value: CMA.n0(cu[N - 1]) })], dx: -14, dy: -34, anchor: "end" },
-      { series: "dollar", i: N - 1, lines: [CMA.monthLong(SER[N - 1].month), T("m_dol", { value: CMA.n0(dol[N - 1]) })], dx: -14, dy: 46, anchor: "end" }
-    ];
-    card.appendChild(h("p", { class: "small muted", style: "margin-top:10px", text: T("main_note", { base_month: baseMonth }) }));
-    card.appendChild(h("ol", { class: "marklist" }, marks.map(function (m) { return h("li", { text: m.lines[0] + ": " + m.lines[1] }); })));
-    var xTicks = [{ i: 0, label: String(SER[0].month.slice(0, 4)) }];
-    SER.forEach(function (r, i) { var y = +r.month.slice(0, 4); if (r.month.slice(5, 7) === "01" && y % 5 === 0 && i > 12) { xTicks.push({ i: i, label: String(y) }); } });
-    var top = Math.ceil(Math.max.apply(null, cu.concat(dol)) / 50) * 50;
-    var yTicks = []; for (var yv = 50; yv <= top; yv += 50) { yTicks.push(yv); }
-    wrap.appendChild(card);
-    CMA.lineChart(host, {
-      n: N, yMin: 50, yMax: top, yTicks: yTicks, yFormat: CMA.n0, yLabel: T("main_y", { base_month: baseMonth }), xTicks: xTicks, marginRight: 24,
-      series: [
-        { id: "copper", color: "--copper", values: cu, label: { text: T("label_copper"), short: T("label_copper_short") } },
-        { id: "dollar", color: "--verdigris", dash: "6 4", values: dol, label: { text: T("label_dollar"), short: T("label_dollar_short") } }
-      ],
-      marks: marks,
-      tip: function (i) {
-        var r = SER[i];
-        return { title: CMA.monthLong(r.month), lines: [T("tip_cu", { value: CMA.n0(r.copper_indexed), usd: CMA.usd0(r.copper_usd_t) }), T("tip_dol", { value: CMA.n0(r.dollar_indexed) })] };
-      },
-      aria: T("main_aria", { from: CMA.monthLong(SER[0].month), to: CMA.monthLong(SER[N - 1].month), base_month: baseMonth })
+    // ---- the one chart that answers the question: every month as a point, dollar change across, copper change down
+    var SC = CMA.rows(D.scatter), FIT = {};
+    CMA.rows(D.scatter_fit).forEach(function (r) { FIT[r.fact_id] = r.value; });
+    var nOpp = SC.filter(function (r) { return r.direction === "opposite"; }).length;
+    if (nOpp !== g1.opposite_months.value || SC.length !== cIdx.months || Math.abs(FIT.slope_log - rIdx.coefficient) > 1e-6) { throw new Error("the scatter does not match the tables"); }
+    var unchangedMonth = SC.filter(function (r) { return r.direction === "unchanged"; }).map(function (r) { return r.month; });
+    var scCard = h("div", { class: "card chart-card" });
+    scCard.appendChild(h("h3", { class: "qtitle", text: T("sc_title") }));
+    scCard.appendChild(h("p", { class: "hint", text: T("sc_hint") }));
+    scCard.appendChild(h("div", { class: "key" },
+      h("span", { style: "color:var(--copper)" }, h("span", { class: "sw dot" }), h("span", { style: "color:var(--ink)", text: T("sc_key_opp") })),
+      h("span", { style: "color:var(--muted)" }, h("span", { class: "sw dot" }), h("span", { style: "color:var(--ink)", text: T("sc_key_same") }))));
+    var scHost = h("div", { class: "scatter" });
+    scCard.appendChild(scHost);
+    scCard.appendChild(h("p", { class: "small muted", style: "margin-top:8px", text: T("sc_line", { beta: CMA.n1(-FIT.slope_log) }) }));
+    if (unchangedMonth.length) { scCard.appendChild(h("p", { class: "small muted", text: T("sc_unchanged", { month: CMA.monthLong(unchangedMonth[0]) }) })); }
+    wrap.appendChild(scCard);
+    CMA.scatterChart(scHost, {
+      rows: SC, x: "dollar_pct", y: "copper_pct", fit: FIT, oppShare: CMA.n0(oppShare), opp: nOpp,
+      xLabel: T("sc_x"), yLabel: T("sc_y"), big: T("sc_big", { share: CMA.n0(oppShare) }), count: T("sc_count", { opp: nOpp, n: SC.length }), here: T("sc_here"),
+      aria: T("sc_aria", { n: SC.length, from: CMA.monthLong(SC[0].month), to: CMA.monthLong(SC[SC.length - 1].month), opp: nOpp }),
+      tip: function (r) { return { title: CMA.monthLong(r.month), lines: [T("sc_tip_dollar", { value: CMA.s1(r.dollar_pct) }), T("sc_tip_copper", { value: CMA.s1(r.copper_pct) })] }; }
     });
 
     // ---- three short findings in plain words
@@ -116,6 +106,44 @@
     // =============================== the details, closed by default
     var fold = [];
     fold.push(h("p", { class: "small", text: T("measured", vars) }));
+    fold.push(h("details", { class: "tableview" }, h("summary", { text: T("sc_table") }), h("div", { class: "tablewrap" }, h("table", {},
+      h("thead", {}, h("tr", {}, ["sc_col_month", "sc_col_dollar", "sc_col_copper", "sc_col_dir"].map(function (k) { return h("th", { scope: "col", text: T(k) }); }))),
+      h("tbody", {}, SC.map(function (r) { return h("tr", {}, h("td", { text: r.month.slice(0, 7) }), h("td", { text: CMA.s1(r.dollar_pct) }), h("td", { text: CMA.s1(r.copper_pct) }), h("td", { text: T("sc_dir_" + r.direction) })); }))))));
+
+    // ---- the level chart, kept in the fold: both lines end higher, so it is not the chart that answers the question
+    var card = h("div", { class: "card chart-card" });
+    card.appendChild(h("h3", { class: "qtitle", text: T("level_title") }));
+    card.appendChild(h("p", { class: "hint", text: T("level_hint") }));
+    card.appendChild(h("div", { class: "key" },
+      h("span", { style: "color:var(--copper)" }, h("span", { class: "sw" }), h("span", { style: "color:var(--ink)", text: T("label_copper") })),
+      h("span", { style: "color:var(--verdigris)" }, h("span", { class: "sw dash" }), h("span", { style: "color:var(--ink)", text: T("label_dollar") }))));
+    var host = h("div", { class: "chart-host" });
+    card.appendChild(host);
+    var N = SER.length, cu = SER.map(function (r) { return r.copper_indexed; }), dol = SER.map(function (r) { return r.dollar_indexed; });
+    var marks = [
+      { series: "copper", i: N - 1, lines: [CMA.monthLong(SER[N - 1].month), T("m_cu", { value: CMA.n0(cu[N - 1]) })], dx: -14, dy: -34, anchor: "end" },
+      { series: "dollar", i: N - 1, lines: [CMA.monthLong(SER[N - 1].month), T("m_dol", { value: CMA.n0(dol[N - 1]) })], dx: -14, dy: 46, anchor: "end" }
+    ];
+    card.appendChild(h("p", { class: "small muted", style: "margin-top:10px", text: T("main_note", { base_month: baseMonth }) }));
+    card.appendChild(h("ol", { class: "marklist" }, marks.map(function (m) { return h("li", { text: m.lines[0] + ": " + m.lines[1] }); })));
+    var xTicks = [{ i: 0, label: String(SER[0].month.slice(0, 4)) }];
+    SER.forEach(function (r, i) { var y = +r.month.slice(0, 4); if (r.month.slice(5, 7) === "01" && y % 5 === 0 && i > 12) { xTicks.push({ i: i, label: String(y) }); } });
+    var top = Math.ceil(Math.max.apply(null, cu.concat(dol)) / 50) * 50;
+    var yTicks = []; for (var yv = 50; yv <= top; yv += 50) { yTicks.push(yv); }
+    CMA.lineChart(host, {
+      n: N, yMin: 50, yMax: top, yTicks: yTicks, yFormat: CMA.n0, yLabel: T("main_y", { base_month: baseMonth }), xTicks: xTicks, marginRight: 24,
+      series: [
+        { id: "copper", color: "--copper", values: cu, label: { text: T("label_copper"), short: T("label_copper_short") } },
+        { id: "dollar", color: "--verdigris", dash: "6 4", values: dol, label: { text: T("label_dollar"), short: T("label_dollar_short") } }
+      ],
+      marks: marks,
+      tip: function (i) {
+        var r = SER[i];
+        return { title: CMA.monthLong(r.month), lines: [T("tip_cu", { value: CMA.n0(r.copper_indexed), usd: CMA.usd0(r.copper_usd_t) }), T("tip_dol", { value: CMA.n0(r.dollar_indexed) })] };
+      },
+      aria: T("main_aria", { from: CMA.monthLong(SER[0].month), to: CMA.monthLong(SER[N - 1].month), base_month: baseMonth })
+    });
+    fold.push(card);
 
     // the 36-month correlation chart
     var rcard = h("div", { class: "card chart-card" });

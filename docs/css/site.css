@@ -349,7 +349,7 @@ details.srcfold > summary { cursor: pointer; font-weight: 500; font-size: .9rem;
 
 
 /* chapters of the one-page story */
-.chapter { scroll-margin-top: 96px; }
+.chapter { scroll-margin-top: var(--navh, 96px); }
 .chapter .story-body > h2 { margin: var(--s3) 0; }
 .chapter.wide { grid-template-columns: minmax(0, 1fr); gap: var(--s3); }
 .chapter.wide .index b { display: inline; font-size: 1.6rem; margin-left: var(--s2); }
@@ -388,6 +388,23 @@ ol.eventlist { list-style: none; counter-reset: ev; margin: var(--s2) 0 0; paddi
 .toplist li { display: flex; gap: 12px; padding: 8px 0; border-bottom: 1px solid var(--rule); }
 .toplist .rank { width: 1.6em; color: var(--muted); flex: none; padding-top: 2px; }
 @media (max-width: 880px) { .supply-grid { grid-template-columns: minmax(0, 1fr); } }
+
+
+/* the dollar chapter scatter */
+.scatter { position: relative; width: 100%; margin-top: 8px; }
+.scatter svg { display: block; width: 100%; height: auto; overflow: visible; }
+.scatter svg:focus-visible { outline: 2px solid var(--copper-text); outline-offset: 4px; }
+.scatter .quad { fill: var(--copper); opacity: .08; }
+.scatter .gridline { stroke: var(--rule); stroke-width: 1; }
+.scatter .zeroline { stroke: var(--ink); stroke-width: 1.2; }
+.scatter .ax { font-family: var(--mono); font-size: 11px; fill: var(--muted); }
+.scatter .ax.strong { fill: var(--copper-text); font-weight: 500; }
+.scatter .pt.opposite { fill: var(--copper); fill-opacity: .85; }
+.scatter .pt.same { fill: var(--muted); fill-opacity: .45; }
+.scatter .pt.unchanged { fill: var(--card); stroke: var(--ink); stroke-width: 1.2; }
+.scatter .fitline { fill: none; stroke: var(--ink); stroke-width: 1.6; }
+.scatter .bigl { font: 400 22px var(--display); fill: var(--ink); font-variation-settings: "opsz" 30; paint-order: stroke; stroke: var(--card); stroke-width: 5px; stroke-linejoin: round; }
+.scatter .ring { fill: none; stroke: var(--ink); stroke-width: 1.6; }
 
 /* note, chips, next, tiles */
 .note { background: var(--card); border: 1px solid var(--rule); border-left: 3px solid var(--copper); border-radius: 3px; padding: 16px 20px; margin: 26px 0; }

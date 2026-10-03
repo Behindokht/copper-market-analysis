@@ -379,7 +379,8 @@
    "lme_statistics_only": true,
    "large_datasets": [
     "rolling",
-    "series"
+    "series",
+    "scatter"
    ]
   },
   "docs/data/ratio.js": {
@@ -551,6 +552,21 @@
     "S30"
    ],
    "note": "where the map data comes from and its licences"
+  },
+  "results/res_dollar_scatter.csv": {
+   "sources": [
+    "S02",
+    "S17"
+   ],
+   "note": "monthly % changes of World Bank copper and the FRED broad dollar index, February 2006 on, with the direction of each month (derived)",
+   "large_ok": true
+  },
+  "results/res_dollar_scatter_fit.csv": {
+   "sources": [
+    "S02",
+    "S17"
+   ],
+   "note": "the regression line of the dollar chapter scatter (same as model 2) and the month counts"
   }
  }
 }
