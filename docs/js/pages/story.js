@@ -4,14 +4,14 @@
   var CMA = window.CMA, t = CMA.t, h = CMA.h;
 
   var CHAPTERS = [
-    { id: "uses", key: "uses", label: "chapter", numeral: "i", page: "uses" },
-    { id: "record", key: "record", label: "chapter", numeral: "ii", page: "record" },
-    { id: "just-copper", key: "just", label: "chapter", numeral: "iii", page: "just" },
-    { id: "dollar", key: "dollar", label: "chapter", numeral: "iv", page: "dollar" },
-    { id: "supply", key: "supply", label: "chapter", numeral: "v", page: "supply", wide: true },
-    { id: "demand", key: "demand", label: "chapter", numeral: "vi", page: "demand" },
-    { id: "aluminium", key: "aluminium", label: "chapter", numeral: "vii", page: "aluminium" },
-    { id: "summary", key: "summary", label: "summary_index", numeral: "viii", page: "summary" }
+    { id: "uses", key: "uses", label: "chapter", numeral: "1", page: "uses" },
+    { id: "record", key: "record", label: "chapter", numeral: "2", page: "record" },
+    { id: "just-copper", key: "just", label: "chapter", numeral: "3", page: "just" },
+    { id: "dollar", key: "dollar", label: "chapter", numeral: "4", page: "dollar" },
+    { id: "supply", key: "supply", label: "chapter", numeral: "5", page: "supply", wide: true },
+    { id: "demand", key: "demand", label: "chapter", numeral: "6", page: "demand" },
+    { id: "aluminium", key: "aluminium", label: "chapter", numeral: "7", page: "aluminium" },
+    { id: "summary", key: "summary", label: "summary_index", numeral: "8", page: "summary" }
   ];
   CMA.CHAPTER_NO = {};
   CHAPTERS.forEach(function (c, i) { CMA.CHAPTER_NO[c.key] = i + 1; });
@@ -30,6 +30,7 @@
     var realRec = CMA.realRecord();
     var U = {};
     CMA.rows(window.CMA_DATA.uses.figures).forEach(function (r) { U[r.fact_id] = r; });
+    var runDate = CMA.rows(window.CMA_DATA.quality.checks)[0].run_date, checkDate = parseInt(runDate.slice(8, 10), 10) + " " + CMA.monthLong(runDate);
     var nChecks = CMA.rows(window.CMA_DATA.quality.checks).filter(function (r) { return r.status === "PASS"; }).length;
     var sparkSvg = CMA.svg("svg", { class: "spark spark-title", viewBox: "-40 -40 80 80", "aria-hidden": "true" });
     CMA.spark.build(sparkSvg);
@@ -49,7 +50,8 @@
         h("p", { class: "hurry rise", style: "--i:3" }, h("a", { href: "#summary", text: t("hero.summary_link") })),
         h("ul", { class: "facts rise", style: "--i:4" },
           h("li", {}, h("b", { class: "num", text: CMA.n0(R.series_months.value) }), h("span", { class: "mono", text: t("hero.fact_months", { year: R.series_months.month.slice(0, 4) }) })),
-          h("li", {}, h("b", { class: "num", text: CMA.n0(nChecks) }), h("span", { class: "mono", text: t("hero.fact_checks") })))),
+          h("li", {}, h("b", { class: "num", text: CMA.n0(nChecks) }), h("span", { class: "mono", text: t("hero.fact_checks") }))),
+        h("p", { class: "dataline mono rise", style: "--i:4", text: t("hero.data_line", { latest_month: CMA.monthLong(R.nominal_latest.month), check_date: checkDate }) })),
       plaque), h("div", { class: "wrap" }, CMA.drivers("hero")));
     if (window.CMA_PHOTO) { hero.classList.add("has-photo"); hero.style.setProperty("--photo", 'url("' + window.CMA_PHOTO + '")'); }
     root.appendChild(hero);

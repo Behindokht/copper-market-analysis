@@ -220,4 +220,4 @@ check_no,table_name,description,status,detail,run_date
 219,stg_lme_copper_daily,every source_id exists in sources register,PASS,details withheld: the LME data is commercial and is never published,2026-10-04
 220,stg_usgs_copper,every source_id exists in sources register,PASS,ok,2026-10-04
 221,stg_wb_prices_monthly,every source_id exists in sources register,PASS,ok,2026-10-04
-222,sources,sources in the register that no table uses yet,INFO,"['S33', 'S34']",2026-10-04
+222,sources,sources in the register that no table uses yet,INFO,none,2026-10-04

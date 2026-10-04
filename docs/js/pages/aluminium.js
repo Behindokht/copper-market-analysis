@@ -32,7 +32,7 @@
     box.appendChild(card);
     CMA.lineChart(chost, {
       n: n, yMax: 5, yTicks: [0, 1, 2, 3, 4, 5], yFormat: CMA.n0, xTicks: xTicks, marginRight: 24,
-      band: { v: be, label: T("band") },
+      band: { v: be, label: T("band"), i0: SR.findIndex(function (r) { return r.month.slice(0, 7) === "1978-06"; }), i1: SR.findIndex(function (r) { return r.month.slice(0, 7) === "1996-06"; }) },
       series: [{ id: "ratio", color: "--copper", values: vals, label: { text: T("ctx_label"), short: T("ctx_label_short") } }],
       marks: marks,
       tip: function (i) {

@@ -49,7 +49,8 @@ window.CMA_STRINGS = {
    "Nine",
    "Ten"
   ],
-  "summary_link": "In a hurry? Read the 1-minute summary"
+  "summary_link": "In a hurry? Read the 1-minute summary",
+  "data_line": "Data through {latest_month}. Checked {check_date}."
  },
  "pages": {
   "uses": {
@@ -384,15 +385,15 @@ window.CMA_STRINGS = {
  },
  "demand": {
   "intro": "This chapter adds up the copper that electric cars and data centres might need each year in 2030, with 2035 beside it. It is a scenario built from stated assumptions. Results are shown in thousand tonnes and as a share of today's world mine output, {mine} million tonnes (USGS estimate for 2025).",
-  "answer": "In the middle case, electric cars and data centres need extra copper equivalent to {tot_pct}% of today's mine output in 2030. Other assumptions give {r1_lo}% to {r1_hi}%.",
+  "answer": "In the middle case, electric cars and data centres need extra copper equal to {tot_pct}% of today's mine output in 2030. Cars are counted against 2025 and data centres against their 2024 build. Other assumptions give {r1_lo}% to {r1_hi}%.",
   "scale": "For scale: {pct}% of today's mine output is about {mt} million tonnes a year, roughly what Russia mines in a year.",
   "main_title": "How much extra copper, in the middle case?",
   "main_hint": "Each bar adds the two effects, each against its own starting point: the EV transition against 2025 and the data-centre build against the 2024 build.",
-  "seg_ev": "EV transition",
+  "seg_ev": "EV transition, extra over 2025",
   "seg_dc": "Data centres, extra over the 2024 build",
   "bar_label": "In {year}",
-  "bar_total": "{thousand tonnes} thousand tonnes in total, equivalent to {pct}% of today's mine output",
-  "seg_value": "{thousand tonnes} thousand tonnes",
+  "bar_total": "{kt} thousand tonnes in total, equivalent to {pct}% of today's mine output",
+  "seg_value": "{kt} thousand tonnes",
   "range_line": "Changing one assumption at a time gives {lo}% to {hi}% for 2030.",
   "main_aria": "Stacked bars for {y1} and {y2}. {y1}: {t1}. {y2}: {t2}.",
   "more_title": "Change the assumptions, see the gross data-centre copper and the open issues",
@@ -409,7 +410,7 @@ window.CMA_STRINGS = {
   "range_all": "Every assumption at its extreme at once",
   "range_all_note": "Not a plausible case. Every assumption sits at its extreme at the same time.",
   "range_value": "{lo}% to {hi}% of today's mine output ({lo_kt} to {hi_kt} thousand tonnes)",
-  "range_ref_value": "{pct}% of today's mine output ({thousand tonnes} thousand tonnes)",
+  "range_ref_value": "{pct}% of today's mine output ({kt} thousand tonnes)",
   "range_axis": "Share of today's mine output (percent)",
   "range_cases": "Based on {n} cases tried",
   "range_ends": "Show what sits at each end",
@@ -475,9 +476,9 @@ window.CMA_STRINGS = {
   "row_mkt_sub": "Not an electric-car effect. Worked out from rounded IEA sales and shares. Not added to the total.",
   "row_total": "The two effects together, on their own baselines",
   "row_total_sub": "EV transition plus the data-centre extra. It adds two figures with different baselines: 2025 for cars, 2024 for data centres.",
-  "value": "{thousand tonnes} thousand tonnes, equivalent to {pct}% of today's mine output",
-  "value_band": "{thousand tonnes} thousand tonnes, equivalent to {pct}% of today's mine output. Rounding in the IEA data allows {lo} to {hi} thousand tonnes.",
-  "value_slow": "{thousand tonnes} thousand tonnes. The yearly build is slower than in 2024. This is a slower build, not negative demand.",
+  "value": "{kt} thousand tonnes, equivalent to {pct}% of today's mine output",
+  "value_band": "{kt} thousand tonnes, equivalent to {pct}% of today's mine output. Rounding in the IEA data allows {lo} to {hi} thousand tonnes.",
+  "value_slow": "{kt} thousand tonnes. The yearly build is slower than in 2024. This is a slower build, not negative demand.",
   "panel_aria": "Bars for {year}: {rows}",
   "basis_title": "Does it matter which capacity the copper per MW refers to?",
   "basis_open": "Open issue K01",
@@ -536,10 +537,11 @@ window.CMA_STRINGS = {
     "S20": "Project modelling assumptions"
    },
    "attribution": "Electric-car and data-centre scenario inputs: International Energy Agency (Global EV Outlook 2026, Energy and AI data annex). World mine output: US Geological Survey, Mineral Commodity Summaries 2026. The results on this chapter are my own calculations from these inputs and the assumptions listed above."
-  }
+  },
+  "total_label": "Sum of the two, each against its own starting year"
  },
  "quality": {
-  "intro": "Every automatic check on the data is on this page, with the open problems first.",
+  "intro": "Each check below runs on every rebuild. Warnings are open issues, listed with their reason.",
   "answer": "Mostly yes. No check failed. {n_warn} warnings stay open, and each one is explained below.",
   "bar_title": "Result of every check",
   "bar_aria": "Bar of all {n} checks: {n_pass} passed, {n_info} information, {n_warn} warnings, {n_fail} failed.",
@@ -679,15 +681,15 @@ window.CMA_STRINGS = {
   "size_note_reserves": "Circle area is proportional to reserves.",
   "list_title_output": "Top 10 by mine output",
   "list_title_reserves": "Top 10 by reserves",
-  "list_value_output": "{thousand tonnes} thousand tonnes, {share}% of the world",
-  "list_value_reserves": "{thousand tonnes} thousand tonnes, {share}% of the world",
+  "list_value_output": "{kt} thousand tonnes, {share}% of the world",
+  "list_value_reserves": "{kt} thousand tonnes, {share}% of the world",
   "life": "About {n} years at today's rate",
   "life_note": "Reserve life is reserves divided by one year of mine output. It is a simple ratio, not a forecast of when a country runs out.",
-  "tip_output": "Mine output, {year} estimate: {thousand tonnes} thousand tonnes ({share}% of the world)",
-  "tip_reserves": "Reserves: {thousand tonnes} thousand tonnes ({share}% of the world)",
+  "tip_output": "Mine output, {year} estimate: {kt} thousand tonnes ({share}% of the world)",
+  "tip_reserves": "Reserves: {kt} thousand tonnes ({share}% of the world)",
   "tip_life": "Reserve life: about {n} years at today's rate. A simple ratio, not a forecast.",
-  "other_note": "USGS also gives {thousand tonnes} thousand tonnes ({share}%) of output for other countries. It cannot be placed on the map.",
-  "other_note_reserves": "USGS also gives {thousand tonnes} thousand tonnes ({share}%) of reserves for other countries. It cannot be placed on the map.",
+  "other_note": "USGS also gives {kt} thousand tonnes ({share}%) of output for other countries. It cannot be placed on the map.",
+  "other_note_reserves": "USGS also gives {kt} thousand tonnes ({share}%) of reserves for other countries. It cannot be placed on the map.",
   "estimate_note": "Output for {year} is a USGS estimate.",
   "map_aria": "World map with a circle on each of {n} countries, sized by {measure}.",
   "text_alt": "Map in words: {list}. The list next to the map and the table below give the exact figures.",
@@ -721,7 +723,7 @@ window.CMA_STRINGS = {
   "bridge": "Supply is concentrated twice: where copper is mined and where it is refined. On the demand side, which new uses could need much more of it?"
  },
  "summary": {
-  "verdict": "Less special than it looks, in one way. As quoted, copper is at a record, but so {is_are} {others}. In today's money, copper is still {peak_above}% below {peak_month}. More special in others. Supply is concentrated twice, in a few mining countries and in Chinese refineries. And aluminium has been the cheaper metal for carrying electricity for almost 18 years, yet most copper still becomes wire, because space, strength and safe joints still favour copper.",
+  "verdict": "Less special than it looks, in one way. As quoted, copper is at a record, but so {is_are} {others}. In today's money, copper is still {peak_above}% below {peak_month}. More special in others. Supply is concentrated twice, in a few mining countries and in Chinese refineries. And aluminium has been the cheaper metal for carrying electricity for almost 18 years. Yet most copper still becomes wire, because copper wire is smaller, stronger and easier to connect.",
   "list_title": "In one sentence per chapter",
   "s_uses": "Most copper becomes wire, and China uses more than half of it.",
   "guess_title": "Your guesses",
@@ -744,7 +746,7 @@ window.CMA_STRINGS = {
    "It does not measure how much buyers switch to aluminium."
   ],
   "appendix_title": "Can you trust these numbers?",
-  "appendix_text": "Every number comes from a listed source and passes automatic checks. The appendix shows the checks, the open problems and the sources.",
+  "appendix_text": "Every number links to its source. The automatic checks show {fail} failures and {warn} open warnings, each explained in the appendix.",
   "appendix_link": "Open the appendix"
  },
  "method": {
@@ -862,10 +864,10 @@ window.CMA_STRINGS = {
    "attribution": "Copper end use, shares by country and recycling: International Copper Study Group, The World Copper Factbook 2025. Cited, not republished."
   },
   "bridge": "Something used this widely is priced every day. In {month} that price set a record. Is it really one?",
-  "facts_line": "{wire}% of copper is first made into wire, China uses {china}% of the world's refined copper, and about a third of copper use comes from recycled copper."
+  "facts_line": "{wire}% of copper is first made into wire. China uses {china}% of the world's refined copper. About a third of copper use comes from recycled copper."
  },
  "aluminium": {
-  "answer": "On metal cost alone, aluminium wins easily. For the same electrical job, the aluminium costs about a ninth of the copper today, and aluminium has been the cheaper conductor metal every month since {since}. Yet most copper still becomes wire.",
+  "answer": "On metal cost alone, aluminium wins easily. For the same electrical job, the aluminium costs about a ninth of the copper today. Aluminium has been the cheaper conductor metal every month since {since}. Yet most copper still becomes wire.",
   "chart_title": "How much more does copper cost than aluminium?",
   "chart_hint": "The line is the copper price divided by the aluminium price, month by month. Both are World Bank monthly averages in US dollars.",
   "band": "Above this line, aluminium is the cheaper metal for carrying electricity",
@@ -913,7 +915,7 @@ window.CMA_STRINGS = {
     "Metal cost only. Making, insulating and installing the cable are not included, and a wider aluminium cable needs more insulation.",
     "It does not measure how much switching actually happens.",
     "The ratio uses monthly average prices; inflation cancels in a ratio of two prices in the same currency.",
-    "The fire figure is for older US home wiring."
+    "The fire figure comes from a survey of outlet connections in older US homes."
    ]
   },
   "sources": {
@@ -929,13 +931,13 @@ window.CMA_STRINGS = {
   "bridge": "That is the last chapter. Here is what the whole story adds up to, and what it cannot tell you.",
   "holds_lines": [
    "Space: the aluminium wire is about {wider}% wider. Where space is tight, as in motor windings and electronics, the smaller copper wire wins.",
-   "Safe joints: aluminium connections loosen and overheat more easily. US homes wired with aluminium before 1972 were 55 times more likely to have a connection reach fire-hazard conditions, says the US Consumer Product Safety Commission.",
+   "Connections: aluminium connections loosen and overheat more easily. A survey for the US Consumer Product Safety Commission found that US homes built before 1972 and wired with aluminium were 55 times more likely than copper-wired homes to have an outlet connection reach fire-hazard conditions. The survey covers older US homes only, not modern wiring.",
    "Strength: copper's tensile strength is 2.8 times aluminium's and its fatigue limit 1.6 times, so thin wires survive bending and vibration better (Nexans).",
    "Corrosion: the oxide layer on aluminium harms its contacts more, so it needs special connectors (Nexans)."
   ],
   "wins_title": "Where aluminium already wins",
-  "wins": "Weight. For the same job, aluminium weighs about half as much. That is why it is preferred for high-power lines, cars and aircraft (Nexans).",
-  "closing": "So the price says where aluminium wins on paper. Weight, space, strength and safe joints decide where it wins in practice."
+  "wins": "Weight. For the same electrical job, aluminium weighs about half as much (our calculation from the NBS figures). Nexans, a cable maker, says this is why aluminium suits high-power lines, cars and aircraft.",
+  "closing": "So the price says where aluminium wins on paper. Weight, space, strength and connections decide where it wins in practice."
  },
  "foot": {
   "details": "Show the details",

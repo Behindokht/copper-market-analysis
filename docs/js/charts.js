@@ -75,14 +75,16 @@
         var by = Y(cfg.band.v);
         s.appendChild(svg("rect", { class: "bandfill", x: ml, y: mt, width: pw, height: Math.max(0, by - mt) }));
         s.appendChild(svg("line", { x1: ml, x2: ml + pw, y1: by, y2: by, class: "bandline" }));
-        if (!narrow) {      // on a narrow screen the label is a line of text under the chart (the line, not the label, carries the meaning there)
-          var bw = Math.min(200, pw * 0.3), words = cfg.band.label.split(" "), lns = [], cur2 = "";
+        if (!narrow) {      // on a narrow screen the label is a line of text under the chart. On a wide one it sits above the line in a stretch where the data is far below it (cfg.band.i0 to i1)
+          var i0 = cfg.band.i0 == null ? 0 : cfg.band.i0, i1 = cfg.band.i1 == null ? cfg.n - 1 : cfg.band.i1;
+          var bw = X(i1) - X(i0), words = cfg.band.label.split(" "), lns = [], cur2 = "";
           words.forEach(function (w) { if (cur2 && textW(cur2 + " " + w) > bw) { lns.push(cur2); cur2 = w; } else { cur2 = cur2 ? cur2 + " " + w : w; } });
           lns.push(cur2);
-          var bt = svg("text", { x: ml + pw - 8, y: by + 16, "text-anchor": "end", class: "ax bandlabel" });
-          lns.forEach(function (ln, k) { var ts = svg("tspan", { x: ml + pw - 8, dy: k === 0 ? 0 : 14 }); ts.textContent = ln; bt.appendChild(ts); });
+          var yLast = by - 12, yFirst = yLast - 14 * (lns.length - 1);
+          var bt = svg("text", { x: X(i0), y: yFirst, "text-anchor": "start", class: "ax bandlabel" });
+          lns.forEach(function (ln, k) { var ts = svg("tspan", { x: X(i0), dy: k === 0 ? 0 : 14 }); ts.textContent = ln; bt.appendChild(ts); });
           s.appendChild(bt);
-          box(ml + pw - 8 - bw, by, ml + pw, by + 6 + 14 * lns.length);
+          box(X(i0), yFirst - 12, X(i1), by);
         }
       }
 

@@ -27,6 +27,7 @@
 
     var vars = { peak_month: CMA.monthLong(CMA.realRecord().month), peak_above: CMA.n0(CMA.realRecord().belowPct), others: J.othersText, is_are: J.isAre, top2_share: CMA.n0(top2), demand_pct: CMA.n0(ref.headline_total_pct_of_mine), china_ref: CMA.n0(china.refinery_share_pct),
       since: CMA.monthLong(String(C.first_month_of_run.value) + "-01") };
+    function checkCount(status) { return CMA.rows(D.quality.checks).filter(function (r) { return r.status === status; }).length; }
     box.appendChild(h("p", { class: "answer summary-verdict", text: T("verdict", vars) }));
 
     var items = [["s_uses", "uses", ["uses.end_use", "uses.facts"]], ["s_record", "record", ["story.record_facts", "chapters.euro"]], ["s_just", "just-copper", ["chapters.records"]],
@@ -61,7 +62,7 @@
     box.appendChild(list("cannot_title", "cannot", "sum-cannot"));
 
     box.appendChild(h("section", { class: "card", "aria-labelledby": "sum-app" },
-      h("h3", { id: "sum-app", text: T("appendix_title") }), h("p", { text: T("appendix_text") }),
+      h("h3", { id: "sum-app", text: T("appendix_title") }), h("p", { text: T("appendix_text", { fail: checkCount("FAIL"), warn: checkCount("WARN") }) }),
       h("div", { class: "row" }, h("a", { class: "btn", href: "#quality", text: T("appendix_link") }), h("a", { class: "btn secondary", href: "#method", text: T("method_link") }))));
   };
 })();

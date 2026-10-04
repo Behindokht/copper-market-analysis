@@ -127,7 +127,7 @@ for k, v in keys.items():
 BANNED = ["utilize", "utilise", "leverage", "furthermore", "moreover", "notably", "robust", "delve", "underscore", "paramount", "plethora",
           "facilitate", "elucidate", "endeavor", "endeavour", "commence", "subsequently", "nevertheless", "consequently", "albeit",
           "whilst", "comprehensive", "holistic", "seamless", "myriad", "intricate", "pivotal", "landscape"]
-EXEMPT_LENGTH = ("aluminium.answer", "summary.verdict", "uses.facts_line", "aluminium.holds_lines", "footer.credits", "story.sources.attribution", "dollar.sources.attribution", "ratio.sources.attribution", "demand.sources.attribution")
+EXEMPT_LENGTH = ("aluminium.holds_lines", "footer.credits", "story.sources.attribution", "dollar.sources.attribution", "ratio.sources.attribution", "demand.sources.attribution")
 for p in text_files:
     if p.name.startswith("OFL-"):
         continue
@@ -166,6 +166,26 @@ elif r.stdout.startswith("SKIPPED"):
 r = subprocess.run([str(venv) if venv.exists() else sys.executable, str(ROOT / "tools" / "contrast_report.py")], capture_output=True, text=True, encoding="utf-8", errors="replace")
 if r.returncode != 0:
     problems.append("CONTRAST " + (r.stdout.strip().splitlines()[-1] if r.stdout.strip() else r.stderr.strip()))
+
+# 11. the built page itself: no unfilled placeholder such as {kt}, no "undefined" or "NaN" anywhere on screen (tools/rendered_text.py, needs Playwright)
+import json as _json
+site_dir = sys.argv[sys.argv.index("--site") + 1] if "--site" in sys.argv else str(ROOT / "docs")
+for py in (sys.executable, str(venv)):
+    if py == str(venv) and not venv.exists():
+        continue
+    probe = subprocess.run([py, "-c", "import playwright"], capture_output=True)
+    if probe.returncode != 0:
+        continue
+    r = subprocess.run([py, str(ROOT / "tools" / "rendered_text.py"), site_dir], capture_output=True, text=True, encoding="utf-8", errors="replace")
+    try:
+        res = _json.loads(r.stdout.strip().splitlines()[-1])
+        problems.extend("RENDERED " + x for x in res["problems"])
+        print(f"rendered check: {res['chars']} characters read from the story, appendix and method page; {len(res['problems'])} problem(s)")
+    except Exception:
+        problems.append("RENDERED the browser check did not run: " + (r.stderr.strip().splitlines() or ["no output"])[-1])
+    break
+else:
+    print("note: rendered check skipped (Playwright is not installed for any Python)")
 
 if problems:
     print(f"SITE CHECK FAILED: {len(problems)} problem(s)")

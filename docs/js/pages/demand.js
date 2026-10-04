@@ -275,7 +275,7 @@
         h("div", { class: "segvals small" },
           h("span", {}, h("i", { class: "sw2 ev" }), T("seg_ev") + ": " + T("seg_value", { kt: kt(c.ev) })),
           h("span", {}, h("i", { class: "sw2 dcx" }), T("seg_dc") + ": " + T("seg_value", { kt: kt(c.dcExtra) }))),
-        h("div", { class: "bval num", text: T("bar_total", { kt: kt(c.total), pct: pct(c.total) }) }));
+        h("div", { class: "bval num" }, h("span", { class: "small muted", style: "display:block", text: T("total_label") }), T("bar_total", { kt: kt(c.total), pct: pct(c.total) })));
     }
     var mainCard = h("div", { class: "card chart-card" },
       h("h3", { class: "qtitle", text: T("main_title") }),
