@@ -7,7 +7,7 @@
    Nothing here runs by itself: no idle animation. Contrast is checked by tools/glass_contrast.py. */
 (function () {
   var CMA = window.CMA, NS = "http://www.w3.org/2000/svg";
-  var SCALE = 66, SPLIT = 2, FROST = 3, SATURATE = "140%", TILT = 2, SPRING = 0.15;
+  var SCALE = 66, SPLIT = 2, FROST = 22, SATURATE = "160%", TILT = 2, SPRING = 0.15;
   var host = null, items = [], counter = 0, started = false;
   var mq = function (q) { return !!(window.matchMedia && window.matchMedia(q).matches); };
   var plain = function () { return mq("(prefers-reduced-transparency: reduce)") || !(window.CSS && CSS.supports && (CSS.supports("backdrop-filter", "blur(1px)") || CSS.supports("-webkit-backdrop-filter", "blur(1px)"))); };
@@ -53,7 +53,7 @@
     f.appendChild(mk("feBlend", { "in": "cR", in2: "cG", mode: "screen", result: "rg" }));
     f.appendChild(mk("feBlend", { "in": "rg", in2: "cB", mode: "screen" }));
     host.appendChild(f);
-    el.style.backdropFilter = "url(#" + id + ") blur(" + (+el.getAttribute("data-frost") || FROST) + "px) saturate(" + SATURATE + ")";
+    el.style.backdropFilter = "blur(" + (+el.getAttribute("data-frost") || FROST) + "px) saturate(" + SATURATE + ") url(#" + id + ")";      // blur first, then bend: text scrolling under a plate stays unreadable
     el.style.webkitBackdropFilter = el.style.backdropFilter;
   }
 
