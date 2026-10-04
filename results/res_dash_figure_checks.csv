@@ -15,3 +15,8 @@ D11,"real copper series against the story's real copper series (largest differen
 D12,"copper change over one year as quoted in USD, by hand from two months",48.1489,48.1489,0.001,percent,PASS
 D13,the one-year change in the opener of the story (result table of the uses chapter),48.15,48.1489,0.01,percent,PASS
 D14,euro window for 'all' starts in 1999,1999-01,1999-01,0.0,,PASS
+D17,"end-use shares add up to 100 (ICSG Factbook 2025, S31)",100.0,100.0,0.0,percent,PASS
+D18,"the six end-use shares in the result table equal the collected table, sector by sector (largest abs difference)",0.0,0.0,0.0,percentage points,PASS
+D19,"wire 63, China 58 and recycled about one third come from the collected facts table with their source id",154.0,154.0,0.0,sum of three percentages,PASS
+D20,the 12-month average of the ratio in the latest month equals the mean of the last 12 ratios,3.9622,3.9622,0.0002,ratio,PASS
+D21,each metal's share of its own real record is 100 in its record month and the five latest values match the interlude records table,0.0,0.0184,0.05,percentage points,PASS

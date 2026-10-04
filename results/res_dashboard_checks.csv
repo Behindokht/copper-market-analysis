@@ -33,195 +33,196 @@ check_no,table_name,description,status,detail,run_date
 32,stg_ev_data,"known issue K05 (limitation): IEA numbers are rounded to two significant figures and EV shares to whole percent. Total car sales derived as EV sales / share, and so the growth in total sales, carry a rounding band of several million cars",INFO,details withheld: raw IEA data is not redistributed,2026-10-04
 33,copper_intensity_vehicle,"known issue K06 (limitation): Vans, buses, trucks and 2 and 3-wheelers have no copper intensity in the project data and are excluded; fuel-cell cars are excluded too (about 7,000 sold in 2025). The EV result is therefore understated",INFO,source S11; Cars only,2026-10-04
 34,copper_end_use,"known issue K07 (unresolved): The ICSG World Copper Factbook figures (end-use shares, China 58% of refined use, recycled share, wire share, 23 Mt mined and 27.4 Mt used in 2024) were read from extracted PDF text. The page numbers in sources.csv (S31) have not yet been checked in the PDF",WARN,"source S31; Still open. Open the PDF and confirm each figure and page before the repository is published; nothing else about the figures is in doubt (primary source, high reliability)",2026-10-04
-35,stg_wb_prices_monthly,commodities / rows / date range,INFO,71 commodities; 50383 values; 1960-01-01 to 2026-08-01,2026-10-04
-36,stg_wb_prices_monthly,"raw cells dropped in staging (empty, non-numeric or bad period)",INFO,6417 of 56800 raw cells,2026-10-04
-37,stg_wb_prices_monthly,"no duplicate (date, commodity)",PASS,0 duplicated keys,2026-10-04
-38,stg_wb_prices_monthly,Aluminum: no missing months since 1998,PASS,344 of 344 months,2026-10-04
-39,stg_wb_prices_monthly,Copper: no missing months since 1998,PASS,344 of 344 months,2026-10-04
-40,stg_wb_prices_monthly,"Crude oil, Brent: no missing months since 1998",PASS,344 of 344 months,2026-10-04
-41,stg_wb_prices_monthly,Gold: no missing months since 1998,PASS,344 of 344 months,2026-10-04
-42,stg_wb_prices_monthly vs python baseline,"row count, date range, null values and sum of values match the old Python output",PASS,"sql 50383 rows, 1960-01-01 to 2026-08-01, 0 nulls, sum 34393207.203 | python 50383 rows, 1960-01-01 to 2026-08-01, 0 nulls, sum 34393207.203",2026-10-04
-43,stg_wb_prices_monthly vs python baseline,"every commodity matches the old Python output (unit, rows, first and last month, sum)",PASS,"71 commodities compared, all equal",2026-10-04
-44,stg_fred_monthly,CPIAUCSL: values / date range,INFO,955 values; 1947-01-01 to 2026-08-01,2026-10-04
-45,stg_fred_monthly,EXUSEU: values / date range,INFO,332 values; 1999-01-01 to 2026-08-01,2026-10-04
-46,stg_fred_monthly,GS10: values / date range,INFO,881 values; 1953-04-01 to 2026-08-01,2026-10-04
-47,stg_fred_monthly,PALUMUSDM: values / date range,INFO,415 values; 1992-01-01 to 2026-07-01,2026-10-04
-48,stg_fred_monthly,"raw rows dropped in staging (blank, non-numeric or bad date)",INFO,1 of 2584 raw rows,2026-10-04
-49,stg_fred_monthly,"no duplicate (series_id, date) and every date is the first of a month",PASS,0 duplicated keys; 0 dates that are not the first of a month,2026-10-04
-50,stg_fred_monthly,CPIAUCSL: no missing months,WARN,955 of 956 months,2026-10-04
-51,stg_fred_monthly,EXUSEU: no missing months,PASS,332 of 332 months,2026-10-04
-52,stg_fred_monthly,GS10: no missing months,PASS,881 of 881 months,2026-10-04
-53,stg_fred_monthly,PALUMUSDM: no missing months,PASS,415 of 415 months,2026-10-04
-54,stg_fred_monthly,CPIAUCSL: values inside plausible range 10 to 1000,PASS,"min 21.48, max 334.131",2026-10-04
-55,stg_fred_monthly,EXUSEU: values inside plausible range 0.5 to 2.0,PASS,"min 0.8525, max 1.5759",2026-10-04
-56,stg_fred_monthly,GS10: values inside plausible range -1 to 20,PASS,"min 0.62, max 15.32",2026-10-04
-57,stg_fred_monthly,PALUMUSDM: values inside plausible range 100 to 10000,PASS,"min 1040.02270507813, max 3658.22142857143",2026-10-04
-58,stg_fred_monthly vs python baseline,"aluminium and CPI match the old Python output (rows, first and last month, null values, sum)",PASS,"2 series compared, all equal: CPIAUCSL 955 rows; PALUMUSDM 415 rows",2026-10-04
-59,stg_fred_dtwexbgs_daily,days with a value / blank days dropped / date range,INFO,5198 days; 212 blank days dropped; 2006-01-02 to 2026-09-25,2026-10-04
-60,stg_fred_dtwexbgs_daily,no duplicate dates and index inside 50 to 200,PASS,"min 85.4692, max 130.0413",2026-10-04
-61,stg_fred_dtwexbgs_daily,every complete month has at least 15 days with a value (needed for a monthly average),PASS,"248 complete months; fewest days 15, most 23",2026-10-04
-62,mart_monthly_panel,"one row per month, no gaps or duplicates, from 1999-01 to the last World Bank copper month",PASS,332 rows; 1999-01-01 to 2026-08-01; expected 332,2026-10-04
-63,mart_monthly_panel,copper and aluminium in the panel equal the World Bank staging values (every month),PASS,0 months differ,2026-10-04
-64,mart_monthly_panel,"months with a value per column (copper, aluminium, euro rate, dollar index, 10-year rate, CPI, copper in euros)",PASS,"of 332 months: copper 332, aluminium 332, usd per eur 332, dollar index 248 (starts 2006-01-01), 10-year 332, CPI 331, copper in EUR 332",2026-10-04
-65,mart_monthly_panel,"only 2025-10 has no CPI (US federal shutdown, no October 2025 data; see README)",PASS,1 months without CPI: 2025-10,2026-10-04
-66,mart_monthly_panel,copper in euros times USD per euro gives back the USD price (every month),PASS,0 months off,2026-10-04
-67,mart_monthly_panel,dollar index month-end date is in the same month and on or after day 24,PASS,248 months checked; earliest month-end day 26,2026-10-04
-68,mart_monthly_changes,same months as the panel; first month has no change,PASS,332 rows,2026-10-04
-69,mart_monthly_changes,"exp(log return) - 1 equals the simple percent change / 100 (copper, euro rate, dollar index)",PASS,247 months compared,2026-10-04
-70,mart_monthly_changes,copper EUR log return = copper USD log return minus USD-per-euro log return (every month),PASS,331 months compared,2026-10-04
-71,mart_monthly_changes,"CPI change is missing only for the first month, 2025-10 and 2025-11",PASS,"missing: 1999-01, 2025-10, 2025-11",2026-10-04
-72,mart_monthly_changes,months available for each planned test (sample sizes),INFO,copper vs USD per euro 331; copper vs dollar index 247; with 10-year rate control 247; real copper vs dollar index 245,2026-10-04
-73,stg_lme_copper_daily,date range and rows,INFO,details withheld: the LME data is commercial and is never published,2026-10-04
-74,stg_lme_copper_daily,raw lines read / dropped (summary lines and other non-dates) / duplicate dates removed,PASS,details withheld: the LME data is commercial and is never published,2026-10-04
-75,stg_lme_copper_daily,every full year has at least 240 trading days,PASS,details withheld: the LME data is commercial and is never published,2026-10-04
-76,stg_lme_copper_daily,gaps longer than 5 calendar days,INFO,details withheld: the LME data is commercial and is never published,2026-10-04
-77,stg_lme_copper_daily,coverage of cash_usd_t,INFO,details withheld: the LME data is commercial and is never published,2026-10-04
-78,stg_lme_copper_daily,coverage of three_month_usd_t,INFO,details withheld: the LME data is commercial and is never published,2026-10-04
-79,stg_lme_copper_daily,coverage of fifteen_month_usd_t,INFO,details withheld: the LME data is commercial and is never published,2026-10-04
-80,stg_lme_copper_daily,coverage of inventory_t,INFO,details withheld: the LME data is commercial and is never published,2026-10-04
-81,stg_lme_copper_daily,coverage of volume_as_exported,INFO,details withheld: the LME data is commercial and is never published,2026-10-04
-82,stg_lme_copper_daily,coverage of cash_unofficial_usd_t,INFO,details withheld: the LME data is commercial and is never published,2026-10-04
-83,stg_lme_copper_daily,"cash price inside 500 to 20,000 USD per tonne and inventory positive",PASS,details withheld: the LME data is commercial and is never published,2026-10-04
-84,stg_lme_copper_daily vs python baseline,"rows, first and last date, non-null count, sum, min and max match the old Python output for every column, overall and for each year",PASS,details withheld: the LME data is commercial and is never published,2026-10-04
-85,mart_monthly_panel,LME month-end date is in the same month and on or after day 24; only complete months (before the last LME month),PASS,details withheld: the LME data is commercial and is never published,2026-10-04
-86,mart_monthly_panel,LME monthly average cash price in the panel equals the average of the daily staging values (every month with data),PASS,details withheld: the LME data is commercial and is never published,2026-10-04
-87,mart_monthly_changes,"months available for the month-end check (LME copper and dollar index, averages and month-end on the same months)",INFO,details withheld: the LME data is commercial and is never published,2026-10-04
-88,mart_cu_al_ratio,"one row per month with no gaps, from the first to the last World Bank month",PASS,800 rows; 1960-01-01 to 2026-08-01; expected 800,2026-10-04
-89,mart_cu_al_ratio,ratio equals the World Bank staging copper price divided by the staging aluminium price (every month),PASS,0 months differ,2026-10-04
-90,mart_cu_al_ratio,forward 6 and 12 month changes match the ratio six and twelve calendar months later (every month); last 6 and 12 months are empty,PASS,"0 months differ; empty 6m outcomes 6, empty 12m outcomes 12",2026-10-04
-91,mart_cu_al_ratio,"forward ratio log change = copper log return minus aluminium log return (6 and 12 months, every month)",PASS,0 months differ,2026-10-04
-92,mart_cu_al_ratio,"percentiles empty for the first 120 months, between 0 and 100 after, 100 at a new high and 0 at a new low",PASS,first month with a percentile 1970-01-01; high/low violations 0,2026-10-04
-93,mart_cu_al_signal_months,every rule uses the same months at each horizon (common sample),PASS,"6m: 674 months, 1970-01-01 to 2026-02-01",2026-10-04
-94,mart_cu_al_signal_months,every rule uses the same months at each horizon (common sample),PASS,"12m: 668 months, 1970-01-01 to 2025-08-01",2026-10-04
-95,mart_cu_al_signal_months,signal months in one episode are at most horizon months apart; the next episode starts more than horizon months later,PASS,0 violations,2026-10-04
-96,mart_cu_al_signal_months,"signal-on months have an episode id, signal-off months have none",PASS,7799 signal-on months; 22814 rows,2026-10-04
-97,mart_cu_al_signal_months,independent episodes at 12 months: ratio at or above 2.0,INFO,"4 episodes, 275 signal months of 668",2026-10-04
-98,mart_cu_al_signal_months,independent episodes at 12 months: ratio at or above 2.5,INFO,"3 episodes, 245 signal months of 668",2026-10-04
-99,mart_cu_al_signal_months,independent episodes at 12 months: ratio at or above 3.0,INFO,"3 episodes, 203 signal months of 668",2026-10-04
-100,mart_cu_al_signal_months,independent episodes at 12 months: ratio at or above 3.5,INFO,"3 episodes, 100 signal months of 668",2026-10-04
-101,mart_cu_al_signal_months,independent episodes at 12 months: ratio at or above 4.0,INFO,"3 episodes, 15 signal months of 668",2026-10-04
-102,mart_cu_al_signal_months,independent episodes at 12 months: ratio at or above its 50th percentile of all earlier months,INFO,"7 episodes, 395 signal months of 668",2026-10-04
-103,mart_cu_al_signal_months,independent episodes at 12 months: ratio at or above its 60th percentile of all earlier months,INFO,"6 episodes, 345 signal months of 668",2026-10-04
-104,mart_cu_al_signal_months,independent episodes at 12 months: ratio at or above its 70th percentile of all earlier months,INFO,"5 episodes, 298 signal months of 668",2026-10-04
-105,mart_cu_al_signal_months,independent episodes at 12 months: ratio at or above its 80th percentile of all earlier months,INFO,"4 episodes, 261 signal months of 668",2026-10-04
-106,mart_cu_al_signal_months,independent episodes at 12 months: ratio at or above its 90th percentile of all earlier months,INFO,"4 episodes, 171 signal months of 668",2026-10-04
-107,mart_cu_al_signal_months,independent episodes at 12 months: ratio at or above its 95th percentile of all earlier months,INFO,"4 episodes, 101 signal months of 668",2026-10-04
-108,mart_cu_al_signal_months,independent episodes at 12 months: ratio at or above its 50th percentile of the previous 10 years,INFO,"8 episodes, 353 signal months of 668",2026-10-04
-109,mart_cu_al_signal_months,independent episodes at 12 months: ratio at or above its 60th percentile of the previous 10 years,INFO,"8 episodes, 317 signal months of 668",2026-10-04
-110,mart_cu_al_signal_months,independent episodes at 12 months: ratio at or above its 70th percentile of the previous 10 years,INFO,"8 episodes, 259 signal months of 668",2026-10-04
-111,mart_cu_al_signal_months,independent episodes at 12 months: ratio at or above its 80th percentile of the previous 10 years,INFO,"8 episodes, 219 signal months of 668",2026-10-04
-112,mart_cu_al_signal_months,independent episodes at 12 months: ratio at or above its 90th percentile of the previous 10 years,INFO,"7 episodes, 170 signal months of 668",2026-10-04
-113,mart_cu_al_signal_months,independent episodes at 12 months: ratio at or above its 95th percentile of the previous 10 years,INFO,"6 episodes, 128 signal months of 668",2026-10-04
-114,stg_ev_data,"rows kept (EV sales, EV sales share, EV stock) / categories / years",INFO,details withheld: raw IEA data is not redistributed,2026-10-04
-115,stg_ev_data,rows of the three kept parameters dropped for a non-numeric year or value,PASS,details withheld: raw IEA data is not redistributed,2026-10-04
-116,stg_ev_data,world EV car sales 2025 in plausible range (10 to 40 million),PASS,details withheld: raw IEA data is not redistributed,2026-10-04
-117,stg_ev_data vs python baseline,"row count, non-null counts, distinct counts, sums, min and max per column, and counts and sums per group match the old Python output",PASS,details withheld: raw IEA data is not redistributed,2026-10-04
-118,stg_usgs_copper,rows read (copper only) / sections,INFO,"194 rows; sections Import Sources, Salient Statistics, United States, World Mine and Refinery Production and Reserves",2026-10-04
-119,stg_usgs_copper,2024: mine production by country adds up to world total (2% tolerance for USGS rounding),PASS,"sum 22,981 vs total 23,000 (0.08% apart)",2026-10-04
-120,stg_usgs_copper,2025: mine production by country adds up to world total (2% tolerance for USGS rounding),PASS,"sum 23,013 vs total 23,000 (0.06% apart)",2026-10-04
-121,stg_usgs_copper,reserves by country add up to world total (2% tolerance),PASS,"sum 980,200 vs total 980,000 (0.02% apart)",2026-10-04
-122,stg_usgs_copper,"copper lines in the raw file and entries that are not numbers (kept as text in value_text, NULL in value)",INFO,194 copper lines; 13 without a numeric value,2026-10-04
-123,stg_usgs_copper vs python baseline,"row count, non-null counts, distinct counts, sums, min and max per column, and counts and sums per group match the old Python output",PASS,"134 column and group summaries compared, all equal",2026-10-04
-124,stg_datacentre_annex_world,rows read,INFO,details withheld: raw IEA data is not redistributed,2026-10-04
-125,stg_datacentre_annex_world,every row has a metric and a unit (a section header was found above it),PASS,details withheld: raw IEA data is not redistributed,2026-10-04
-126,stg_datacentre_annex_world,hyperscale + colocation + enterprise add up to the total electricity (2% tolerance),PASS,details withheld: raw IEA data is not redistributed,2026-10-04
-127,stg_datacentre_annex_world vs python baseline,"row count, non-null counts, distinct counts, sums, min and max per column, and counts and sums per group match the old Python output",PASS,details withheld: raw IEA data is not redistributed,2026-10-04
-128,stg_datacentre_annex_regional,rows read,INFO,details withheld: raw IEA data is not redistributed,2026-10-04
-129,stg_datacentre_annex_regional,every row has a metric and a unit (a section header was found above it),PASS,details withheld: raw IEA data is not redistributed,2026-10-04
-130,stg_datacentre_annex_regional,2024 six regions add up to the world electricity figure (3% tolerance),PASS,details withheld: raw IEA data is not redistributed,2026-10-04
-131,stg_datacentre_annex_regional vs python baseline,"row count, non-null counts, distinct counts, sums, min and max per column, and counts and sums per group match the old Python output",PASS,details withheld: raw IEA data is not redistributed,2026-10-04
-132,stg_datacentre_capacity_scenarios,"scenario names in row 2 of the annex are Base, Lift-Off, High Efficiency, Headwinds in columns H, K, N, Q (column mapping holds)",PASS,details withheld: raw IEA data is not redistributed,2026-10-04
-133,stg_datacentre_capacity_scenarios,"Base-case capacity (total and IT, 2030 and 2035) equals stg_datacentre_annex_world",PASS,details withheld: raw IEA data is not redistributed,2026-10-04
-134,stg_datacentre_capacity_scenarios,"estimate years (2020, 2023, 2024) equal stg_datacentre_annex_world for total and IT",PASS,details withheld: raw IEA data is not redistributed,2026-10-04
-135,stg_datacentre_capacity_scenarios,IT capacity is below total capacity in every case and year,PASS,details withheld: raw IEA data is not redistributed,2026-10-04
-136,mart_ev_sales_path,BEV + PHEV + FCEV equal the EV total within 2% for 2025 and 2035 (IEA rounds to 2 significant figures),PASS,largest difference 0.99%,2026-10-04
-137,mart_ev_sales_path,"direct 2025 and 2035 BEV, PHEV, EV and share equal stg_ev_data (World, Cars)",PASS,0 differences,2026-10-04
-138,mart_ev_sales_path,"2030 linear is the midpoint and constant growth is the geometric mean of the 2025 and 2035 values (BEV, PHEV, EV, share); constant growth is below linear",PASS,2 scenarios checked,2026-10-04
-139,mart_ev_sales_path,"total car sales = EV sales / share, with min below central below max (derived, not from EV data)",PASS,world car sales 2025 about 84.0 million (band 80.4 to 87.8),2026-10-04
-140,mart_ev_copper_cases,"transition + car-market growth equals the change in copper in new cars computed directly from BEV, PHEV and non-EV sales (every central case)",PASS,0 cases differ,2026-10-04
-141,mart_ev_copper_cases,"one row for every scenario, 2030 path (2) or 2035, BEV, PHEV, petrol-car and rounding case (2 x 3 x 3 x 3 x 6 x 3)",PASS,972 rows,2026-10-04
-142,mart_ev_copper_cases,"CPS 2030 linear, mid copper per car: transition = (extra BEV x (BEV kg - petrol kg) + extra PHEV x (PHEV kg - petrol kg)) / 1000 tonnes",PASS,"926,650 t",2026-10-04
-143,mart_dc_capacity_path,even path: yearly build x years = total additions; constant growth: the yearly builds add up to the same total and the target-year build is first-year build x (1+g)^(years-1),PASS,"32 paths checked; Base 2030: even 21.50 GW a year, constant growth 29.64 GW in 2030",2026-10-04
-144,mart_dc_copper_cases,"new-capacity copper = GW x 1000 x t per MW, extra = (build - base build) x 1000 x t per MW (every case)",PASS,0 cases differ,2026-10-04
-145,mart_dc_copper_cases,"every negative extra-over-base-year number carries the explanation (a slower build, not negative demand), and gross new-capacity copper is never negative",PASS,36 of 256 cases are negative and all carry the note,2026-10-04
-146,mart_demand_headline,every headline data-centre row with a negative low value carries the explanation,PASS,7 rows with a negative low value,2026-10-04
-147,mart_demand_headline,"percent of mine output = tonnes / 2025e world mine production x 100 (every row), and the base is the USGS 2025 estimate",PASS,"0 rows differ; base 23,000,000 t",2026-10-04
-148,mart_demand_headline,low is not above mid and mid is not above high for the EV terms and the data-centre new-capacity rows,PASS,0 rows out of order of 44,2026-10-04
-149,mart_demand_sensitivity,"reference case in the sensitivity table equals EV transition (CPS, 2030, linear, mid) + data-centre extra (Base, even, total capacity, mid) from the headline table",PASS,"1,189,150 t = 5.17% of 2025e mine output",2026-10-04
-150,mart_demand_sensitivity,every bar from 1 to 13 has at least one alternative row and the reference row exists once,PASS,"23 rows, 14 bar groups",2026-10-04
-151,mart_demand_context,"S13 reports 1.1 Mt of data-centre copper demand for 2025; the model gives 0.42 to 0.56 Mt for the 2024 build (known issue K02, unreconciled)",INFO,S13 is 2.0 to 2.6 times the model,2026-10-04
-152,mart_dc_copper_cases,"IT-capacity basis gives a lower data-centre result than total capacity (Base, 2030, even, mid, 2023-24 base): new-capacity copper and extra over the base year",INFO,new-capacity copper 18% lower on IT capacity; extra over base year 11% lower,2026-10-04
-153,usgs_country_iso,every USGS country name (production 2025 and reserves) is in the ISO mapping table,PASS,all matched,2026-10-04
-154,usgs_country_iso,placeable rows have a 3-letter ISO code and an M49 code; the not placeable row has neither,PASS,0 bad rows,2026-10-04
-155,events,"every event has a month (YYYY-MM), a label, a description and a status of proposed or approved",PASS,0 bad rows,2026-10-04
-156,res_story_copper_record_facts,the latest price on the plaque equals the World Bank copper price for that month,PASS,"2026-08: 14326.0 in the result table, 14326.0 in staging",2026-10-04
-157,res_story_copper_record_facts,the record as quoted is the highest monthly World Bank copper price since 1960,PASS,2026-08: 14326.0,2026-10-04
-158,res_interlude_records,"copper's real record is the same month and value as in the story facts (plaque, chapter 1 and summary use it)",PASS,1974-04 21062.0 vs 1974-04 21062.1,2026-10-04
-159,res_interlude_records,the latest price of each of the five series equals the World Bank price for that month,PASS,5 of 5 series match,2026-10-04
-160,res_euro_record,the latest euro price equals the panel and is the highest since January 1999,PASS,2026-08: 12356.0 EUR per tonne,2026-10-04
-161,res_supply_countries,countries plus other countries add up to the USGS world total (0.5% tolerance) and match staging,PASS,"23013.0 kt listed, world 23000.0 kt; 0 rows differ from staging",2026-10-04
-162,res_story_guess_dollar,"opposite, same direction and unchanged months add up to the months compared",PASS,178.0 + 68.0 + 1.0 of 247.0,2026-10-04
-163,res_dollar_correlations,the dollar chapter scatter has the same months as the correlation with the broad dollar index,PASS,"247 points, 247 months",2026-10-04
-164,res_cu_al_threshold_table,every rule has both horizons and an adjusted p-value between 0 and 1,PASS,"34 rows, 17 rules, 1 below 0.05 after adjustment",2026-10-04
-165,res_demand_sensitivity,the reference total is the EV transition plus the data-centre extra over the 2024 build,PASS,1189150.0 t = 926650.0 + 262500.0,2026-10-04
-166,res_dashboard_checks,the list of checks shown on the site has no failed check,PASS,"155 passed, 7 warnings, 0 failed",2026-10-04
-167,copper_end_use,"the six end-use shares add up to 100 percent (one scope, one year)",PASS,6 sectors add up to 100 percent,2026-10-04
-168,physical_constants,"copper and aluminium both have a conductivity and a density, and annealed copper is 100 percent IACS by definition",PASS,"2 densities, 2 conductivities",2026-10-04
-169,copper_context_facts,"facts F01 to F07 are present, the percentages are between 0 and 100 and each has a source",PASS,7 facts,2026-10-04
-170,copper_context_facts,ICSG world mine production 2024 (F05) equals the USGS world mine production 2024 (both about 23 million tonnes),PASS,23.0 million tonnes (ICSG) vs 23000.0 thousand tonnes (USGS),2026-10-04
-171,res_uses_end_use,"the end-use result table has the six sectors and the same shares as the collected ICSG table, adding up to 100",PASS,"6 sectors, sum 100",2026-10-04
-172,res_uses_facts,the 12-month change equals the World Bank prices of August 2026 and August 2025,PASS,48.15% = 14326.0 / 9670.0 - 1,2026-10-04
-173,res_refined_vs_mined,"refinery output of each country in the chart equals the USGS figure, and every share is of the USGS world total",PASS,8 of 8 countries match,2026-10-04
-174,res_refined_vs_mined,a country without a USGS mine figure has no mine share (never zero),PASS,1 country without a mine figure,2026-10-04
-175,res_aluminium_case,the break-even ratio equals 1 / ((1 / conductivity) x (aluminium density / copper density)) from the collected constants,PASS,"2.0085 from conductivity 61.0 percent IACS, densities 2.7 and 8.89",2026-10-04
-176,res_aluminium_case,"no month after the last month below the break-even is at or below it, and that last month is the one named",PASS,last month at or below the break-even: 2008-11,2026-10-04
-177,res_demand_scale,"the 2030 reference total in the scale sentence equals the sensitivity table, and Russia equals the USGS figure",PASS,1189.0 kt against Russia 1300.0 kt,2026-10-04
-178,res_story_figure_checks,every figure computed for the story brief reproduces its expected value,PASS,56 of 56 figures pass,2026-10-04
-179,res_dash_series,dashboard copper (dollars and euros) equals the monthly panel in every month since 1999,PASS,332 of 332 months match,2026-10-04
-180,res_dash_series,"dashboard copper-to-aluminium ratio equals the ratio mart in every month, and the series has one row per month",PASS,800 months,2026-10-04
-181,res_dash_series,the real copper value is empty in exactly the months with no US CPI value (October 2025) and nowhere else,PASS,1 empty month(s),2026-10-04
-182,res_dash_figure_checks,every latest-month figure on the dashboard reproduces from an independent source table,PASS,16 of 16 figures pass,2026-10-04
-183,raw_lme_copper_daily,every source_id exists in sources register,PASS,details withheld: the LME data is commercial and is never published,2026-10-04
-184,raw_wb_prices_monthly,every source_id exists in sources register,PASS,ok,2026-10-04
-185,raw_fred_palumusdm,every source_id exists in sources register,PASS,ok,2026-10-04
-186,raw_fred_cpiaucsl,every source_id exists in sources register,PASS,ok,2026-10-04
-187,raw_fred_exuseu,every source_id exists in sources register,PASS,ok,2026-10-04
-188,raw_fred_dtwexbgs,every source_id exists in sources register,PASS,ok,2026-10-04
-189,raw_fred_gs10,every source_id exists in sources register,PASS,ok,2026-10-04
-190,raw_ev_data,every source_id exists in sources register,PASS,details withheld: raw IEA data is not redistributed,2026-10-04
-191,raw_usgs_commodities,every source_id exists in sources register,PASS,ok,2026-10-04
-192,raw_iea_annex_cells,every source_id exists in sources register,PASS,details withheld: raw IEA data is not redistributed,2026-10-04
-193,company_production,every source_id exists in sources register,PASS,ok,2026-10-04
-194,copper_context_facts,every source_id exists in sources register,PASS,ok,2026-10-04
-195,copper_end_use,every source_id exists in sources register,PASS,ok,2026-10-04
-196,copper_intensity_vehicle,every source_id exists in sources register,PASS,ok,2026-10-04
-197,datacentre_copper_assumptions,every source_id exists in sources register,PASS,ok,2026-10-04
-198,datacentre_electricity_iea,every source_id exists in sources register,PASS,details withheld: raw IEA data is not redistributed,2026-10-04
-199,datacentre_growth_by_region,every source_id exists in sources register,PASS,details withheld: raw IEA data is not redistributed,2026-10-04
-200,events,every source_id exists in sources register,PASS,ok,2026-10-04
-201,known_issues,every source_id exists in sources register,PASS,ok,2026-10-04
-202,mine_production,every source_id exists in sources register,PASS,ok,2026-10-04
-203,physical_constants,every source_id exists in sources register,PASS,ok,2026-10-04
-204,scenario_assumptions,every source_id exists in sources register,PASS,ok,2026-10-04
-205,usgs_country_iso,every source_id exists in sources register,PASS,ok,2026-10-04
-206,usgs_mine_production_country,every source_id exists in sources register,PASS,ok,2026-10-04
-207,res_context_facts,every source_id exists in sources register,PASS,ok,2026-10-04
-208,res_dashboard_known_issues,every source_id exists in sources register,PASS,ok,2026-10-04
-209,res_dashboard_sources,every source_id exists in sources register,PASS,ok,2026-10-04
-210,res_demand_assumptions,every source_id exists in sources register,PASS,ok,2026-10-04
-211,res_demand_context,every source_id exists in sources register,PASS,ok,2026-10-04
-212,res_events,every source_id exists in sources register,PASS,ok,2026-10-04
-213,res_uses_end_use,every source_id exists in sources register,PASS,ok,2026-10-04
-214,mart_demand_assumptions,every source_id exists in sources register,PASS,ok,2026-10-04
-215,mart_demand_context,every source_id exists in sources register,PASS,ok,2026-10-04
-216,mart_scenario_inputs,every source_id exists in sources register,PASS,ok,2026-10-04
-217,stg_datacentre_annex_regional,every source_id exists in sources register,PASS,details withheld: raw IEA data is not redistributed,2026-10-04
-218,stg_datacentre_annex_world,every source_id exists in sources register,PASS,details withheld: raw IEA data is not redistributed,2026-10-04
-219,stg_datacentre_capacity_scenarios,every source_id exists in sources register,PASS,details withheld: raw IEA data is not redistributed,2026-10-04
-220,stg_ev_data,every source_id exists in sources register,PASS,details withheld: raw IEA data is not redistributed,2026-10-04
-221,stg_fred_dtwexbgs_daily,every source_id exists in sources register,PASS,ok,2026-10-04
-222,stg_fred_monthly,every source_id exists in sources register,PASS,ok,2026-10-04
-223,stg_lme_copper_daily,every source_id exists in sources register,PASS,details withheld: the LME data is commercial and is never published,2026-10-04
-224,stg_usgs_copper,every source_id exists in sources register,PASS,ok,2026-10-04
-225,stg_wb_prices_monthly,every source_id exists in sources register,PASS,ok,2026-10-04
-226,sources,sources in the register that no table uses yet,INFO,none,2026-10-04
+35,res_dash_series,"known issue K08 (unresolved): Background photo licence unconfirmed. The dashboard page uses a patina photo (assets/patina-background.webp) as its page background. It is not in the repository or in docs/, and the page falls back to the plain paper colour when the file is missing. Contrast was computed on bounds, not on the photo, until the file is on this disk",WARN,"source S35; Confirm the source and licence, then move the file into docs/img/ and update tools/audit_public.py and the manifest",2026-10-04
+36,stg_wb_prices_monthly,commodities / rows / date range,INFO,71 commodities; 50383 values; 1960-01-01 to 2026-08-01,2026-10-04
+37,stg_wb_prices_monthly,"raw cells dropped in staging (empty, non-numeric or bad period)",INFO,6417 of 56800 raw cells,2026-10-04
+38,stg_wb_prices_monthly,"no duplicate (date, commodity)",PASS,0 duplicated keys,2026-10-04
+39,stg_wb_prices_monthly,Aluminum: no missing months since 1998,PASS,344 of 344 months,2026-10-04
+40,stg_wb_prices_monthly,Copper: no missing months since 1998,PASS,344 of 344 months,2026-10-04
+41,stg_wb_prices_monthly,"Crude oil, Brent: no missing months since 1998",PASS,344 of 344 months,2026-10-04
+42,stg_wb_prices_monthly,Gold: no missing months since 1998,PASS,344 of 344 months,2026-10-04
+43,stg_wb_prices_monthly vs python baseline,"row count, date range, null values and sum of values match the old Python output",PASS,"sql 50383 rows, 1960-01-01 to 2026-08-01, 0 nulls, sum 34393207.203 | python 50383 rows, 1960-01-01 to 2026-08-01, 0 nulls, sum 34393207.203",2026-10-04
+44,stg_wb_prices_monthly vs python baseline,"every commodity matches the old Python output (unit, rows, first and last month, sum)",PASS,"71 commodities compared, all equal",2026-10-04
+45,stg_fred_monthly,CPIAUCSL: values / date range,INFO,955 values; 1947-01-01 to 2026-08-01,2026-10-04
+46,stg_fred_monthly,EXUSEU: values / date range,INFO,332 values; 1999-01-01 to 2026-08-01,2026-10-04
+47,stg_fred_monthly,GS10: values / date range,INFO,881 values; 1953-04-01 to 2026-08-01,2026-10-04
+48,stg_fred_monthly,PALUMUSDM: values / date range,INFO,415 values; 1992-01-01 to 2026-07-01,2026-10-04
+49,stg_fred_monthly,"raw rows dropped in staging (blank, non-numeric or bad date)",INFO,1 of 2584 raw rows,2026-10-04
+50,stg_fred_monthly,"no duplicate (series_id, date) and every date is the first of a month",PASS,0 duplicated keys; 0 dates that are not the first of a month,2026-10-04
+51,stg_fred_monthly,CPIAUCSL: no missing months,WARN,955 of 956 months,2026-10-04
+52,stg_fred_monthly,EXUSEU: no missing months,PASS,332 of 332 months,2026-10-04
+53,stg_fred_monthly,GS10: no missing months,PASS,881 of 881 months,2026-10-04
+54,stg_fred_monthly,PALUMUSDM: no missing months,PASS,415 of 415 months,2026-10-04
+55,stg_fred_monthly,CPIAUCSL: values inside plausible range 10 to 1000,PASS,"min 21.48, max 334.131",2026-10-04
+56,stg_fred_monthly,EXUSEU: values inside plausible range 0.5 to 2.0,PASS,"min 0.8525, max 1.5759",2026-10-04
+57,stg_fred_monthly,GS10: values inside plausible range -1 to 20,PASS,"min 0.62, max 15.32",2026-10-04
+58,stg_fred_monthly,PALUMUSDM: values inside plausible range 100 to 10000,PASS,"min 1040.02270507813, max 3658.22142857143",2026-10-04
+59,stg_fred_monthly vs python baseline,"aluminium and CPI match the old Python output (rows, first and last month, null values, sum)",PASS,"2 series compared, all equal: CPIAUCSL 955 rows; PALUMUSDM 415 rows",2026-10-04
+60,stg_fred_dtwexbgs_daily,days with a value / blank days dropped / date range,INFO,5198 days; 212 blank days dropped; 2006-01-02 to 2026-09-25,2026-10-04
+61,stg_fred_dtwexbgs_daily,no duplicate dates and index inside 50 to 200,PASS,"min 85.4692, max 130.0413",2026-10-04
+62,stg_fred_dtwexbgs_daily,every complete month has at least 15 days with a value (needed for a monthly average),PASS,"248 complete months; fewest days 15, most 23",2026-10-04
+63,mart_monthly_panel,"one row per month, no gaps or duplicates, from 1999-01 to the last World Bank copper month",PASS,332 rows; 1999-01-01 to 2026-08-01; expected 332,2026-10-04
+64,mart_monthly_panel,copper and aluminium in the panel equal the World Bank staging values (every month),PASS,0 months differ,2026-10-04
+65,mart_monthly_panel,"months with a value per column (copper, aluminium, euro rate, dollar index, 10-year rate, CPI, copper in euros)",PASS,"of 332 months: copper 332, aluminium 332, usd per eur 332, dollar index 248 (starts 2006-01-01), 10-year 332, CPI 331, copper in EUR 332",2026-10-04
+66,mart_monthly_panel,"only 2025-10 has no CPI (US federal shutdown, no October 2025 data; see README)",PASS,1 months without CPI: 2025-10,2026-10-04
+67,mart_monthly_panel,copper in euros times USD per euro gives back the USD price (every month),PASS,0 months off,2026-10-04
+68,mart_monthly_panel,dollar index month-end date is in the same month and on or after day 24,PASS,248 months checked; earliest month-end day 26,2026-10-04
+69,mart_monthly_changes,same months as the panel; first month has no change,PASS,332 rows,2026-10-04
+70,mart_monthly_changes,"exp(log return) - 1 equals the simple percent change / 100 (copper, euro rate, dollar index)",PASS,247 months compared,2026-10-04
+71,mart_monthly_changes,copper EUR log return = copper USD log return minus USD-per-euro log return (every month),PASS,331 months compared,2026-10-04
+72,mart_monthly_changes,"CPI change is missing only for the first month, 2025-10 and 2025-11",PASS,"missing: 1999-01, 2025-10, 2025-11",2026-10-04
+73,mart_monthly_changes,months available for each planned test (sample sizes),INFO,copper vs USD per euro 331; copper vs dollar index 247; with 10-year rate control 247; real copper vs dollar index 245,2026-10-04
+74,stg_lme_copper_daily,date range and rows,INFO,details withheld: the LME data is commercial and is never published,2026-10-04
+75,stg_lme_copper_daily,raw lines read / dropped (summary lines and other non-dates) / duplicate dates removed,PASS,details withheld: the LME data is commercial and is never published,2026-10-04
+76,stg_lme_copper_daily,every full year has at least 240 trading days,PASS,details withheld: the LME data is commercial and is never published,2026-10-04
+77,stg_lme_copper_daily,gaps longer than 5 calendar days,INFO,details withheld: the LME data is commercial and is never published,2026-10-04
+78,stg_lme_copper_daily,coverage of cash_usd_t,INFO,details withheld: the LME data is commercial and is never published,2026-10-04
+79,stg_lme_copper_daily,coverage of three_month_usd_t,INFO,details withheld: the LME data is commercial and is never published,2026-10-04
+80,stg_lme_copper_daily,coverage of fifteen_month_usd_t,INFO,details withheld: the LME data is commercial and is never published,2026-10-04
+81,stg_lme_copper_daily,coverage of inventory_t,INFO,details withheld: the LME data is commercial and is never published,2026-10-04
+82,stg_lme_copper_daily,coverage of volume_as_exported,INFO,details withheld: the LME data is commercial and is never published,2026-10-04
+83,stg_lme_copper_daily,coverage of cash_unofficial_usd_t,INFO,details withheld: the LME data is commercial and is never published,2026-10-04
+84,stg_lme_copper_daily,"cash price inside 500 to 20,000 USD per tonne and inventory positive",PASS,details withheld: the LME data is commercial and is never published,2026-10-04
+85,stg_lme_copper_daily vs python baseline,"rows, first and last date, non-null count, sum, min and max match the old Python output for every column, overall and for each year",PASS,details withheld: the LME data is commercial and is never published,2026-10-04
+86,mart_monthly_panel,LME month-end date is in the same month and on or after day 24; only complete months (before the last LME month),PASS,details withheld: the LME data is commercial and is never published,2026-10-04
+87,mart_monthly_panel,LME monthly average cash price in the panel equals the average of the daily staging values (every month with data),PASS,details withheld: the LME data is commercial and is never published,2026-10-04
+88,mart_monthly_changes,"months available for the month-end check (LME copper and dollar index, averages and month-end on the same months)",INFO,details withheld: the LME data is commercial and is never published,2026-10-04
+89,mart_cu_al_ratio,"one row per month with no gaps, from the first to the last World Bank month",PASS,800 rows; 1960-01-01 to 2026-08-01; expected 800,2026-10-04
+90,mart_cu_al_ratio,ratio equals the World Bank staging copper price divided by the staging aluminium price (every month),PASS,0 months differ,2026-10-04
+91,mart_cu_al_ratio,forward 6 and 12 month changes match the ratio six and twelve calendar months later (every month); last 6 and 12 months are empty,PASS,"0 months differ; empty 6m outcomes 6, empty 12m outcomes 12",2026-10-04
+92,mart_cu_al_ratio,"forward ratio log change = copper log return minus aluminium log return (6 and 12 months, every month)",PASS,0 months differ,2026-10-04
+93,mart_cu_al_ratio,"percentiles empty for the first 120 months, between 0 and 100 after, 100 at a new high and 0 at a new low",PASS,first month with a percentile 1970-01-01; high/low violations 0,2026-10-04
+94,mart_cu_al_signal_months,every rule uses the same months at each horizon (common sample),PASS,"6m: 674 months, 1970-01-01 to 2026-02-01",2026-10-04
+95,mart_cu_al_signal_months,every rule uses the same months at each horizon (common sample),PASS,"12m: 668 months, 1970-01-01 to 2025-08-01",2026-10-04
+96,mart_cu_al_signal_months,signal months in one episode are at most horizon months apart; the next episode starts more than horizon months later,PASS,0 violations,2026-10-04
+97,mart_cu_al_signal_months,"signal-on months have an episode id, signal-off months have none",PASS,7799 signal-on months; 22814 rows,2026-10-04
+98,mart_cu_al_signal_months,independent episodes at 12 months: ratio at or above 2.0,INFO,"4 episodes, 275 signal months of 668",2026-10-04
+99,mart_cu_al_signal_months,independent episodes at 12 months: ratio at or above 2.5,INFO,"3 episodes, 245 signal months of 668",2026-10-04
+100,mart_cu_al_signal_months,independent episodes at 12 months: ratio at or above 3.0,INFO,"3 episodes, 203 signal months of 668",2026-10-04
+101,mart_cu_al_signal_months,independent episodes at 12 months: ratio at or above 3.5,INFO,"3 episodes, 100 signal months of 668",2026-10-04
+102,mart_cu_al_signal_months,independent episodes at 12 months: ratio at or above 4.0,INFO,"3 episodes, 15 signal months of 668",2026-10-04
+103,mart_cu_al_signal_months,independent episodes at 12 months: ratio at or above its 50th percentile of all earlier months,INFO,"7 episodes, 395 signal months of 668",2026-10-04
+104,mart_cu_al_signal_months,independent episodes at 12 months: ratio at or above its 60th percentile of all earlier months,INFO,"6 episodes, 345 signal months of 668",2026-10-04
+105,mart_cu_al_signal_months,independent episodes at 12 months: ratio at or above its 70th percentile of all earlier months,INFO,"5 episodes, 298 signal months of 668",2026-10-04
+106,mart_cu_al_signal_months,independent episodes at 12 months: ratio at or above its 80th percentile of all earlier months,INFO,"4 episodes, 261 signal months of 668",2026-10-04
+107,mart_cu_al_signal_months,independent episodes at 12 months: ratio at or above its 90th percentile of all earlier months,INFO,"4 episodes, 171 signal months of 668",2026-10-04
+108,mart_cu_al_signal_months,independent episodes at 12 months: ratio at or above its 95th percentile of all earlier months,INFO,"4 episodes, 101 signal months of 668",2026-10-04
+109,mart_cu_al_signal_months,independent episodes at 12 months: ratio at or above its 50th percentile of the previous 10 years,INFO,"8 episodes, 353 signal months of 668",2026-10-04
+110,mart_cu_al_signal_months,independent episodes at 12 months: ratio at or above its 60th percentile of the previous 10 years,INFO,"8 episodes, 317 signal months of 668",2026-10-04
+111,mart_cu_al_signal_months,independent episodes at 12 months: ratio at or above its 70th percentile of the previous 10 years,INFO,"8 episodes, 259 signal months of 668",2026-10-04
+112,mart_cu_al_signal_months,independent episodes at 12 months: ratio at or above its 80th percentile of the previous 10 years,INFO,"8 episodes, 219 signal months of 668",2026-10-04
+113,mart_cu_al_signal_months,independent episodes at 12 months: ratio at or above its 90th percentile of the previous 10 years,INFO,"7 episodes, 170 signal months of 668",2026-10-04
+114,mart_cu_al_signal_months,independent episodes at 12 months: ratio at or above its 95th percentile of the previous 10 years,INFO,"6 episodes, 128 signal months of 668",2026-10-04
+115,stg_ev_data,"rows kept (EV sales, EV sales share, EV stock) / categories / years",INFO,details withheld: raw IEA data is not redistributed,2026-10-04
+116,stg_ev_data,rows of the three kept parameters dropped for a non-numeric year or value,PASS,details withheld: raw IEA data is not redistributed,2026-10-04
+117,stg_ev_data,world EV car sales 2025 in plausible range (10 to 40 million),PASS,details withheld: raw IEA data is not redistributed,2026-10-04
+118,stg_ev_data vs python baseline,"row count, non-null counts, distinct counts, sums, min and max per column, and counts and sums per group match the old Python output",PASS,details withheld: raw IEA data is not redistributed,2026-10-04
+119,stg_usgs_copper,rows read (copper only) / sections,INFO,"194 rows; sections Import Sources, Salient Statistics, United States, World Mine and Refinery Production and Reserves",2026-10-04
+120,stg_usgs_copper,2024: mine production by country adds up to world total (2% tolerance for USGS rounding),PASS,"sum 22,981 vs total 23,000 (0.08% apart)",2026-10-04
+121,stg_usgs_copper,2025: mine production by country adds up to world total (2% tolerance for USGS rounding),PASS,"sum 23,013 vs total 23,000 (0.06% apart)",2026-10-04
+122,stg_usgs_copper,reserves by country add up to world total (2% tolerance),PASS,"sum 980,200 vs total 980,000 (0.02% apart)",2026-10-04
+123,stg_usgs_copper,"copper lines in the raw file and entries that are not numbers (kept as text in value_text, NULL in value)",INFO,194 copper lines; 13 without a numeric value,2026-10-04
+124,stg_usgs_copper vs python baseline,"row count, non-null counts, distinct counts, sums, min and max per column, and counts and sums per group match the old Python output",PASS,"134 column and group summaries compared, all equal",2026-10-04
+125,stg_datacentre_annex_world,rows read,INFO,details withheld: raw IEA data is not redistributed,2026-10-04
+126,stg_datacentre_annex_world,every row has a metric and a unit (a section header was found above it),PASS,details withheld: raw IEA data is not redistributed,2026-10-04
+127,stg_datacentre_annex_world,hyperscale + colocation + enterprise add up to the total electricity (2% tolerance),PASS,details withheld: raw IEA data is not redistributed,2026-10-04
+128,stg_datacentre_annex_world vs python baseline,"row count, non-null counts, distinct counts, sums, min and max per column, and counts and sums per group match the old Python output",PASS,details withheld: raw IEA data is not redistributed,2026-10-04
+129,stg_datacentre_annex_regional,rows read,INFO,details withheld: raw IEA data is not redistributed,2026-10-04
+130,stg_datacentre_annex_regional,every row has a metric and a unit (a section header was found above it),PASS,details withheld: raw IEA data is not redistributed,2026-10-04
+131,stg_datacentre_annex_regional,2024 six regions add up to the world electricity figure (3% tolerance),PASS,details withheld: raw IEA data is not redistributed,2026-10-04
+132,stg_datacentre_annex_regional vs python baseline,"row count, non-null counts, distinct counts, sums, min and max per column, and counts and sums per group match the old Python output",PASS,details withheld: raw IEA data is not redistributed,2026-10-04
+133,stg_datacentre_capacity_scenarios,"scenario names in row 2 of the annex are Base, Lift-Off, High Efficiency, Headwinds in columns H, K, N, Q (column mapping holds)",PASS,details withheld: raw IEA data is not redistributed,2026-10-04
+134,stg_datacentre_capacity_scenarios,"Base-case capacity (total and IT, 2030 and 2035) equals stg_datacentre_annex_world",PASS,details withheld: raw IEA data is not redistributed,2026-10-04
+135,stg_datacentre_capacity_scenarios,"estimate years (2020, 2023, 2024) equal stg_datacentre_annex_world for total and IT",PASS,details withheld: raw IEA data is not redistributed,2026-10-04
+136,stg_datacentre_capacity_scenarios,IT capacity is below total capacity in every case and year,PASS,details withheld: raw IEA data is not redistributed,2026-10-04
+137,mart_ev_sales_path,BEV + PHEV + FCEV equal the EV total within 2% for 2025 and 2035 (IEA rounds to 2 significant figures),PASS,largest difference 0.99%,2026-10-04
+138,mart_ev_sales_path,"direct 2025 and 2035 BEV, PHEV, EV and share equal stg_ev_data (World, Cars)",PASS,0 differences,2026-10-04
+139,mart_ev_sales_path,"2030 linear is the midpoint and constant growth is the geometric mean of the 2025 and 2035 values (BEV, PHEV, EV, share); constant growth is below linear",PASS,2 scenarios checked,2026-10-04
+140,mart_ev_sales_path,"total car sales = EV sales / share, with min below central below max (derived, not from EV data)",PASS,world car sales 2025 about 84.0 million (band 80.4 to 87.8),2026-10-04
+141,mart_ev_copper_cases,"transition + car-market growth equals the change in copper in new cars computed directly from BEV, PHEV and non-EV sales (every central case)",PASS,0 cases differ,2026-10-04
+142,mart_ev_copper_cases,"one row for every scenario, 2030 path (2) or 2035, BEV, PHEV, petrol-car and rounding case (2 x 3 x 3 x 3 x 6 x 3)",PASS,972 rows,2026-10-04
+143,mart_ev_copper_cases,"CPS 2030 linear, mid copper per car: transition = (extra BEV x (BEV kg - petrol kg) + extra PHEV x (PHEV kg - petrol kg)) / 1000 tonnes",PASS,"926,650 t",2026-10-04
+144,mart_dc_capacity_path,even path: yearly build x years = total additions; constant growth: the yearly builds add up to the same total and the target-year build is first-year build x (1+g)^(years-1),PASS,"32 paths checked; Base 2030: even 21.50 GW a year, constant growth 29.64 GW in 2030",2026-10-04
+145,mart_dc_copper_cases,"new-capacity copper = GW x 1000 x t per MW, extra = (build - base build) x 1000 x t per MW (every case)",PASS,0 cases differ,2026-10-04
+146,mart_dc_copper_cases,"every negative extra-over-base-year number carries the explanation (a slower build, not negative demand), and gross new-capacity copper is never negative",PASS,36 of 256 cases are negative and all carry the note,2026-10-04
+147,mart_demand_headline,every headline data-centre row with a negative low value carries the explanation,PASS,7 rows with a negative low value,2026-10-04
+148,mart_demand_headline,"percent of mine output = tonnes / 2025e world mine production x 100 (every row), and the base is the USGS 2025 estimate",PASS,"0 rows differ; base 23,000,000 t",2026-10-04
+149,mart_demand_headline,low is not above mid and mid is not above high for the EV terms and the data-centre new-capacity rows,PASS,0 rows out of order of 44,2026-10-04
+150,mart_demand_sensitivity,"reference case in the sensitivity table equals EV transition (CPS, 2030, linear, mid) + data-centre extra (Base, even, total capacity, mid) from the headline table",PASS,"1,189,150 t = 5.17% of 2025e mine output",2026-10-04
+151,mart_demand_sensitivity,every bar from 1 to 13 has at least one alternative row and the reference row exists once,PASS,"23 rows, 14 bar groups",2026-10-04
+152,mart_demand_context,"S13 reports 1.1 Mt of data-centre copper demand for 2025; the model gives 0.42 to 0.56 Mt for the 2024 build (known issue K02, unreconciled)",INFO,S13 is 2.0 to 2.6 times the model,2026-10-04
+153,mart_dc_copper_cases,"IT-capacity basis gives a lower data-centre result than total capacity (Base, 2030, even, mid, 2023-24 base): new-capacity copper and extra over the base year",INFO,new-capacity copper 18% lower on IT capacity; extra over base year 11% lower,2026-10-04
+154,usgs_country_iso,every USGS country name (production 2025 and reserves) is in the ISO mapping table,PASS,all matched,2026-10-04
+155,usgs_country_iso,placeable rows have a 3-letter ISO code and an M49 code; the not placeable row has neither,PASS,0 bad rows,2026-10-04
+156,events,"every event has a month (YYYY-MM), a label, a description and a status of proposed or approved",PASS,0 bad rows,2026-10-04
+157,res_story_copper_record_facts,the latest price on the plaque equals the World Bank copper price for that month,PASS,"2026-08: 14326.0 in the result table, 14326.0 in staging",2026-10-04
+158,res_story_copper_record_facts,the record as quoted is the highest monthly World Bank copper price since 1960,PASS,2026-08: 14326.0,2026-10-04
+159,res_interlude_records,"copper's real record is the same month and value as in the story facts (plaque, chapter 1 and summary use it)",PASS,1974-04 21062.0 vs 1974-04 21062.1,2026-10-04
+160,res_interlude_records,the latest price of each of the five series equals the World Bank price for that month,PASS,5 of 5 series match,2026-10-04
+161,res_euro_record,the latest euro price equals the panel and is the highest since January 1999,PASS,2026-08: 12356.0 EUR per tonne,2026-10-04
+162,res_supply_countries,countries plus other countries add up to the USGS world total (0.5% tolerance) and match staging,PASS,"23013.0 kt listed, world 23000.0 kt; 0 rows differ from staging",2026-10-04
+163,res_story_guess_dollar,"opposite, same direction and unchanged months add up to the months compared",PASS,178.0 + 68.0 + 1.0 of 247.0,2026-10-04
+164,res_dollar_correlations,the dollar chapter scatter has the same months as the correlation with the broad dollar index,PASS,"247 points, 247 months",2026-10-04
+165,res_cu_al_threshold_table,every rule has both horizons and an adjusted p-value between 0 and 1,PASS,"34 rows, 17 rules, 1 below 0.05 after adjustment",2026-10-04
+166,res_demand_sensitivity,the reference total is the EV transition plus the data-centre extra over the 2024 build,PASS,1189150.0 t = 926650.0 + 262500.0,2026-10-04
+167,res_dashboard_checks,the list of checks shown on the site has no failed check,PASS,"155 passed, 7 warnings, 0 failed",2026-10-04
+168,copper_end_use,"the six end-use shares add up to 100 percent (one scope, one year)",PASS,6 sectors add up to 100 percent,2026-10-04
+169,physical_constants,"copper and aluminium both have a conductivity and a density, and annealed copper is 100 percent IACS by definition",PASS,"2 densities, 2 conductivities",2026-10-04
+170,copper_context_facts,"facts F01 to F07 are present, the percentages are between 0 and 100 and each has a source",PASS,7 facts,2026-10-04
+171,copper_context_facts,ICSG world mine production 2024 (F05) equals the USGS world mine production 2024 (both about 23 million tonnes),PASS,23.0 million tonnes (ICSG) vs 23000.0 thousand tonnes (USGS),2026-10-04
+172,res_uses_end_use,"the end-use result table has the six sectors and the same shares as the collected ICSG table, adding up to 100",PASS,"6 sectors, sum 100",2026-10-04
+173,res_uses_facts,the 12-month change equals the World Bank prices of August 2026 and August 2025,PASS,48.15% = 14326.0 / 9670.0 - 1,2026-10-04
+174,res_refined_vs_mined,"refinery output of each country in the chart equals the USGS figure, and every share is of the USGS world total",PASS,8 of 8 countries match,2026-10-04
+175,res_refined_vs_mined,a country without a USGS mine figure has no mine share (never zero),PASS,1 country without a mine figure,2026-10-04
+176,res_aluminium_case,the break-even ratio equals 1 / ((1 / conductivity) x (aluminium density / copper density)) from the collected constants,PASS,"2.0085 from conductivity 61.0 percent IACS, densities 2.7 and 8.89",2026-10-04
+177,res_aluminium_case,"no month after the last month below the break-even is at or below it, and that last month is the one named",PASS,last month at or below the break-even: 2008-11,2026-10-04
+178,res_demand_scale,"the 2030 reference total in the scale sentence equals the sensitivity table, and Russia equals the USGS figure",PASS,1189.0 kt against Russia 1300.0 kt,2026-10-04
+179,res_story_figure_checks,every figure computed for the story brief reproduces its expected value,PASS,56 of 56 figures pass,2026-10-04
+180,res_dash_series,dashboard copper (dollars and euros) equals the monthly panel in every month since 1999,PASS,332 of 332 months match,2026-10-04
+181,res_dash_series,"dashboard copper-to-aluminium ratio equals the ratio mart in every month, and the series has one row per month",PASS,800 months,2026-10-04
+182,res_dash_series,the real copper value is empty in exactly the months with no US CPI value (October 2025) and nowhere else,PASS,1 empty month(s),2026-10-04
+183,res_dash_figure_checks,every latest-month figure on the dashboard reproduces from an independent source table,PASS,21 of 21 figures pass,2026-10-04
+184,raw_lme_copper_daily,every source_id exists in sources register,PASS,details withheld: the LME data is commercial and is never published,2026-10-04
+185,raw_wb_prices_monthly,every source_id exists in sources register,PASS,ok,2026-10-04
+186,raw_fred_palumusdm,every source_id exists in sources register,PASS,ok,2026-10-04
+187,raw_fred_cpiaucsl,every source_id exists in sources register,PASS,ok,2026-10-04
+188,raw_fred_exuseu,every source_id exists in sources register,PASS,ok,2026-10-04
+189,raw_fred_dtwexbgs,every source_id exists in sources register,PASS,ok,2026-10-04
+190,raw_fred_gs10,every source_id exists in sources register,PASS,ok,2026-10-04
+191,raw_ev_data,every source_id exists in sources register,PASS,details withheld: raw IEA data is not redistributed,2026-10-04
+192,raw_usgs_commodities,every source_id exists in sources register,PASS,ok,2026-10-04
+193,raw_iea_annex_cells,every source_id exists in sources register,PASS,details withheld: raw IEA data is not redistributed,2026-10-04
+194,company_production,every source_id exists in sources register,PASS,ok,2026-10-04
+195,copper_context_facts,every source_id exists in sources register,PASS,ok,2026-10-04
+196,copper_end_use,every source_id exists in sources register,PASS,ok,2026-10-04
+197,copper_intensity_vehicle,every source_id exists in sources register,PASS,ok,2026-10-04
+198,datacentre_copper_assumptions,every source_id exists in sources register,PASS,ok,2026-10-04
+199,datacentre_electricity_iea,every source_id exists in sources register,PASS,details withheld: raw IEA data is not redistributed,2026-10-04
+200,datacentre_growth_by_region,every source_id exists in sources register,PASS,details withheld: raw IEA data is not redistributed,2026-10-04
+201,events,every source_id exists in sources register,PASS,ok,2026-10-04
+202,known_issues,every source_id exists in sources register,PASS,ok,2026-10-04
+203,mine_production,every source_id exists in sources register,PASS,ok,2026-10-04
+204,physical_constants,every source_id exists in sources register,PASS,ok,2026-10-04
+205,scenario_assumptions,every source_id exists in sources register,PASS,ok,2026-10-04
+206,usgs_country_iso,every source_id exists in sources register,PASS,ok,2026-10-04
+207,usgs_mine_production_country,every source_id exists in sources register,PASS,ok,2026-10-04
+208,res_context_facts,every source_id exists in sources register,PASS,ok,2026-10-04
+209,res_dashboard_known_issues,every source_id exists in sources register,PASS,ok,2026-10-04
+210,res_dashboard_sources,every source_id exists in sources register,PASS,ok,2026-10-04
+211,res_demand_assumptions,every source_id exists in sources register,PASS,ok,2026-10-04
+212,res_demand_context,every source_id exists in sources register,PASS,ok,2026-10-04
+213,res_events,every source_id exists in sources register,PASS,ok,2026-10-04
+214,res_uses_end_use,every source_id exists in sources register,PASS,ok,2026-10-04
+215,mart_demand_assumptions,every source_id exists in sources register,PASS,ok,2026-10-04
+216,mart_demand_context,every source_id exists in sources register,PASS,ok,2026-10-04
+217,mart_scenario_inputs,every source_id exists in sources register,PASS,ok,2026-10-04
+218,stg_datacentre_annex_regional,every source_id exists in sources register,PASS,details withheld: raw IEA data is not redistributed,2026-10-04
+219,stg_datacentre_annex_world,every source_id exists in sources register,PASS,details withheld: raw IEA data is not redistributed,2026-10-04
+220,stg_datacentre_capacity_scenarios,every source_id exists in sources register,PASS,details withheld: raw IEA data is not redistributed,2026-10-04
+221,stg_ev_data,every source_id exists in sources register,PASS,details withheld: raw IEA data is not redistributed,2026-10-04
+222,stg_fred_dtwexbgs_daily,every source_id exists in sources register,PASS,ok,2026-10-04
+223,stg_fred_monthly,every source_id exists in sources register,PASS,ok,2026-10-04
+224,stg_lme_copper_daily,every source_id exists in sources register,PASS,details withheld: the LME data is commercial and is never published,2026-10-04
+225,stg_usgs_copper,every source_id exists in sources register,PASS,ok,2026-10-04
+226,stg_wb_prices_monthly,every source_id exists in sources register,PASS,ok,2026-10-04
+227,sources,sources in the register that no table uses yet,INFO,none,2026-10-04
