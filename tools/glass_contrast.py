@@ -12,7 +12,9 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 css = (ROOT / "docs" / "css" / "site.css").read_text(encoding="utf-8")
-tok = {m.group(1): m.group(2) for m in re.finditer(r"--([\w-]+):\s*(#[0-9A-Fa-f]{6}|[\d.]+)\s*;", css)}
+tok = {}
+for m in re.finditer(r"--([\w-]+):\s*(#[0-9A-Fa-f]{6}|[\d.]+)\s*;", css):
+    tok.setdefault(m.group(1), m.group(2))          # the first definition is the one in :root; later ones are the dark and dashboard scopes
 hexrgb = lambda h: tuple(int(h.lstrip("#")[i:i + 2], 16) for i in (0, 2, 4))
 INK, INK2 = hexrgb(tok["ink"]), hexrgb(tok["ink-2"])
 TEXT = {"ivory": hexrgb(tok["ivory"]), "ivory-dim": hexrgb(tok["ivory-dim"]), "copper-bright": hexrgb(tok["copper-bright"])}
@@ -88,6 +90,43 @@ for tname, vname, bname, bg in rows:
         if v < 4.5:
             bad.append((tname, vname, bname, k, v)); flag = "  <-- below 4.5"
     print(f"{tname:38} {vname:50} {bname[:78]:78} " + " ".join(f"{v:14.2f}" for v in vals.values()) + flag)
+
+# ---- the light and dark plates of the dashboard (assets/patina-background.webp is the page background when it exists)
+def block(selector):
+    i = css.index(selector)
+    return css[i:css.index("}", i)]
+plate_a = float(re.search(r"--plate-a:\s*([\d.]+)", css).group(1))
+light = {"plate": hexrgb("#FAF9F6"), "text": {"ink": hexrgb(tok["ink"]), "muted": hexrgb(tok["muted"]), "copper-text": hexrgb(re.search(r"--copper-text:\s*(#[0-9A-Fa-f]{6})", block("body.has-dash-bg {")).group(1))}}
+db = block(':root[data-theme="dark"] body.has-dash-bg {')
+dkv = lambda n: hexrgb(re.search(r"--" + n + r":\s*(#[0-9A-Fa-f]{6})", db).group(1))
+dark = {"plate": dkv("card"), "text": {"ink": dkv("ink"), "muted": dkv("muted"), "copper-text": dkv("copper-text")}, "shade": (12, 8, 6, 0.6)}
+bg_light = {"pure black (bound)": (0, 0, 0), "pure white (bound)": (255, 255, 255), "plain paper (no photo)": hexrgb(tok["paper"])}
+bg_dark = {"pure black (bound)": (0, 0, 0), "pure white (bound, under the dark shade)": (255, 255, 255), "plain dark paper (no photo)": (22, 17, 14)}
+bgphoto = ROOT / "assets" / "patina-background.webp"
+plate_note = "assets/patina-background.webp is not on this disk: the table uses pure black and pure white as bounds, and the plain paper colour"
+try:
+    if bgphoto.exists():
+        im = Image.open(bgphoto).convert("RGB").filter(ImageFilter.GaussianBlur(22))
+        a = np.asarray(im).astype(float)[::6, ::6]
+        Y = 0.2126 * np.vectorize(lin)(a[..., 0]) + 0.7152 * np.vectorize(lin)(a[..., 1]) + 0.0722 * np.vectorize(lin)(a[..., 2])
+        dk, br = np.unravel_index(Y.argmin(), Y.shape), np.unravel_index(Y.argmax(), Y.shape)
+        bg_light["photo, darkest point after 22 px blur"] = tuple(float(x) for x in a[dk])
+        sh = dark["shade"]
+        bg_dark["photo, brightest point after 22 px blur, under the dark shade"] = over(sh[3], sh[:3], tuple(float(x) for x in a[br]))
+        plate_note = "photo: darkest blurred pixel " + str(tuple(round(float(x)) for x in a[dk])) + ", brightest " + str(tuple(round(float(x)) for x in a[br]))
+except Exception as e:
+    plate_note = f"photo rows skipped ({e})"
+print("\nPlates on the dashboard (plate opacity " + str(plate_a) + "; " + plate_note + ")")
+print(f"{'mode':6} {'backdrop':64} " + " ".join(f"{k:>12}" for k in light["text"]))
+for mode, spec, bgs in (("light", light, bg_light), ("dark", dark, bg_dark)):
+    for bname, b in bgs.items():
+        c = over(plate_a, spec["plate"], b)
+        vals = {k: ratio(v, c) for k, v in spec["text"].items()}
+        flag = ""
+        for k, v in vals.items():
+            if v < 4.5:
+                bad.append(("plate, " + mode, "-", bname, k, v)); flag = "  <-- below 4.5"
+        print(f"{mode:6} {bname[:64]:64} " + " ".join(f"{v:12.2f}" for v in vals.values()) + flag)
 
 if "--measure" in sys.argv:
     from playwright.sync_api import sync_playwright

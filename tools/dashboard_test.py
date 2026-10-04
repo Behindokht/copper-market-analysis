@@ -29,8 +29,17 @@ def pressed(pg, group):
 def open_dash(pg, q=""):
     pg.goto(url + "#dashboard" + q)
     pg.reload()
-    pg.wait_for_selector("#dashboard .dgrid")
+    pg.wait_for_selector("#dashboard .d2-grid")
     pg.wait_for_timeout(300)
+
+
+def changed(pg, sel, before, timeout=8000):
+    """The text of a readout once it differs from `before` (a software-rendered browser can take a few frames)."""
+    try:
+        pg.wait_for_function("([s, b]) => document.querySelector(s).textContent.trim() !== b", arg=[sel, before], timeout=timeout)
+    except Exception:
+        pass
+    return pg.locator(sel).first.inner_text()
 
 
 def visible_cross(pg):
@@ -48,7 +57,7 @@ def run(engine):
 
         # 1. defaults, and invalid values fall back
         pg.goto(url)
-        pg.wait_for_selector("#dashboard .dgrid")
+        pg.wait_for_selector("#dashboard .d2-grid")
         ok(pg.evaluate("location.hash") in ("", "#dashboard"), t + "an empty hash should open the dashboard")
         ok(pressed(pg, 0) == ["20y"] and pressed(pg, 1) == ["usd"] and pressed(pg, 2) == ["nominal"], t + f"default filters wrong: {pressed(pg, 0)} {pressed(pg, 1)} {pressed(pg, 2)}")
         open_dash(pg, "?p=zz&c=gbp&v=nope&e=9")
@@ -78,10 +87,11 @@ def run(engine):
         h_before = pg.evaluate("document.documentElement.scrollHeight")
         box = pg.locator("#dashboard .dchart svg").first.bounding_box()
         pg.mouse.move(box["x"] + box["width"] * 0.6, box["y"] + box["height"] * 0.4)
-        pg.wait_for_timeout(250)
+        IDLE = "Hover over a chart, or press the arrow keys on one, to compare the same month across the line charts."
+        changed(pg, "#dreadout", IDLE)
         v = visible_cross(pg)
         ok(all(v), t + f"the crosshair should show on all four charts, got {v}")
-        ro = pg.locator("#dashreadout, #dreadout").first.inner_text()
+        ro = pg.locator("#dreadout").inner_text()
         ok(re.match(r"^[A-Z][a-z]+ \d{4}", ro) is not None and "Copper" in ro, t + f"the readout should name the month and show values, got {ro!r}")
         ok(pg.evaluate("document.documentElement.scrollHeight") == h_before, t + "showing the crosshair should not change the page height")
         pg.mouse.move(5, 5)
@@ -91,15 +101,12 @@ def run(engine):
         # 4. keyboard
         pg.locator("#dashboard .dchart svg").first.focus()
         pg.keyboard.press("ArrowLeft")
-        pg.wait_for_timeout(150)
-        r1 = pg.locator("#dreadout").inner_text()
+        r1 = changed(pg, "#dreadout", IDLE)
         pg.keyboard.press("ArrowLeft")
-        pg.wait_for_timeout(150)
-        r2 = pg.locator("#dreadout").inner_text()
+        r2 = changed(pg, "#dreadout", r1)
         ok(r1 != r2 and all(visible_cross(pg)), t + "arrow keys should move the crosshair on all charts")
         pg.keyboard.press("Shift+ArrowLeft")
-        pg.wait_for_timeout(150)
-        ok(pg.locator("#dreadout").inner_text() != r2, t + "shift and arrow should move by a year")
+        ok(changed(pg, "#dreadout", r2) != r2, t + "shift and arrow should move by a year")
         pg.keyboard.press("Escape")
         pg.wait_for_timeout(150)
         ok(not any(visible_cross(pg)), t + "escape should clear the crosshair")
@@ -117,7 +124,7 @@ def run(engine):
         open_dash(pg)
         pg.mouse.wheel(0, 1500)
         pg.wait_for_timeout(300)
-        top = pg.evaluate("document.querySelector('#dashboard .dashbar').getBoundingClientRect().top")
+        top = pg.evaluate("document.querySelector('#dashboard .d2-bar').getBoundingClientRect().top")
         ok(40 < top < 120, t + f"the filter bar should stay just below the nav bar when scrolled, top is {top}")
 
         # 7. CSV download of the current view
@@ -141,7 +148,7 @@ def run(engine):
         tp.on("pageerror", lambda e: errs.append(str(e)))
         tp.goto(url + "#dashboard")
         tp.reload()
-        tp.wait_for_selector("#dashboard .dgrid")
+        tp.wait_for_selector("#dashboard .d2-grid")
         tp.locator("#dashboard .dchart svg").first.scroll_into_view_if_needed()
         bx = tp.locator("#dashboard .dchart svg").first.bounding_box()
         tp.touchscreen.tap(bx["x"] + bx["width"] * 0.5, bx["y"] + bx["height"] * 0.5)
@@ -152,6 +159,107 @@ def run(engine):
         ok(not any(visible_cross(tp)), t + "a second tap should clear the crosshair")
         ok(not tp.evaluate("document.documentElement.scrollWidth > window.innerWidth"), t + "no sideways scroll at 400 px")
         tctx.close()
+
+        pg.close()
+        pg = ctx.new_page()
+        pg.on("pageerror", lambda e: errs.append(str(e)))
+        # 10. expandable charts: every panel opens a dialog by mouse and by keyboard, Esc and the backdrop close it, focus returns, the table has the data
+        open_dash(pg)
+        want = {"price": 21, "metals": 21, "ratio": 21, "dollar": 2, "supply": 8, "uses": 6}        # the default view is 20 years (August 2006 to 2026): 21 calendar years
+        for key, n_rows in want.items():
+            btn = pg.locator(f'#dashboard .p-{key} .d2-expand')
+            ok(btn.get_attribute("aria-haspopup") == "dialog" and (btn.get_attribute("aria-label") or "").startswith("Expand: "), t + f"{key}: the Expand button needs aria-haspopup and an aria-label")
+            btn.scroll_into_view_if_needed()
+            btn.click()
+            pg.wait_for_timeout(250)
+            ok(pg.evaluate("document.querySelector('dialog.d2-dialog').open"), t + f"{key}: the dialog should open")
+            ok(pg.evaluate("document.querySelector('dialog.d2-dialog').matches(':modal')"), t + f"{key}: the dialog should be modal (the page behind is inert)")
+            ok(pg.locator("dialog.d2-dialog .dlg-title").inner_text().strip() != "" and pg.locator("dialog.d2-dialog .dlg-chart svg").count() >= 1, t + f"{key}: the dialog needs a title and a chart")
+            pg.locator("dialog.d2-dialog .dlg-table summary").click()
+            pg.wait_for_timeout(150)
+            rows = pg.locator("dialog.d2-dialog .dlg-table tbody tr").count()
+            ok(rows == n_rows, t + f"{key}: the table should have {n_rows} rows, it has {rows}")
+            if key in ("price", "ratio"):
+                cb = pg.locator("dialog.d2-dialog .dlg-chart svg").first.bounding_box()
+                pg.mouse.move(cb["x"] + cb["width"] * 0.5, cb["y"] + cb["height"] * 0.45)
+                ro = changed(pg, "dialog.d2-dialog .dlg-readout", IDLE)
+                ok(re.match(r"^[A-Z][a-z]+ \d{4}", ro) is not None, t + f"{key}: hovering the expanded chart should update the dialog readout, got {ro!r}")
+                pg.locator("dialog.d2-dialog .dlg-chart svg").first.focus()
+                pg.keyboard.press("ArrowLeft")
+                r1 = changed(pg, "dialog.d2-dialog .dlg-readout", ro)
+                pg.keyboard.press("ArrowLeft")
+                ok(changed(pg, "dialog.d2-dialog .dlg-readout", r1) != r1, t + f"{key}: arrow keys should move the crosshair in the expanded chart")
+            pg.keyboard.press("Escape")
+            pg.wait_for_timeout(200)
+            ok(not pg.evaluate("document.querySelector('dialog.d2-dialog').open"), t + f"{key}: Escape should close the dialog")
+            ok(pg.evaluate("document.activeElement && document.activeElement.classList.contains('d2-expand') && document.activeElement.closest('.p-%s') !== null" % key), t + f"{key}: focus should return to the Expand button")
+            pg.keyboard.press("Enter")
+            pg.wait_for_timeout(250)
+            ok(pg.evaluate("document.querySelector('dialog.d2-dialog').open"), t + f"{key}: Enter on the Expand button should open the dialog")
+            pg.mouse.click(3, 3)
+            pg.wait_for_timeout(200)
+            ok(not pg.evaluate("document.querySelector('dialog.d2-dialog').open"), t + f"{key}: a click on the backdrop should close the dialog")
+            btn.click()
+            pg.wait_for_timeout(200)
+            pg.click("dialog.d2-dialog .dlg-close")
+            pg.wait_for_timeout(200)
+            ok(not pg.evaluate("document.querySelector('dialog.d2-dialog').open"), t + f"{key}: the Close button should close the dialog")
+            text = pg.evaluate("document.querySelector('dialog.d2-dialog').textContent")
+            ok(not re.search(r"\{\w+\}|undefined|NaN", text), t + f"{key}: the dialog text should have no unfilled placeholder")
+
+        # 11. the donut: hover and focus on each slice set the centre and the lift; reduced motion removes the scale
+        open_dash(pg)
+        n = pg.locator("#dashboard .donut .dn-slice").count()
+        ok(n == 6, t + f"the donut should have six slices, got {n}")
+        ok(pg.evaluate("document.querySelector('#dashboard .donut').getAttribute('role') === 'group' && document.querySelector('#dashboard .donut').getAttribute('aria-label').split('%').length >= 7"), t + "the donut svg needs role group and an aria-label that lists all six shares")
+        for i in range(6):
+            g = pg.locator(f'#dashboard .donut .dn-slice[data-i="{i}"]')
+            ok(g.get_attribute("role") == "img" and "%" in (g.get_attribute("aria-label") or "") and g.locator("title").count() == 1, t + f"slice {i}: role img, aria-label and title are needed")
+            g.focus()
+            pg.wait_for_function("(i) => { const g = document.querySelector('#dashboard .donut .dn-slice[data-i=\"' + i + '\"]'); return getComputedStyle(g).transform !== 'none' && Array.from(document.querySelectorAll('#dashboard .donut .dn-slice')).filter(e => +e.dataset.i !== i).every(e => +getComputedStyle(e).opacity < 0.7); }", arg=i, timeout=8000)
+            big = pg.locator("#dashboard .donut .dn-c-big").text_content()
+            name = " ".join(pg.locator("#dashboard .donut .dn-c-name").all_text_contents()).strip()
+            lab = g.get_attribute("aria-label")
+            ok(big in lab and name.split(" ")[0] in lab, t + f"slice {i}: the centre ({big!r}, {name!r}) should match {lab!r}")
+            tr = pg.evaluate("(i) => getComputedStyle(document.querySelector('#dashboard .donut .dn-slice[data-i=\"' + i + '\"]')).transform", i)
+            ok(tr not in ("none", ""), t + f"slice {i}: a focused slice should be lifted (transform), got {tr}")
+            others = pg.evaluate("(i) => Array.from(document.querySelectorAll('#dashboard .donut .dn-slice')).filter(e => +e.dataset.i !== i).every(e => +getComputedStyle(e).opacity < 0.7)", i)
+            ok(others, t + f"slice {i}: the other slices should fall to about 60 percent")
+        pg.evaluate("document.activeElement.blur()")
+        pg.wait_for_function("document.querySelector('#dashboard .donut .dn-c-big').textContent === '2024'", timeout=8000)
+        ok(pg.locator("#dashboard .donut .dn-c-big").text_content() == "2024", t + "leaving the donut should restore the centre")
+        rctx = b.new_context(viewport={"width": 1280, "height": 900}, reduced_motion="reduce")
+        rp = rctx.new_page()
+        rp.goto(url + "#dashboard")
+        rp.reload()
+        rp.wait_for_selector("#dashboard .d2-grid")
+        rp.locator('#dashboard .donut .dn-slice[data-i="1"]').focus()
+        rp.wait_for_timeout(300)
+        m = rp.evaluate("getComputedStyle(document.querySelector('#dashboard .donut .dn-slice[data-i=\"1\"]')).transform")
+        sc = float(re.findall(r"matrix\(([-\d.e]+),", m)[0]) if m.startswith("matrix") else 1.0
+        ok(abs(sc - 1.0) < 0.001 and m != "none", t + f"with reduced motion the slice should lift without scaling, got {m}")
+        rctx.close()
+
+        # 12. no sideways scroll at 400 px, also with a dialog open
+        pctx = b.new_context(viewport={"width": 400, "height": 800}, reduced_motion="reduce")
+        pp = pctx.new_page()
+        pp.goto(url + "#dashboard")
+        pp.reload()
+        pp.wait_for_selector("#dashboard .d2-grid")
+        pp.wait_for_timeout(300)
+        ok(not pp.evaluate("document.documentElement.scrollWidth > window.innerWidth"), t + "no sideways scroll at 400 px")
+        for key in ("price", "metals", "dollar", "supply", "uses"):
+            bt = pp.locator(f'#dashboard .p-{key} .d2-expand')
+            bt.scroll_into_view_if_needed()
+            bt.click()
+            pp.wait_for_timeout(300)
+            wide = pp.evaluate("document.documentElement.scrollWidth > window.innerWidth || (() => { const d = document.querySelector('dialog.d2-dialog'); return d.scrollWidth > d.clientWidth + 1; })()")
+            dw = pp.evaluate("document.querySelector('dialog.d2-dialog').getBoundingClientRect().width")
+            ok(not wide, t + f"{key}: no sideways scroll at 400 px with the dialog open")
+            ok(abs(dw - 388) < 2, t + f"{key}: the dialog should be the full width minus 12 px on a phone, got {dw}")
+            pp.keyboard.press("Escape")
+            pp.wait_for_timeout(150)
+        pctx.close()
 
         ok(not errs, t + f"script errors: {errs}")
         b.close()

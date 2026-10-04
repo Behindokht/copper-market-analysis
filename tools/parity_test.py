@@ -20,6 +20,7 @@ kp = {r["fact_id"]: r["value"] for r in csv.DictReader((ROOT / "results" / "res_
 checks = list(csv.DictReader((ROOT / "results" / "res_dashboard_checks.csv").open(encoding="utf-8")))
 health = {s: sum(1 for c in checks if c["status"] == s) for s in ("PASS", "WARN", "FAIL")}
 
+last_row = list(csv.DictReader((ROOT / "results" / "res_dash_series.csv").open(encoding="utf-8")))[-1]
 problems, n_compared = [], 0
 
 
@@ -38,7 +39,7 @@ def run(engine):
             for cur, prices in (("usd", "nominal"), ("eur", "nominal"), ("usd", "real")):
                 pg.goto(url + f"#dashboard?p={period}&c={cur}&v={prices}")
                 pg.reload()
-                pg.wait_for_selector("#dashboard .dgrid")
+                pg.wait_for_selector("#dashboard .d2-grid")
                 snap = pg.evaluate("window.CMA.dash.snapshot()")
                 r = ref[(period, cur, prices)]
                 tag = f"[{engine}] {period} {cur} {prices}"
@@ -53,15 +54,23 @@ def run(engine):
                 if not close(s["ratio_start"], r["ratio_start"]):
                     problems.append(f"{tag}: ratio at the start {s['ratio_start']} vs Python {r['ratio_start']}")
                 n_compared += 2
-                if cur == "usd":
-                    for k in ("al", "gold", "tin", "brent"):
-                        if not close(s[k + "_rebased_latest"], r[k + "_rebased_latest"]):
-                            problems.append(f"{tag}: {k} rebased {s[k + '_rebased_latest']:.4f} vs Python {r[k + '_rebased_latest']}")
-                        n_compared += 1
+                for k in ("dollar_rose_n", "copper_fell_when_rose_n", "dollar_fell_n", "copper_rose_when_fell_n"):
+                    n_compared += 1
+                    if int(s[k]) != int(r[k]):
+                        problems.append(f"{tag}: {k} {s[k]} vs Python {r[k]}")
+        # each metal's share of its own real record in the latest month (the small multiples)
+        pg.goto(url + "#dashboard")
+        pg.reload()
+        pg.wait_for_selector("#dashboard .d2-grid")
+        snap = pg.evaluate("window.CMA.dash.snapshot()")
+        for k in ("cu", "al", "gold", "tin", "brent"):
+            n_compared += 1
+            if not close(snap["snap"]["rec_latest"][k], last_row[k + "_rec_pct"]):
+                problems.append(f"[{engine}] share of own record, {k}: {snap['snap']['rec_latest'][k]:.4f} vs Python {last_row[k + '_rec_pct']}")
         # the figures as printed in the KPI band, in the default view
         pg.goto(url + "#dashboard")
         pg.reload()
-        pg.wait_for_selector("#dashboard .dgrid")
+        pg.wait_for_selector("#dashboard .d2-grid")
         txt = lambda k: pg.locator(f'#dashboard .kpi[data-k="{k}"] .kfig').inner_text().strip()
         want = {"copper": "$" + format(round(float(kp["copper_usd_t"])), ","), "real": str(round(float(kp["real_share_of_record_pct"]))) + "%", "ratio": f"{float(kp['ratio_latest']):.2f}×", "health": str(health["PASS"])}
         for k, v in want.items():
@@ -70,7 +79,7 @@ def run(engine):
                 problems.append(f"[{engine}] KPI {k}: page shows {txt(k)!r}, Python gives {v!r}")
         pg.goto(url + "#dashboard?p=20y&c=eur&v=nominal")
         pg.reload()
-        pg.wait_for_selector("#dashboard .dgrid")
+        pg.wait_for_selector("#dashboard .d2-grid")
         n_compared += 1
         if txt("copper") != "€" + format(round(float(kp["copper_eur_t"])), ","):
             problems.append(f"[{engine}] KPI copper in euros: page shows {txt('copper')!r}, Python gives {round(float(kp['copper_eur_t']))}")

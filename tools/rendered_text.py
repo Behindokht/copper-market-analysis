@@ -21,7 +21,7 @@ with sync_playwright() as p:
     for view in ("dashboard", "dashboard?p=1y&c=eur&v=nominal&e=1", "dashboard?p=all&c=usd&v=real", "story", "quality", "method"):
         base = view.split("?")[0]
         pg.goto(url + "#" + view)
-        pg.wait_for_selector("#story .hero" if base == "story" else ("#dashboard .dgrid" if base == "dashboard" else "#" + base + " .wrap"), timeout=15000)
+        pg.wait_for_selector("#story .hero" if base == "story" else ("#dashboard .d2-grid" if base == "dashboard" else "#" + base + " .wrap"), timeout=15000)
         pg.wait_for_timeout(500)
         if base == "dashboard":
             box = pg.locator("#dashboard .dchart svg").first.bounding_box()
@@ -34,6 +34,17 @@ with sync_playwright() as p:
                 except Exception:
                     pass
             pg.wait_for_timeout(500)
+        if base == "dashboard":
+            for key in ("price", "metals", "ratio", "dollar", "supply", "uses"):          # open each dialog and its table, so their text is read too
+                pg.locator("#dashboard .p-%s .d2-expand" % key).click()
+                pg.locator("dialog.d2-dialog .dlg-table summary").click()
+                pg.wait_for_timeout(150)
+                dt = pg.evaluate("document.querySelector('dialog.d2-dialog').textContent")
+                total += len(dt)
+                for rx, name in BAD:
+                    for m in rx.finditer(dt):
+                        problems.append("%s view, %s dialog: %s near: ...%s..." % (view, key, name, re.sub(r"\s+", " ", dt[max(0, m.start() - 50): m.end() + 50])))
+                pg.keyboard.press("Escape")
         text = pg.evaluate("document.getElementById('%s').textContent" % base)
         total += len(text)
         for rx, name in BAD:
