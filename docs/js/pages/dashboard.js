@@ -45,7 +45,7 @@
     USE = CMA.rows(window.CMA_DATA.uses.end_use).sort(function (a, b) { return a.rank - b.rank; });
     CMA.rows(window.CMA_DATA.uses.facts).forEach(function (r) { FACT[r.fact_id] = r; });
     var ev = CMA.rows(window.CMA_DATA.chapters.events).sort(function (a, b) { return a.month < b.month ? -1 : 1; });
-    EVENTS = ev.map(function (e, k) { return { n: k + 1, month: e.month, label: e.label, description: e.description, source_id: e.source_id, source_name: e.source_name, url: e.source_url }; });
+    EVENTS = ev.map(function (e, k) { return { n: k + 1, id: e.event_id, month: e.month, label: e.label, description: e.description, source_id: e.source_id, source_name: e.source_name, url: e.source_url }; });
   }
   function firstValid(a) { for (var i = 0; i < a.length; i++) { if (a[i] != null) { return i; } } return a.length - 1; }
   // the window of a period for one series: the same rules as notebook 07
@@ -154,8 +154,9 @@
     cfg.marks = inWin ? [{ series: "cu", i: ri, lines: [T("mark_record", { month: monthShort(months[recIdx]), value: money(cs[recIdx], state.c) })], side: ri > ms.length * 0.55 ? "left" : "right", up: state.e === "1" }] : [];
     cfg.endLabels = (inWin && ri === ms.length - 1) ? [] : [{ series: "cu", text: T("mark_latest", { value: money(cs[c.last], state.c) }), ink: "--ink" }];
     if (state.e === "1") {
-      cfg.events = EVENTS.filter(function (e) { var i = months.indexOf(e.month); return i >= c.s && cs[i] != null; }).map(function (e) {
-        return { i: months.indexOf(e.month) - c.s, n: e.n, tip: [monthLong(e.month), e.label, T("event_source", { source: e.source_name })] };
+      // the record has its own label on the chart, so an event in the record month (the new record as quoted) is not drawn again; the expanded view lists every event
+      cfg.events = EVENTS.filter(function (e) { var i = months.indexOf(e.month); return i >= c.s && cs[i] != null && i !== recIdx; }).map(function (e) {
+        return { i: months.indexOf(e.month) - c.s, label: window.CMA_STRINGS.dashboard.event_short[e.id] || e.label, tip: [monthLong(e.month), e.label, T("event_source", { source: e.source_name })] };
       });
     }
     cfg.aria = T("price_aria", { from: monthLong(ms[0]), to: monthLong(ms[ms.length - 1]), unit: unit, prices: T("prices_" + state.v + "_text") });
@@ -254,7 +255,7 @@
         while (placed.some(function (p) { return Math.abs(p[0] - x) < 2 * r + 0.4 && Math.abs(p[1] - dy) < 2 * r + 0.4; }) && k < 120) { k++; dy = (k % 2 ? 1 : -1) * Math.ceil(k / 2) * (r * 1.05); }
         if (Math.abs(dy) > lane / 2 - r) { dy = (dy < 0 ? -1 : 1) * (lane / 2 - r); }
         placed.push([x, dy]);
-        var dot = svg("circle", { cx: x.toFixed(1), cy: (cy + dy).toFixed(1), r: r, fill: q.cu >= 0 ? "var(--copper)" : "var(--verdigris)", "fill-opacity": 0.85 });
+        var dot = svg("circle", { cx: x.toFixed(1), cy: (cy + dy).toFixed(1), r: r, fill: q.cu >= 0 ? "var(--copper)" : "var(--verdigris)", "data-series": q.cu >= 0 ? "--copper" : "--verdigris", "fill-opacity": 0.85 });
         var ti = svg("title"); ti.textContent = T("dollar_dot", { month: monthLong(q.month), cu: CMA.pctChange(q.cu), dx: CMA.pctChange(q.dx) }); dot.appendChild(ti);
         sv.appendChild(dot);
       });
@@ -280,9 +281,9 @@
       var n = svg("text", { x: 0, y: y + 4, class: "lbl" }); n.textContent = r.display_name; sv.appendChild(n);
       if (r.mine_listed) {
         sv.appendChild(svg("line", { x1: Math.min(xm, xr), x2: Math.max(xm, xr), y1: y, y2: y, stroke: "var(--grey)", "stroke-width": 1.5 }));
-        sv.appendChild(svg("circle", { cx: xm, cy: y, r: rad, fill: "var(--verdigris)" }));
+        sv.appendChild(svg("circle", { cx: xm, cy: y, r: rad, fill: "var(--verdigris)", "data-series": "--verdigris" }));
       }
-      sv.appendChild(svg("circle", { cx: xr, cy: y, r: rad, fill: "var(--copper)" }));
+      sv.appendChild(svg("circle", { cx: xr, cy: y, r: rad, fill: "var(--copper)", "data-series": "--copper" }));
       var v = svg("text", { x: W, y: y + 3.5, "text-anchor": "end" });
       v.textContent = r.mine_listed ? CMA.n1(r.mine_share_pct) + "% / " + CMA.n1(r.refinery_share_pct) + "%" : T("supply_none") + " / " + CMA.n1(r.refinery_share_pct) + "%"; sv.appendChild(v);
       var ti = svg("title"); ti.textContent = r.display_name + ": " + (r.mine_listed ? CMA.n1(r.mine_share_pct) + "% " + T("supply_legend_mine").toLowerCase() : T("supply_none")) + ", " + CMA.n1(r.refinery_share_pct) + "% " + T("supply_legend_ref").toLowerCase(); sv.appendChild(ti);
@@ -355,8 +356,9 @@
   }
   function panelTitle(p) { return p.key === "price" ? T(state.v === "real" && state.c !== "eur" ? "price_title_real" : "price_title_nominal") : T(p.key + "_title"); }
   // the subtitle of a panel, as nodes: some carry a legend (coloured dots), as in the study
-  function legend(a, b) {
-    return h("span", { class: "legend" }, h("span", {}, h("i", { class: "sw", style: "background:var(--copper)" }), a), h("span", {}, h("i", { class: "sw", style: "background:var(--verdigris)" }), b));
+  // each swatch carries the colour token of the series it names (tools/dashboard_test.py compares it with the colour the chart draws)
+  function legend(a, ca, b, cb) {
+    return h("span", { class: "legend" }, h("span", {}, h("i", { class: "sw", "data-series": ca, style: "background:var(" + ca + ")" }), a), h("span", {}, h("i", { class: "sw", "data-series": cb, style: "background:var(" + cb + ")" }), b));
   }
   function panelSub(p) {
     if (p.key === "price") {
@@ -365,8 +367,8 @@
         (state.c === "eur" && euroStart ? " " + T("price_sub_euro_start") : "") + (state.c === "eur" ? " " + T("price_sub_euro_real") : "")];
     }
     if (p.key === "ratio") { return [T("ratio_hint", { be: CMA.n1(K.breakeven_ratio), since: monthShort(String(RC.first_month_of_run)) })]; }
-    if (p.key === "dollar") { return [T("dollar_hint_a") + " ", legend(T("legend_rose"), T("legend_fell")), h("br"), T("dollar_hint_b", { lim: DOLLAR_LIM })]; }
-    if (p.key === "supply") { return [legend(T("supply_legend_mine"), T("supply_legend_ref"))]; }
+    if (p.key === "dollar") { return [T("dollar_hint_a") + " ", legend(T("legend_rose"), "--copper", T("legend_fell"), "--verdigris"), h("br"), T("dollar_hint_b", { lim: DOLLAR_LIM })]; }
+    if (p.key === "supply") { return [legend(T("supply_legend_mine"), "--verdigris", T("supply_legend_ref"), "--copper")]; }
     return [T(p.key + "_hint")];
   }
   function fillSub(el, p) { el.textContent = ""; panelSub(p).forEach(function (n) { el.appendChild(typeof n === "string" ? document.createTextNode(n) : n); }); }
@@ -422,7 +424,7 @@
     dlg.evs.hidden = p.key !== "price";
     if (p.key === "price") {
       dlg.evs.appendChild(h("details", { class: "dd" }, h("summary", { text: T("events_in_dialog") }), h("ol", { class: "eventlist" }, EVENTS.map(function (e) {
-        return h("li", {}, h("span", { class: "evdate mono", text: monthShort(e.month) }), " ", h("b", { text: e.n + ". " + e.label + ". " }), e.description + " ",
+        return h("li", {}, h("span", { class: "evdate mono", text: monthShort(e.month) }), " ", h("b", { text: e.label + ". " }), e.description + " ",
           h("a", { href: e.url, target: "_blank", rel: "noopener noreferrer", text: T("event_source", { source: e.source_id }) }));
       }))));
     }
@@ -444,10 +446,10 @@
     if (K.copper_is_nominal_record !== 1 || !(pctBelow > 0)) { throw new Error("the headline needs a record as quoted and a price below the real record"); }
     var gP = segGroup("p", VALID.p), gC = segGroup("c", VALID.c), gV = segGroup("v", VALID.v);
     ui.btns = { p: gP.btns, c: gC.btns, v: gV.btns };
-    wrap.appendChild(h("section", { class: "head glass lens", "data-frost": "22", "aria-labelledby": "dashboard-title" },
+    wrap.appendChild(h("section", { class: "head glass", "aria-labelledby": "dashboard-title" },
       h("div", {},
         h("h1", { id: "dashboard-title", tabindex: "-1" }, h("em", { text: T("head_em") }), " " + T("head_rest", { price: money(K.copper_usd_t, "usd") })),
-        h("p", { text: T("head_lede", { change: CMA.n0(K.copper_12m_change_pct), n: K.months_total, pct: CMA.n0(pctBelow), month: monthLong(K.real_peak_month) }) })),
+        h("p", { text: T("head_lede", { change: CMA.n0(K.copper_12m_change_pct), n: K.months_total, since: monthShort(months[0]), pct: CMA.n0(pctBelow), month: monthLong(K.real_peak_month) }) })),
       h("div", { class: "filters", role: "group", "aria-label": T("filter_aria") }, gP.el, gC.el, gV.el)));
     pageBus = makeBus();
 

@@ -87,7 +87,7 @@ def run(engine):
                     problems.append(f"[{engine}] change chip {k}: page shows {chip(k)!r}, Python gives {w!r}")
             n_compared += 1
             ctx = pg.locator('#dashboard .kpi[data-k="real"] .k-c').inner_text()
-            if f"{int(float(kp['real_rank_latest']))}" not in ctx or f"{int(float(kp['real_months_valid']))} months" not in ctx:
+            if f"{int(float(kp['real_rank_latest']))}" not in ctx or f"out of {int(float(kp['real_months_valid']))}" not in ctx:
                 problems.append(f"[{engine}] today's money context: page shows {ctx!r}, Python gives rank {kp['real_rank_latest']} of {kp['real_months_valid']}")
         st = " ".join(pg.locator("#status").inner_text().split())
         n_compared += 1

@@ -18,7 +18,7 @@
     host.classList.add("chart");
 
     var sparkEl = null;
-    function color(c) { return getComputedStyle(document.documentElement).getPropertyValue(c).trim() || c; }
+    function color(c) { return getComputedStyle(document.body).getPropertyValue(c).trim() || c; }
     function textW(s) { return 6.4 * s.length; }
 
     function draw() {
@@ -99,7 +99,7 @@
         var gs = cfg.series.filter(function (x) { return x.id === cfg.gap.series; })[0];
         [cfg.gap.i - 1, cfg.gap.i + 1].forEach(function (i) {
           if (gs.values[i] != null) {
-            s.appendChild(svg("circle", { cx: X(i), cy: Y(gs.values[i]), r: 3.5, fill: color("--card"), stroke: color(gs.color), "stroke-width": 1.8 }));
+            s.appendChild(svg("circle", { cx: X(i), cy: Y(gs.values[i]), r: 3.5, fill: color("--halo"), stroke: color(gs.color), "stroke-width": 1.8 }));
           }
         });
       }
@@ -116,27 +116,38 @@
         var sr = cfg.series.filter(function (x) { return x.id === m.series; })[0];
         var cx = X(m.i), cy = Y(sr.values[m.i]);
         if (narrow) {
-          s.appendChild(svg("circle", { class: "endmark", cx: cx, cy: cy, r: 9, fill: color("--card"), stroke: color(sr.color), "stroke-width": 2.5 }));
+          s.appendChild(svg("circle", { class: "endmark", cx: cx, cy: cy, r: 9, fill: color("--halo"), stroke: color(sr.color), "stroke-width": 2.5 }));
           var nt = svg("text", { x: cx, y: cy + 4, "text-anchor": "middle", class: "badge endmark", fill: color("--ink") }); nt.textContent = (cfg.events && cfg.events.length) ? String.fromCharCode(65 + mi) : String(mi + 1); s.appendChild(nt);   // letters when the chart also has numbered event markers
           box(cx - 10, cy - 10, cx + 10, cy + 10);
           return;
         }
-        s.appendChild(svg("circle", { class: "endmark", cx: cx, cy: cy, r: 5.5, fill: color(sr.color), stroke: color("--card"), "stroke-width": 2.2 }));
+        s.appendChild(svg("circle", { class: "endmark", cx: cx, cy: cy, r: 5.5, fill: color(sr.color), stroke: color("--halo"), "stroke-width": 2.2 }));
         var widest = m.lines.reduce(function (a, b) { return textW(b) > a ? textW(b) : a; }, 0);
-        var anchor = m.anchor || "start", dx = m.dx || 0;
+        var anchor = m.anchor || "start", dx = m.dx || 0, dyv = m.dy || 0;
         if (anchor === "start" && cx + dx + widest > W - 4) { anchor = "end"; dx = -Math.abs(dx); }
         else if (anchor === "end" && cx + dx - widest < ml) { anchor = "start"; dx = Math.abs(dx); }
         else if (anchor === "middle") {
           if (cx - widest / 2 < ml) { anchor = "start"; dx = 0; } else if (cx + widest / 2 > W - 4) { anchor = "end"; dx = 0; }
         }
-        var bx0 = anchor === "start" ? cx + dx : (anchor === "end" ? cx + dx - widest : cx + dx - widest / 2);
-        box(bx0 - 3, cy + (m.dy || 0) - 13, bx0 + widest + 3, cy + (m.dy || 0) + 14.5 * (m.lines.length - 1) + 5);
-        if (Math.abs(m.dy || 0) > 24) {              // a thin leader from the dot to a label that sits further away
-          var ly = (m.dy || 0) > 0 ? cy + m.dy - 14 : cy + m.dy + 14.5 * (m.lines.length - 1) + 5;
-          s.appendChild(svg("line", { x1: cx, y1: cy + ((m.dy || 0) > 0 ? 6 : -6), x2: cx + dx, y2: ly, class: "leader" }));
+        // the call-out must not sit on a line: try the given spot first, then other heights on both sides of the dot
+        var spotBox = function (an, ddx, ddy) {
+          var x0 = an === "start" ? cx + ddx : (an === "end" ? cx + ddx - widest : cx + ddx - widest / 2);
+          return { x0: x0 - 3, x1: x0 + widest + 3, y0: cy + ddy - 13, y1: cy + ddy + 14.5 * (m.lines.length - 1) + 5 };
+        };
+        var okSpot = function (bx) { return bx.x0 >= ml && bx.x1 <= W - 2 && bx.y0 >= mt - 6 && bx.y1 <= mt + ph && crossings(bx.x0, bx.y0, bx.x1, bx.y1) === 0; };
+        if (!okSpot(spotBox(anchor, dx, dyv))) {
+          var tries = [];
+          [-30, -48, -66, -84, -102, 28, 46, 64, 82, 100, 118, 136].forEach(function (dd) { [["end", -16], ["start", 16], ["middle", 0], ["end", -60], ["start", 60]].forEach(function (a2) { tries.push([a2[0], a2[1], dd]); }); });
+          for (var q = 0; q < tries.length; q++) { if (okSpot(spotBox(tries[q][0], tries[q][1], tries[q][2]))) { anchor = tries[q][0]; dx = tries[q][1]; dyv = tries[q][2]; break; } }
         }
-        var t = svg("text", { x: cx + dx, y: cy + (m.dy || 0), "text-anchor": anchor, class: "callout endmark", fill: color("--ink") });
-        t.setAttribute("style", "paint-order:stroke;stroke:" + color("--card") + ";stroke-width:3px;stroke-linejoin:round");
+        var bx0 = anchor === "start" ? cx + dx : (anchor === "end" ? cx + dx - widest : cx + dx - widest / 2);
+        box(bx0 - 3, cy + dyv - 13, bx0 + widest + 3, cy + dyv + 14.5 * (m.lines.length - 1) + 5);
+        if (Math.abs(dyv) > 24) {              // a thin leader from the dot to a label that sits further away
+          var ly = dyv > 0 ? cy + dyv - 14 : cy + dyv + 14.5 * (m.lines.length - 1) + 5;
+          s.appendChild(svg("line", { x1: cx, y1: cy + (dyv > 0 ? 6 : -6), x2: cx + dx, y2: ly, class: "leader" }));
+        }
+        var t = svg("text", { x: cx + dx, y: cy + dyv, "text-anchor": anchor, class: "callout endmark", fill: color("--ink") });
+        t.setAttribute("style", "paint-order:stroke;stroke:" + color("--halo") + ";stroke-width:3px;stroke-linejoin:round");
         m.lines.forEach(function (line, k) {
           var ts = svg("tspan", { x: cx + dx, dy: k === 0 ? 0 : 14.5, class: k === 0 ? "strong" : "" }); ts.textContent = line; t.appendChild(ts);
         });
@@ -168,10 +179,10 @@
           if (v == null) { continue; }
           var x0 = X(i), x1 = x0 + w;
           if (x1 > ml + pw - 2) { break; }
-          [-9, 17].forEach(function (off) {
+          [-9, 17, -26, 34, -44, 52, -62, 70].forEach(function (off) {
             var base = Y(v) + off, y0 = base - 12, y1 = base + 4;
             if (y0 < mt + 2 || y1 > mt + ph - 2) { return; }
-            var sc = crossings(x0 - 2, y0, x1 + 2, y1) * 1000 + Math.abs(i - cfg.n * 0.55) * 0.05;
+            var sc = crossings(x0 - 2, y0, x1 + 2, y1) * 1000 + Math.abs(off) * 0.4 + Math.abs(i - cfg.n * 0.55) * 0.05;
             if (best === null || sc < best.sc) { best = { sc: sc, x: x0, base: base, x1: x1, y0: y0, y1: y1 }; }
           });
         }
@@ -179,7 +190,7 @@
         box(best.x - 2, best.y0, best.x1 + 2, best.y1);
         var t = svg("text", { x: best.x, y: best.base, "text-anchor": "start", class: "lbl endmark", fill: color("--ink") });
         t.textContent = ltext;
-        t.setAttribute("style", "paint-order:stroke;stroke:" + color("--card") + ";stroke-width:3.5px;stroke-linejoin:round");
+        t.setAttribute("style", "paint-order:stroke;stroke:" + color("--halo") + ";stroke-width:3.5px;stroke-linejoin:round");
         s.appendChild(t);
       });
 
@@ -191,7 +202,7 @@
         lastX = ex;
         var ey = 30 + row * 19;
         s.insertBefore(svg("line", { x1: ex, x2: ex, y1: ey + 8.5, y2: mt + ph, class: "evline" }), s.firstChild.nextSibling);
-        s.appendChild(svg("circle", { class: "evdot", cx: ex, cy: ey, r: 8.5, fill: color("--card"), stroke: color("--ink"), "stroke-width": 1.3 }));
+        s.appendChild(svg("circle", { class: "evdot", cx: ex, cy: ey, r: 8.5, fill: color("--halo"), stroke: color("--ink"), "stroke-width": 1.3 }));
         var et = svg("text", { class: "badge", x: ex, y: ey + 3.8, "text-anchor": "middle", fill: color("--ink") }); et.textContent = String(ev.n); s.appendChild(et);
       });
 
@@ -209,7 +220,7 @@
       var vline = svg("line", { y1: mt, y2: mt + ph, stroke: color("--muted"), "stroke-width": 1 });
       cross.appendChild(vline);
       var dots = cfg.series.map(function (sr) {
-        var c = svg("circle", { r: 4.5, fill: color(sr.color), stroke: color("--card"), "stroke-width": 2 }); cross.appendChild(c); return c;
+        var c = svg("circle", { r: 4.5, fill: color(sr.color), stroke: color("--halo"), "stroke-width": 2 }); cross.appendChild(c); return c;
       });
       s.appendChild(cross);
       var hit = svg("rect", { x: ml, y: mt, width: pw, height: ph, fill: "transparent" });
@@ -296,7 +307,7 @@
   CMA.scatterChart = function (host, cfg) {
     var tip = null, cur = null, lastW = 0, raf = 0;
     host.classList.add("chart");
-    function color(c) { return getComputedStyle(document.documentElement).getPropertyValue(c).trim() || c; }
+    function color(c) { return getComputedStyle(document.body).getPropertyValue(c).trim() || c; }
     function nice(v, step) { return Math.ceil(Math.abs(v) / step) * step; }
     var rows = cfg.rows;
     var xMax = nice(Math.max.apply(null, rows.map(function (r) { return Math.abs(r[cfg.x]); })), 2);
@@ -312,6 +323,7 @@
       var Y = function (v) { return mt + (yMax - v) / (2 * yMax) * ph; };
       host.textContent = "";
       var s = svg("svg", { viewBox: "0 0 " + W + " " + H, role: "img", tabindex: "0", "aria-label": cfg.aria, focusable: "true" });
+      host.appendChild(s);                 // attached now, so the labels can be measured before they are placed
       // the two opposite-direction corners
       s.appendChild(svg("rect", { x: ml, y: mt, width: X(0) - ml, height: Y(0) - mt, class: "quad" }));
       s.appendChild(svg("rect", { x: X(0), y: Y(0), width: ml + pw - X(0), height: mt + ph - Y(0), class: "quad" }));
@@ -327,12 +339,12 @@
       var xl = svg("text", { x: ml + pw, y: H - 6, "text-anchor": "end", class: "ax" }); xl.textContent = cfg.xLabel; s.appendChild(xl);
       var yl = svg("text", { x: ml, y: 14, "text-anchor": "start", class: "ax" }); yl.textContent = cfg.yLabel; s.appendChild(yl);
       // the regression line, drawn in % terms (it is fitted on log changes)
-      var d = "";
+      var d = "", fitPts = [];
       for (var k = 0; k <= 60; k++) {
         var xv = -xMax + k * (2 * xMax / 60);
         var yv = 100 * (Math.exp(cfg.fit.intercept_log + cfg.fit.slope_log * Math.log(1 + xv / 100)) - 1);
         if (yv > yMax || yv < -yMax) { continue; }
-        d += (d ? "L" : "M") + X(xv).toFixed(1) + " " + Y(yv).toFixed(1);
+        d += (d ? "L" : "M") + X(xv).toFixed(1) + " " + Y(yv).toFixed(1); fitPts.push([X(xv), Y(yv)]);
       }
       // dots: grey first, copper on top
       var dots = [];
@@ -345,15 +357,35 @@
         });
       });
       s.appendChild(svg("path", { d: d, class: "fitline" }));
-      // the big label in the upper-left corner, a small one in the lower-right
-      var bx = ml + 12, by = mt + 30;
-      var big = svg("text", { x: bx, y: by, class: "bigl" }); big.textContent = cfg.big; s.appendChild(big);
-      var cnt = svg("text", { x: bx, y: by + 20, class: "ax strong" }); cnt.textContent = cfg.count; s.appendChild(cnt);
+      // the big label sits inside the upper-left tinted corner, in the spot that touches the fitted line and the dots least; the count goes under it, the small label is in the lower-right corner
+      var big = svg("text", { x: 0, y: 0, class: "bigl" }); big.textContent = cfg.big; s.appendChild(big);
+      var cnt = svg("text", { x: 0, y: 0, class: "ax strong" }); cnt.textContent = cfg.count; s.appendChild(cnt);
+      var bb = big.getBBox(), cb = cnt.getBBox(), bw = Math.max(bb.width, cb.width) + 6, bh = bb.height + cb.height + 2;
+      function hitsIn(x0, y0, x1, y1) {
+        var n = 0;
+        for (var q = 0; q < fitPts.length - 1; q++) {
+          for (var f = 0; f < 1; f += 0.125) {
+            var px = fitPts[q][0] + (fitPts[q + 1][0] - fitPts[q][0]) * f, py = fitPts[q][1] + (fitPts[q + 1][1] - fitPts[q][1]) * f;
+            if (px > x0 - 6 && px < x1 + 6 && py > y0 - 6 && py < y1 + 6) { n += 1000; }
+          }
+        }
+        rows.forEach(function (r) { var px = X(r[cfg.x]), py = Y(r[cfg.y]); if (px > x0 - 4 && px < x1 + 4 && py > y0 - 4 && py < y1 + 4) { n++; } });
+        return n;
+      }
+      var spot = null, qx1 = X(0) - 8, qy1 = Y(0) - 8;
+      for (var by0 = mt + 8; by0 + bh <= qy1; by0 += 6) {
+        for (var bx0 = ml + 8; bx0 + bw <= qx1; bx0 += 10) {
+          var sc = hitsIn(bx0, by0, bx0 + bw, by0 + bh) + (bx0 - ml) * 0.01 + (by0 - mt) * 0.01;
+          if (spot === null || sc < spot.sc) { spot = { sc: sc, x: bx0, y: by0 }; }
+        }
+      }
+      if (!spot) { spot = { x: ml + 12, y: mt + 8 }; }
+      big.setAttribute("x", spot.x + 2); big.setAttribute("y", spot.y - bb.y);
+      cnt.setAttribute("x", spot.x + 2); cnt.setAttribute("y", spot.y + bb.height + 2 - cb.y);
       var here = svg("text", { x: ml + pw - 10, y: mt + ph - 12, "text-anchor": "end", class: "ax strong" }); here.textContent = cfg.here; s.appendChild(here);
       var ring = svg("circle", { r: 7, class: "ring", visibility: "hidden" });
       s.appendChild(ring);
       tip = h("div", { class: "chart-tip", hidden: true, role: "presentation" });
-      host.appendChild(s);
       host.appendChild(tip);
 
       function show(i, announce) {

@@ -162,7 +162,9 @@ def run(engine):
         # 7. events
         open_dash(pg, "?p=20y&c=usd&v=nominal&e=1")
         n = pg.locator("#dashboard .dchart .evm").count()
-        ok(n >= 2, t + f"events should show as numbered markers, got {n}")
+        labs = pg.evaluate("Array.from(document.querySelectorAll('#dashboard .p-price .dchart .evl')).map(e => e.textContent)")
+        ok(n >= 2 and len(labs) == n and not any(re.fullmatch(r"\d+", x) for x in labs), t + f"events should show as short text labels, not numbers, got {labs}")
+        ok("New record" not in " ".join(pg.evaluate("Array.from(document.querySelectorAll('#dashboard .p-price svg text')).map(e => e.textContent)")), t + "the August 2026 new-record event must not be drawn on the chart")
         pg.locator("#dashboard .dchart .evm").first.focus()
         ok(pg.locator("#dashboard .chart-tip").first.is_visible(), t + "an event marker should show its tooltip on focus")
 

@@ -31,10 +31,10 @@
     var realRec = CMA.realRecord();
     var U = {};
     CMA.rows(window.CMA_DATA.uses.figures).forEach(function (r) { U[r.fact_id] = r; });
-    var plaque = h("aside", { class: "plaque smoke lens tilt", "data-frost": "22", "aria-label": t("hero.plaque_aria") },
+    var plaque = h("aside", { class: "plaque smoke", "aria-label": t("hero.plaque_aria") },
       h("div", { class: "kicker", text: t("hero.plaque_label", { month: CMA.monthLong(R.nominal_latest.month) }) }),
       h("div", { class: "big num" }, CMA.usd0(R.nominal_latest.value), h("small", { text: t("hero.plaque_unit") })),
-      h("div", { class: "pl-row" }, h("span", { text: t("hero.cert_nominal") }), h("span", { text: t("hero.cert_nominal_v", { n: CMA.n0(R.series_months.value) }) })),
+      h("div", { class: "pl-row" }, h("span", { text: t("hero.cert_nominal") }), h("span", { text: t("hero.cert_nominal_v", { n: CMA.n0(R.series_months.value), since: CMA.monthShort(R.series_months.month) }) })),
       h("div", { class: "pl-row" }, h("span", { text: t("hero.cert_12m") }), h("span", { text: t("hero.cert_12m_v", { pct: CMA.n0(U.copper_12m_change_pct.value), month: CMA.monthShort(U.copper_12m_ago_month.value + "-01"), price: CMA.usd0(U.copper_12m_ago_usd_t.value) }) })),
       h("div", { class: "pl-row" }, h("span", { text: t("hero.cert_real") }), h("span", { text: t("hero.cert_real_v", { pct: CMA.n0(realRec.belowPct), month: CMA.monthLong(realRec.month) }) })));
     var opener = h("section", { class: "opener", id: "top" },
@@ -195,7 +195,7 @@
 
     // ---- the closing panel: smoked glass, two short sentences (not the chapter 8 paragraph again) and the two links
     var cv = CMA.closingVars;
-    root.appendChild(h("section", { class: "closing smoke lens", "data-frost": "22", "aria-labelledby": "h-close" },
+    root.appendChild(h("section", { class: "closing smoke", "aria-labelledby": "h-close" },
       h("div", {}, h("div", { class: "kicker", id: "h-close", text: t("story.close_title") }), h("p", { text: t("story.close_text", { peak_above: cv.peak_above, peak_month: cv.peak_month }) })),
       h("nav", { "aria-label": t("story.close_nav") }, h("a", { href: "#dashboard", text: t("story.close_dash") }), h("a", { href: "#quality", text: t("summary.appendix_link") }))));
     if (CMA.glass) { CMA.glass.init(root); }

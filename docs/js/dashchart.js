@@ -46,7 +46,7 @@
     host.style.position = "relative";
 
     function color(c) { return getComputedStyle(host).getPropertyValue(c).trim() || c; }       // read from the host, so the dark scope of the dashboard applies
-    function textW(s) { return 6.3 * String(s).length; }
+    function textW(s) { return 6.8 * String(s).length; }
 
     function draw(animate) {
       if (dead) { return; }
@@ -86,22 +86,28 @@
         s.appendChild(svg("line", { x1: X(tk.i), x2: X(tk.i), y1: mt + ph, y2: mt + ph + 4, class: "axisline" }));
         var t = svg("text", { x: Math.min(Math.max(X(tk.i), ml + 8), ml + pw - 8), y: mt + ph + 18, "text-anchor": "middle", class: "ax" }); t.textContent = tk.label; s.appendChild(t);
       });
+      var occ = [];           // boxes taken by text, so that event labels keep clear of them
+      var take = function (x0, y0, x1, y1) { occ.push({ x0: x0, y0: y0, x1: x1, y1: y1 }); };
       (cfg.refLines || []).forEach(function (r) {
         var y = Y(r.v);
         if (y < mt || y > mt + ph) { return; }
         s.appendChild(svg("line", { x1: ml, x2: ml + pw, y1: y, y2: y, class: r.dashed ? "bandline" : "zeroline" }));
-        var t = svg("text", { x: ml + pw - 4, y: r.below ? y + 13 : y - 5, "text-anchor": "end", class: "ax" }); t.textContent = r.label; s.appendChild(t);
+        var t = svg("text", { x: ml + pw - 4, y: r.below ? y + 14 : y - 5, "text-anchor": "end", class: "ax" }); t.textContent = r.label; s.appendChild(t);
+        take(ml + pw - 8 - textW(r.label), r.below ? y + 2 : y - 18, ml + pw, r.below ? y + 18 : y);
         if (r.zones) {           // "aluminium cheaper" top left; "copper cheaper" at the right, under the break-even label and clear of the line
           var z1 = svg("text", { x: ml + 6, y: mt + 12, class: "zone", fill: color("--verdigris-text") }); z1.setAttribute("style", "fill:" + color("--verdigris-text")); z1.textContent = r.zones[0]; s.appendChild(z1);
-          var z2 = svg("text", { x: ml + pw - 4, y: y + 27, "text-anchor": "end", class: "zone" }); z2.textContent = r.zones[1]; s.appendChild(z2);
+          var z2 = svg("text", { x: ml + pw - 4, y: y + 31, "text-anchor": "end", class: "zone" }); z2.textContent = r.zones[1]; s.appendChild(z2);
+          take(ml + pw - 8 - textW(r.zones[1]), y + 18, ml + pw, y + 35); take(ml + 4, mt, ml + 8 + textW(r.zones[0]), mt + 17);
         }
       });
 
       var plot = svg("g", { class: "plot", "clip-path": "url(#" + clipId + ")" });
       s.appendChild(plot);
       cfg.series.forEach(function (sr) {
-        if (sr.dots) {          // one faint dot per month (the ratio panel)
-          sr.values.forEach(function (v, i) { if (v != null) { plot.appendChild(svg("circle", { cx: X(i).toFixed(1), cy: Y(v).toFixed(1), r: sr.r || 1.8, fill: color(sr.color), "fill-opacity": 0.3 })); } });
+        if (sr.dots) {          // one faint dot per month (the ratio panel); the latest month is drawn once, as the end dot with its label
+          var endOwned = (cfg.endLabels || []).some(function (l) { return l.series === sr.id; }), lastI = sr.values.length - 1;
+          while (lastI > 0 && sr.values[lastI] == null) { lastI--; }
+          sr.values.forEach(function (v, i) { if (v != null && !(endOwned && i === lastI)) { plot.appendChild(svg("circle", { cx: X(i).toFixed(1), cy: Y(v).toFixed(1), r: sr.r || 1.8, fill: color(sr.color), "fill-opacity": 0.3 })); } });
           return;
         }
         var d = "", pen = false;
@@ -113,62 +119,94 @@
         plot.appendChild(svg("path", { d: d, fill: "none", stroke: color(sr.color), "stroke-width": sr.width || 1.8, "stroke-linejoin": "round", "stroke-linecap": "round", "stroke-dasharray": sr.dash || null }));
       });
 
-      (cfg.lineLabels || []).forEach(function (l) {
-        var sr = cfg.series.filter(function (x) { return x.id === l.series; })[0], w = textW(l.text) + 8, best = null;
-        for (var f = 0.2; f <= 0.88; f += 0.04) {
-          var i = Math.round(f * (n - 1)), v = sr.values[i];
-          if (v == null) { continue; }
-          [-1, 1].forEach(function (side) {
-            var cy = Y(v) + side * 15, x0 = X(i) - w / 2, x1 = X(i) + w / 2, y0 = cy - 11, y1 = cy + 4, hits = 0;
-            if (y0 < mt || y1 > mt + ph) { return; }
-            cfg.series.forEach(function (o) {
-              for (var k = Math.max(0, Math.floor((x0 - ml) / pw * (n - 1))); k <= Math.min(n - 1, Math.ceil((x1 - ml) / pw * (n - 1))); k++) {
-                var ov = o.values[k]; if (ov == null) { continue; }
-                var yy = Y(ov); if (yy > y0 - 3 && yy < y1 + 3) { hits++; }
-              }
-            });
-            (cfg.refLines || []).forEach(function (r) { var yy = Y(r.v); if (yy > y0 - 4 && yy < y1 + 14) { hits += 5; } });
-            if (best === null || hits < best.hits) { best = { hits: hits, x: X(i), y: cy }; }
-          });
-          if (best && best.hits === 0) { break; }
-        }
-        if (best) {
-          var t = svg("text", { x: best.x, y: best.y, "text-anchor": "middle", class: "dlabel", fill: color(l.ink || sr.color) });
-          t.setAttribute("style", "paint-order:stroke;stroke:" + color("--card") + ";stroke-width:3px;stroke-linejoin:round");
-          t.textContent = l.text; s.appendChild(t);
-        }
-      });
-      // direct labels at the line ends, pushed apart so they never overlap
+      var halo = function (t) { t.setAttribute("style", "paint-order:stroke;stroke:" + color("--halo") + ";stroke-width:3px;stroke-linejoin:round"); };
+      // how many lines, dots, reference lines and earlier labels a box would touch (0 means the spot is clear)
+      function touches(x0, y0, x1, y1) {
+        var hits = 0;
+        cfg.series.forEach(function (o) {
+          var k0 = Math.max(0, Math.floor((x0 - ml) / pw * (n - 1)) - 1), k1 = Math.min(n - 1, Math.ceil((x1 - ml) / pw * (n - 1)) + 1);
+          for (var k = k0; k <= k1; k++) {
+            var a1 = o.values[k]; if (a1 == null) { continue; }
+            var ya = Y(a1), xa = X(k);
+            if (o.dots) { if (xa > x0 - 4 && xa < x1 + 4 && ya > y0 - 4 && ya < y1 + 4) { hits++; } continue; }
+            var b1 = k < n - 1 ? o.values[k + 1] : null, yb = b1 == null ? ya : Y(b1), xb = b1 == null ? xa : X(k + 1);
+            if (xb >= x0 - 3 && xa <= x1 + 3 && Math.max(ya, yb) >= y0 - 3 && Math.min(ya, yb) <= y1 + 3) { hits++; }
+          }
+        });
+        (cfg.refLines || []).forEach(function (r) { var yy = Y(r.v); if (yy > y0 - 3 && yy < y1 + 3) { hits += 5; } });
+        occ.forEach(function (o) { if (x0 < o.x1 && x1 > o.x0 && y0 < o.y1 && y1 > o.y0) { hits += 5; } });
+        return hits;
+      }
+      // direct labels at the line ends, pushed apart so they never overlap; one end dot per series, with its label
       var labs = (cfg.endLabels || []).map(function (l) {
         var sr = cfg.series.filter(function (x) { return x.id === l.series; })[0], i = sr.values.length - 1;
         while (i > 0 && sr.values[i] == null) { i--; }
         return { l: l, sr: sr, i: i, y: Y(sr.values[i]) };
       }).sort(function (a, b) { return a.y - b.y; });
-      for (var k = 1; k < labs.length; k++) { if (labs[k].y - labs[k - 1].y < 13) { labs[k].y = labs[k - 1].y + 13; } }
+      for (var k = 1; k < labs.length; k++) { if (labs[k].y - labs[k - 1].y < 14) { labs[k].y = labs[k - 1].y + 14; } }
+      var endX = null;
       labs.forEach(function (o) {
         var t = svg("text", { x: X(o.i) + 7, y: o.y + 4, "text-anchor": "start", class: "dlabel", fill: color(o.l.ink || o.sr.color) });
-        t.setAttribute("style", "paint-order:stroke;stroke:" + color("--card") + ";stroke-width:3px;stroke-linejoin:round");
-        t.textContent = o.l.text; s.appendChild(t);
-        s.appendChild(svg("circle", { cx: X(o.i), cy: Y(o.sr.values[o.i]), r: 3.2, fill: color(o.sr.color), stroke: color("--card"), "stroke-width": 1.5 }));
+        halo(t); t.textContent = o.l.text; s.appendChild(t);
+        take(X(o.i) + 5, o.y - 10, X(o.i) + 9 + textW(o.l.text), o.y + 6);
+        s.appendChild(svg("circle", { cx: X(o.i), cy: Y(o.sr.values[o.i]), r: 3.6, fill: color(o.sr.color), stroke: color("--halo"), "stroke-width": 1.5 }));
+        endX = endX == null ? X(o.i) : Math.max(endX, X(o.i));
       });
       // marks with a short call-out (the record)
       (cfg.marks || []).forEach(function (m) {
         var sr = cfg.series.filter(function (x) { return x.id === m.series; })[0], cx = X(m.i), cy = Y(sr.values[m.i]);
-        s.appendChild(svg("circle", { cx: cx, cy: cy, r: 5, fill: color(sr.color), stroke: color("--card"), "stroke-width": 2 }));
-        var anchor = m.side === "right" ? "start" : "end", dx = m.side === "right" ? 9 : -9;
-        var t = svg("text", { x: cx + dx, y: cy + (m.up ? -10 : 4), "text-anchor": anchor, class: "dlabel strong", fill: color("--ink") });
-        t.setAttribute("style", "paint-order:stroke;stroke:" + color("--card") + ";stroke-width:3px;stroke-linejoin:round");
-        t.textContent = m.lines[0]; s.appendChild(t);
+        s.appendChild(svg("circle", { cx: cx, cy: cy, r: 5, fill: color(sr.color), stroke: color("--halo"), "stroke-width": 2 }));
+        var left = m.side !== "right", dx = left ? -9 : 9, ty = cy + (m.up ? -10 : 4), w = textW(m.lines[0]);
+        var t = svg("text", { x: cx + dx, y: ty, "text-anchor": left ? "end" : "start", class: "dlabel strong", fill: color("--ink") });
+        halo(t); t.textContent = m.lines[0]; s.appendChild(t);
+        take(left ? cx + dx - w : cx + dx, ty - 12, left ? cx + dx : cx + dx + w, ty + 4);
+        if (endX == null || cx > endX) { endX = cx; }
       });
-      // events: small numbered markers on the line
-      var evG = svg("g", { class: "events" });
-      (cfg.events || []).forEach(function (e) {
-        var sr = cfg.series[0], v = sr.values[e.i];
+      // a plain text label for a line, in the open space beside it: several heights above and below, the spot that touches nothing wins
+      (cfg.lineLabels || []).forEach(function (l) {
+        var sr = cfg.series.filter(function (x) { return x.id === l.series; })[0], w = textW(l.text) + 6, best = null;
+        var offs = [-17, 19, -34, 36, -52, 54, -70, 72];
+        for (var f = 0.14; f <= 0.9; f += 0.03) {
+          var i = Math.round(f * (n - 1)), v = sr.values[i];
+          if (v == null) { continue; }
+          offs.forEach(function (off, oi) {
+            var cy = Y(v) + off, x0 = X(i) - w / 2, x1 = X(i) + w / 2, y0 = cy - 13, y1 = cy + 5;
+            if (y0 < mt || y1 > mt + ph || x0 < ml + 2 || x1 > ml + pw - 2) { return; }
+            var sc = touches(x0, y0, x1, y1) * 1000 + oi * 3 + Math.abs(f - 0.5) * 6;
+            if (best === null || sc < best.sc) { best = { sc: sc, x: X(i), y: cy, x0: x0, y0: y0, x1: x1, y1: y1 }; }
+          });
+        }
+        if (best) {
+          var t = svg("text", { x: best.x, y: best.y, "text-anchor": "middle", class: "dlabel", fill: color(l.ink || sr.color) });
+          halo(t); t.textContent = l.text; s.appendChild(t);
+          take(best.x0, best.y0, best.x1, best.y1);
+        }
+      });
+      // events: a short text label above the line, a thin leader and a small dot on the line. A label is skipped when it would sit within 90 px of the one before or of the end of the line,
+      // or when no height above the line is clear of the line and of the other labels. The full list is in the expanded view.
+      var evG = svg("g", { class: "events" }), lastEx = -1e9, sr0 = cfg.series[0], endIdx = sr0.values.length - 1;
+      while (endIdx > 0 && sr0.values[endIdx] == null) { endIdx--; }
+      var lastPx = Math.max(endX == null ? 0 : endX, X(endIdx));
+      (cfg.events || []).slice().sort(function (p, q) { return p.i - q.i; }).forEach(function (e) {
+        var v = sr0.values[e.i];
         if (v == null) { return; }
-        var cx = X(e.i), cy = Y(v);
+        var cx = X(e.i), cy = Y(v), w = textW(e.label) + 4;
+        if (cx - lastEx < 90 || lastPx - cx < 90) { return; }
+        var tx = Math.min(Math.max(cx, ml + w / 2 + 2), ml + pw - w / 2 - 2), spot = null;
+        [32, 46, 60, 74, 88].forEach(function (off) {
+          if (spot) { return; }
+          var ly = cy - off;
+          if (ly - 13 < mt) { return; }
+          if (touches(tx - w / 2, ly - 13, tx + w / 2, ly + 5) === 0) { spot = ly; }
+        });
+        if (spot == null) { return; }
+        lastEx = cx;
+        take(tx - w / 2, spot - 13, tx + w / 2, spot + 5);
         var g = svg("g", { class: "evm", tabindex: "0", role: "button", "aria-label": e.tip.join(". ") });
-        g.appendChild(svg("circle", { cx: cx, cy: cy, r: 8, fill: color("--card"), stroke: color("--ink"), "stroke-width": 1.2 }));
-        var tx = svg("text", { x: cx, y: cy + 3.5, "text-anchor": "middle", class: "evn" }); tx.textContent = String(e.n); g.appendChild(tx);
+        g.appendChild(svg("line", { x1: cx, x2: cx, y1: spot + 5, y2: cy - 4, stroke: color("--muted"), "stroke-width": 1 }));
+        g.appendChild(svg("circle", { cx: cx, cy: cy, r: 3.4, fill: color("--halo"), stroke: color("--ink"), "stroke-width": 1.3 }));
+        g.appendChild(svg("circle", { cx: cx, cy: cy, r: 11, fill: "transparent" }));
+        var tt = svg("text", { x: tx, y: spot, "text-anchor": "middle", class: "evl" }); halo(tt); tt.textContent = e.label; g.appendChild(tt);
         var show = function () { showTip(e.tip, cx, cy); };
         g.addEventListener("pointerenter", show); g.addEventListener("focus", show); g.addEventListener("pointerleave", hideTip); g.addEventListener("blur", hideTip);
         g.addEventListener("click", function (ev) { ev.stopPropagation(); show(); });
@@ -179,7 +217,7 @@
       // crosshair: one line and one dot per series, moved by setMonth
       var xh = svg("line", { class: "xh", y1: mt, y2: mt + ph, x1: 0, x2: 0, visibility: "hidden" });
       s.appendChild(xh);
-      var dots = cfg.series.map(function (sr) { var c = svg("circle", { r: 3.6, fill: color(sr.color), stroke: color("--card"), "stroke-width": 1.5, visibility: "hidden", class: "xhdot" }); s.appendChild(c); return c; });
+      var dots = cfg.series.map(function (sr) { var c = svg("circle", { r: 3.6, fill: color(sr.color), stroke: color("--halo"), "stroke-width": 1.5, visibility: "hidden", class: "xhdot" }); s.appendChild(c); return c; });
       nodes = { xh: xh, dots: dots, X: X, Y: Y, ml: ml, pw: pw, n: n };
 
       // pointer and keyboard

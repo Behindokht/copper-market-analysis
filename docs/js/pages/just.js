@@ -27,7 +27,7 @@
       var cls = r.commodity === "copper" ? "dc" : "grey";
       var pct = CMA.n0(r.latest_pct_of_real_peak);
       return h("li", { class: "brow " + cls, "aria-label": T("bar_aria", { name: names[r.commodity], pct: pct, month: CMA.monthLong(r.real_peak_month + "-01"), year: r.series_start.slice(0, 4) }) },
-        h("div", { class: "bname" }, names[r.commodity], r.at_nominal_record ? h("span", { class: "pill warn", style: "margin-left:10px", text: T("bar_quoted") }) : null),
+        h("div", { class: "bname" }, names[r.commodity], r.at_nominal_record ? h("span", { class: "rtag", text: ", " + T("bar_quoted") }) : null),
         h("div", { class: "btrack" }, h("span", { class: "bfill", style: "width:" + r.latest_pct_of_real_peak + "%" })),
         h("div", { class: "bval num", text: T("bar_value", { pct: pct }) }),
         h("div", { class: "bsub small muted", text: T("bar_record", { month: CMA.monthShort(r.real_peak_month + "-01") }) + "; " + T("bar_start", { year: r.series_start.slice(0, 4) }) }));
