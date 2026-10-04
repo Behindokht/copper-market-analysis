@@ -39,7 +39,7 @@ def run(engine):
             for cur, prices in (("usd", "nominal"), ("eur", "nominal"), ("usd", "real")):
                 pg.goto(url + f"#dashboard?p={period}&c={cur}&v={prices}")
                 pg.reload()
-                pg.wait_for_selector("#dashboard .d2-grid")
+                pg.wait_for_selector("#dashboard .grid")
                 snap = pg.evaluate("window.CMA.dash.snapshot()")
                 r = ref[(period, cur, prices)]
                 tag = f"[{engine}] {period} {cur} {prices}"
@@ -61,32 +61,38 @@ def run(engine):
         # each metal's share of its own real record in the latest month (the small multiples)
         pg.goto(url + "#dashboard")
         pg.reload()
-        pg.wait_for_selector("#dashboard .d2-grid")
+        pg.wait_for_selector("#dashboard .grid")
         snap = pg.evaluate("window.CMA.dash.snapshot()")
         for k in ("cu", "al", "gold", "tin", "brent"):
             n_compared += 1
             if not close(snap["snap"]["rec_latest"][k], last_row[k + "_rec_pct"]):
                 problems.append(f"[{engine}] share of own record, {k}: {snap['snap']['rec_latest'][k]:.4f} vs Python {last_row[k + '_rec_pct']}")
-        # the figures as printed in the KPI band, in the default view
-        pg.goto(url + "#dashboard")
-        pg.reload()
-        pg.wait_for_selector("#dashboard .d2-grid")
-        txt = lambda k: pg.locator(f'#dashboard .kpi[data-k="{k}"] .kfig').inner_text().strip()
-        want = {"copper": "$" + format(round(float(kp["copper_usd_t"])), ","), "real": str(round(float(kp["real_share_of_record_pct"]))) + "%", "ratio": f"{float(kp['ratio_latest']):.2f}×", "health": str(health["PASS"])}
-        for k, v in want.items():
+        # the figures as printed in the band of key figures (the latest month; the euro figure does not depend on the filters) and in the status line
+        for q in ("", "?p=1y&c=eur&v=nominal"):
+            pg.goto(url + "#dashboard" + q)
+            pg.reload()
+            pg.wait_for_selector("#dashboard .grid")
+            txt = lambda k: pg.locator(f'#dashboard .kpi[data-k="{k}"] .k-v').inner_text().strip()
+            chip = lambda k: pg.locator(f'#dashboard .kpi[data-k="{k}"] .chip2').inner_text().strip().replace("\u2212", "-")
+            want = {"cu": "$" + format(round(float(kp["copper_usd_t"])), ",") + "/t", "eur": "\u20ac" + format(round(float(kp["copper_eur_t"])), ",") + "/t",
+                    "real": str(round(float(kp["real_share_of_record_pct"]))) + "%", "ratio": f"{float(kp['ratio_latest']):.2f}\u00d7", "dxy": f"{float(kp['dxy_latest']):.1f}"}
+            for k, v in want.items():
+                n_compared += 1
+                if txt(k) != v:
+                    problems.append(f"[{engine}] key figure {k} ({q or 'default'}): page shows {txt(k)!r}, Python gives {v!r}")
+            for k, fact in (("cu", "copper_12m_change_pct"), ("dxy", "dxy_12m_change_pct")):
+                n_compared += 1
+                w = ("+" if float(kp[fact]) >= 0 else "-") + f"{abs(float(kp[fact])):.1f}%"
+                if chip(k) != w:
+                    problems.append(f"[{engine}] change chip {k}: page shows {chip(k)!r}, Python gives {w!r}")
             n_compared += 1
-            if txt(k) != v:
-                problems.append(f"[{engine}] KPI {k}: page shows {txt(k)!r}, Python gives {v!r}")
-        pg.goto(url + "#dashboard?p=20y&c=eur&v=nominal")
-        pg.reload()
-        pg.wait_for_selector("#dashboard .d2-grid")
+            ctx = pg.locator('#dashboard .kpi[data-k="real"] .k-c').inner_text()
+            if f"{int(float(kp['real_rank_latest']))}" not in ctx or f"{int(float(kp['real_months_valid']))} months" not in ctx:
+                problems.append(f"[{engine}] today's money context: page shows {ctx!r}, Python gives rank {kp['real_rank_latest']} of {kp['real_months_valid']}")
+        st = " ".join(pg.locator("#status").inner_text().split())
         n_compared += 1
-        if txt("copper") != "€" + format(round(float(kp["copper_eur_t"])), ","):
-            problems.append(f"[{engine}] KPI copper in euros: page shows {txt('copper')!r}, Python gives {round(float(kp['copper_eur_t']))}")
-        ctx = pg.locator('#dashboard .kpi[data-k="health"] .kctx').inner_text()
-        n_compared += 1
-        if f"{health['FAIL']} failures" not in ctx or f"{health['WARN']} warnings" not in ctx:
-            problems.append(f"[{engine}] data health: page shows {ctx!r}, checks file gives {health}")
+        if f"{health['PASS']} checks passed" not in st or f"{health['FAIL']} failures" not in st or f"{health['WARN']} warnings" not in st:
+            problems.append(f"[{engine}] status line: page shows {st!r}, the checks file gives {health}")
         problems.extend(f"[{engine}] script error: {e}" for e in errs)
         b.close()
 
