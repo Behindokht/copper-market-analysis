@@ -989,7 +989,7 @@ window.CMA_STRINGS = {
   "disclaimer": "Historical results are not forecasts and not investment advice. A link in a sample is not proof that one thing causes another.",
   "credits_summary": "Credits and licences",
   "credits": [
-   "Fonts: Newsreader (titles), IBM Plex Sans (text) and IBM Plex Mono (labels), self-hosted. All use the SIL Open Font License 1.1. Newsreader: Copyright 2020 The Newsreader Project Authors. IBM Plex: Copyright IBM Corp.",
+   "Fonts: Newsreader (titles and big numbers), Atkinson Hyperlegible Next (text) and Atkinson Hyperlegible Mono (ticks and figures in tables), self-hosted. All use the SIL Open Font License 1.1. Newsreader: Copyright 2020 The Newsreader Project Authors. Atkinson Hyperlegible: Copyright 2020-2024 The Atkinson Hyperlegible Project Authors.",
    "Copper prices: adapted from World Bank Commodity Price Data, licensed under CC BY 4.0. Changes made: prices are deflated with US CPI, rebased or turned into monthly changes, as each page says.",
    "US inflation (CPIAUCSL): U.S. Bureau of Labor Statistics, Consumer Price Index for All Urban Consumers: All Items in U.S. City Average, retrieved from FRED, Federal Reserve Bank of St. Louis. Public domain, citation requested.",
    "Dollar index (DTWEXBGS), euro exchange rate (EXUSEU) and 10-year yield (GS10): Board of Governors of the Federal Reserve System (US), retrieved from FRED, Federal Reserve Bank of St. Louis. Public domain, citation requested.",

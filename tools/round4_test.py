@@ -227,7 +227,7 @@ def run(engine):
                    tt + f"kicker {k['t']!r} should be sans 12px 600 uppercase tracked .06em, is {k}")
             mono_caps = pg.evaluate("""() => Array.from(document.querySelectorAll('body *')).filter(e => { const c = getComputedStyle(e); return c.textTransform === 'uppercase' && /Mono|monospace/.test(c.fontFamily) && e.textContent.trim() && e.getBoundingClientRect().width; }).map(e => e.className).slice(0, 5)""")
             ok(not mono_caps, tt + f"no mono capitals: {mono_caps}")
-            tab = pg.evaluate("() => ['.k-v', '.ro', '.tw table', '.status'].map(s => { const e = document.querySelector('#dashboard ' + s) || document.querySelector(s); return e ? getComputedStyle(e).fontVariantNumeric : 'missing'; })")
+            tab = pg.evaluate("() => ['#dashboard .k-v', '#dashboard .ro', '#status', '#dashboard .chip2'].map(s => { const e = document.querySelector(s); return e ? getComputedStyle(e).fontVariantNumeric : 'missing'; })")
             ok(all("tabular-nums" in x for x in tab), tt + f"tabular figures should be on where numbers line up, got {tab}")
             ctx.close()
 

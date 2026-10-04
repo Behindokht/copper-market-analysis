@@ -96,7 +96,7 @@ Run `python tools/contrast_report.py --validator <path to validate_palette.py> -
 
 ## Fonts
 
-Newsreader (variable, optical size and weight axes, normal and italic) for titles, questions and big figures; IBM Plex Sans 400, 500 and 600 for text and chart labels; IBM Plex Mono 400 and 500 for eyebrows, axis ticks and units (uppercase, 0.06em tracking, never running text). Latin subsets, self-hosted in `docs/fonts/`, all under the SIL Open Font License 1.1 (texts in `docs/fonts/OFL-*.txt`). Nothing is loaded from the web at runtime. `tools/font_coverage.py` checks that every character the site uses (including the minus sign) is in every font file.
+Newsreader (variable, optical size and weight axes, normal and italic) for titles, questions and big figures; Atkinson Hyperlegible Next 400, 500, 600 and 700 for text, labels and the small uppercase kickers (12 px, 600, 0.06em tracking); Atkinson Hyperlegible Mono 400 and 500 for axis ticks, readouts and figures in tables (never capitals, never running text). Latin subsets, self-hosted in `docs/fonts/`, all under the SIL Open Font License 1.1 (texts in `docs/fonts/OFL-*.txt`). Nothing is loaded from the web at runtime. `tools/font_coverage.py` checks that every character the site uses (including the minus sign) is in every font file.
 
 ## Motion
 

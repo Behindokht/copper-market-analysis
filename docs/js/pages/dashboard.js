@@ -197,7 +197,7 @@
     host.textContent = "";
     var box = h("div", { class: "sm" });
     host.appendChild(box);
-    var H = ex ? 84 : 46, w = Math.max(200, (host.clientWidth || 340) - 88), pl = 2, pr = 38, pt = 4, pb = 4, list = months.slice(a0);
+    var H = ex ? 84 : 46, w = Math.max(200, (host.clientWidth || 340) - 110), pl = 2, pr = 38, pt = 4, pb = 4, list = months.slice(a0);
     rows.forEach(function (r) {
       var line = h("div", { class: "sm-row" + (r.k === "cu" ? " cu" : "") });
       line.appendChild(h("span", { class: "sm-n" }, r.name, h("small", { text: T("metals_sub", { pct: CMA.n0(r.v), month: monthShort(months[r.peak]) }) })));

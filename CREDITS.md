@@ -3,8 +3,8 @@
 ## Fonts (self-hosted in `docs/fonts/`)
 
 - **Newsreader** (titles, questions, big figures; variable, optical size and weight, normal and italic), Copyright 2020 The Newsreader Project Authors, <https://github.com/productiontype/Newsreader>. Licensed under the SIL Open Font License 1.1 (`docs/fonts/OFL-Newsreader.txt`). Used unmodified, in Latin subsets.
-- **IBM Plex Sans** (text and chart labels, 400, 500 and 600), Copyright 2019 IBM Corp. All rights reserved, <https://github.com/IBM/plex>. Licensed under the SIL Open Font License 1.1 (`docs/fonts/OFL-IBM-Plex-Sans.txt`). Used unmodified, in Latin subsets.
-- **IBM Plex Mono** (eyebrows, axis ticks and units, 400 and 500), Copyright 2017 IBM Corp. All rights reserved, <https://github.com/IBM/plex>. Licensed under the SIL Open Font License 1.1 (`docs/fonts/OFL-IBM-Plex-Mono.txt`). Used unmodified, in Latin subsets.
+- **Atkinson Hyperlegible Next** (text, labels and the small capitals; 400, 500, 600 and 700), Copyright 2020-2024 The Atkinson Hyperlegible Next Project Authors, <https://github.com/googlefonts/atkinson-hyperlegible-next> (designed for the Braille Institute of America). Licensed under the SIL Open Font License 1.1 (`docs/fonts/OFL-Atkinson-Hyperlegible-Next.txt`). Used unmodified, in a Latin subset. The woff2 files are the Fontsource packaging of the project's release (npm `@fontsource/atkinson-hyperlegible-next`, version 5.3.0).
+- **Atkinson Hyperlegible Mono** (axis ticks, readouts and figures in tables; 400 and 500), Copyright 2020-2024 The Atkinson Hyperlegible Mono Project Authors, <https://github.com/googlefonts/atkinson-hyperlegible-next-mono>. Licensed under the SIL Open Font License 1.1 (`docs/fonts/OFL-Atkinson-Hyperlegible-Mono.txt`). Used unmodified, in a Latin subset. Same packaging (npm `@fontsource/atkinson-hyperlegible-mono`).
 
 ## Code ideas
 
