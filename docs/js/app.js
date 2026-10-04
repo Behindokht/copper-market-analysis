@@ -71,8 +71,11 @@
     curView = name === "method" ? "method" : name;
     ["dashboard", "story", "quality", "method"].forEach(function (v) { document.getElementById(v).hidden = name !== v; });
     document.getElementById("subnav-wrap").hidden = name !== "story";
+    document.body.classList.toggle("has-dash-bg", name === "dashboard");      // the photo background and the light plates belong to the dashboard only
+    var nb = document.querySelector(".nav-bar"); if (nb) { if (name === "dashboard") { nb.setAttribute("data-frost", "12"); } else { nb.removeAttribute("data-frost"); } }
     if (!built[name]) { built[name] = true; CMA.pages[name](document.getElementById(name)); if (CMA.glass) { CMA.glass.init(document.getElementById(name)); } }
     navOffset();
+    if (CMA.glass && CMA.glass.refresh) { CMA.glass.refresh(); }
   }
 
   // the hash is a view, a chapter anchor of the story, or an older page name; the dashboard keeps its filters after a "?"

@@ -1,5 +1,5 @@
 /* Dashboard time chart in plain SVG. One chart per panel; all of them share one month axis idea, so a crosshair set on any chart can be shown on the others (by month key).
-   cfg: { months: ["YYYY-MM", ...], series: [{id, color, dash, values: [number|null]}], scale: "linear"|"log", yMin, yMax, yFormat(v), height,
+   cfg: { months: ["YYYY-MM", ...], series: [{id, color, dash, dots, values: [number|null]}], scale: "linear"|"log", yMin, yMax, yFormat(v), height,
           refLines: [{v, label, dashed}], marks: [{series, i, lines: [text], side: "left"|"right"}], endLabels: [{series, text}],
           events: [{i, n, tip: [lines]}], marginRight, aria, onMonth(month|null, fromKeyboard), onKey(delta) }
    Returns { update(cfg), setMonth(month|null), value(month, seriesId) }. No text lives here: every string comes in through cfg. */
@@ -40,14 +40,15 @@
   }
 
   CMA.dashChart = function (host, cfg0) {
-    var cfg = cfg0, cur = null, lastW = 0, ro = null, first = true, nodes = {}, tip = null;
+    var cfg = cfg0, cur = null, lastW = 0, ro = null, first = true, nodes = {}, tip = null, dead = false;
     host.classList.add("chart", "dchart");
     host.style.position = "relative";
 
-    function color(c) { return getComputedStyle(document.documentElement).getPropertyValue(c).trim() || c; }
+    function color(c) { return getComputedStyle(host).getPropertyValue(c).trim() || c; }       // read from the host, so the dark scope of the dashboard applies
     function textW(s) { return 6.3 * String(s).length; }
 
     function draw(animate) {
+      if (dead) { return; }
       var W = Math.max(260, Math.round(host.clientWidth || 400)), H = cfg.height || 260;
       lastW = W;
       var ml = 46, mr = cfg.marginRight || 16, mt = 14, mb = 26, pw = W - ml - mr, ph = H - mt - mb;
@@ -94,6 +95,10 @@
       var plot = svg("g", { class: "plot", "clip-path": "url(#" + clipId + ")" });
       s.appendChild(plot);
       cfg.series.forEach(function (sr) {
+        if (sr.dots) {          // one faint dot per month (the ratio panel)
+          sr.values.forEach(function (v, i) { if (v != null) { plot.appendChild(svg("circle", { cx: X(i).toFixed(1), cy: Y(v).toFixed(1), r: sr.r || 1.8, fill: color(sr.color), "fill-opacity": 0.3 })); } });
+          return;
+        }
         var d = "", pen = false;
         sr.values.forEach(function (v, i) {
           if (v == null) { pen = false; return; }
@@ -230,6 +235,7 @@
     observe();
     return {
       update: function (c) { cfg = c; draw("filter"); },
+      destroy: function () { dead = true; if (ro) { ro.disconnect(); } },
       setMonth: setMonth,
       hasMonth: function (m) { return cfg.months.indexOf(m) >= 0; },
       value: function (m, id) { var i = cfg.months.indexOf(m); var sr = cfg.series.filter(function (x) { return x.id === id; })[0]; return i < 0 || !sr ? null : sr.values[i]; }

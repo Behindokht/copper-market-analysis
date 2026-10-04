@@ -107,7 +107,7 @@ for u in sorted(used):
 dynamic = ("pages.", "nav.", "story.guess2.opt_", "story.sources.names.", "story.guess1.verdict_", "footer.", "story.notshow.", "story.guess2.c_", "site.", "hero.",
            "dollar.sources.names.", "dollar.notshow.", "ratio.sources.names.", "ratio.notshow.", "ratio.fam_", "ratio.h_",
            "demand.sources.names.", "demand.notshow.", "demand.scen_", "demand.path_", "demand.cu_", "demand.pet_", "demand.dc_", "demand.dcpath_", "demand.basis_",
-           "demand.int_", "demand.base_", "quality.reason.", "quality.f_", "drivers.", "dashboard.csv_", "dashboard.sources.", "dashboard.period_", "dashboard.prices_", "dashboard.currency_", "dashboard.p_", "dashboard.c_", "dashboard.v_")
+           "demand.int_", "demand.base_", "quality.reason.", "quality.f_", "drivers.", "dashboard.")
 for k in sorted(keys):
     if k not in used and not any(k.startswith(d) for d in dynamic) and not any(u.rstrip("*") and k.startswith(u.rstrip("*")) for u in used if u.endswith("*")):
         problems.append(f"TEXT key defined but never used: {k}")

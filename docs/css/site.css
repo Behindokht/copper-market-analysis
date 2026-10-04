@@ -688,3 +688,161 @@ footer.foot .fine { font-size: .85rem; margin-top: 18px; }
 .endpiece-verdict { margin: 0; font: 400 clamp(1.4rem, 2.6vw, 1.9rem)/1.4 var(--display); font-variation-settings: "opsz" 36; color: var(--ivory); }
 .endpiece-links { display: flex; gap: var(--s4); margin: var(--s4) 0 0; }
 .endpiece-links a { color: var(--copper-bright); font-weight: 500; }
+
+/* ================= dashboard, round 2: glass plates over a photo background =================
+   The photo is one CSS variable. assets/patina-background.webp is local only (its licence is not confirmed, known issue K08) and is not in docs/.
+   When the file is missing the page shows the plain paper colour and nothing moves. Text never sits on the photo: header, headline, filters, KPIs, panels,
+   dialog and footer are all plates. Light mode has no shade over the photo, dark mode has a dark one. The plate opacity is set from tools/glass_contrast.py. */
+:root { --bg-photo: url("../../assets/patina-background.webp"); }
+body.has-dash-bg {
+  --plate-a: .86;
+  --plate: rgba(250, 249, 246, var(--plate-a));
+  --plate-edge: rgba(255, 255, 255, .72);
+  --plate-hi: rgba(255, 255, 255, .8);
+  --plate-shadow: 0 16px 36px -22px rgba(30, 18, 10, .5);
+  --sheen-a: .22;
+  --grey: #7D7469;
+  --copper-text: #8E4920;          /* a little deeper than the site's #A85629, so it holds 4.5:1 on the plates over the darkest backdrop */
+  background-color: var(--paper);
+  background-image: var(--bg-photo);
+  background-size: cover; background-position: center; background-attachment: fixed;
+}
+body.has-dash-bg::before { content: ""; position: fixed; inset: 0; z-index: -1; pointer-events: none; background: transparent; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) body.has-dash-bg { --paper: #16110E; --card: #1F1814; --ink: #F4EFE6; --muted: #B5AA9C; --rule: #3A2F28; --track: #2E2520; --copper: #D27A43; --copper-text: #E09A63; --verdigris: #5FA592; --grey: #9A9084; --fill: rgba(210, 122, 67, .12);
+    --plate: rgba(31, 24, 20, var(--plate-a)); --plate-edge: rgba(255, 238, 220, .16); --plate-hi: rgba(255, 238, 220, .12); --plate-shadow: 0 16px 36px -22px rgba(0, 0, 0, .8); --sheen-a: .06; color-scheme: dark; }
+  :root:not([data-theme="light"]) body.has-dash-bg::before { background: rgba(12, 8, 6, .6); }
+}
+:root[data-theme="dark"] body.has-dash-bg { --paper: #16110E; --card: #1F1814; --ink: #F4EFE6; --muted: #B5AA9C; --rule: #3A2F28; --track: #2E2520; --copper: #D27A43; --copper-text: #E09A63; --verdigris: #5FA592; --grey: #9A9084; --fill: rgba(210, 122, 67, .12);
+  --plate: rgba(31, 24, 20, var(--plate-a)); --plate-edge: rgba(255, 238, 220, .16); --plate-hi: rgba(255, 238, 220, .12); --plate-shadow: 0 16px 36px -22px rgba(0, 0, 0, .8); --sheen-a: .06; color-scheme: dark; }
+:root[data-theme="dark"] body.has-dash-bg::before { background: rgba(12, 8, 6, .6); }
+
+.plate { position: relative; isolation: isolate; background: var(--plate); color: var(--ink); border: 1px solid var(--plate-edge); border-radius: 10px;
+  box-shadow: inset 0 1px 0 var(--plate-hi), var(--plate-shadow); -webkit-backdrop-filter: blur(22px) saturate(140%); backdrop-filter: blur(22px) saturate(140%); }
+.plate::after { content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; z-index: -1;
+  background: linear-gradient(115deg, rgba(255, 255, 255, var(--sheen-a)) 0%, rgba(255, 255, 255, 0) 32%, rgba(255, 255, 255, 0) 68%, rgba(255, 255, 255, calc(var(--sheen-a) / 2)) 100%); }
+.plate.lens::before { content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; z-index: -1; opacity: 0; transition: opacity 200ms ease;
+  background: radial-gradient(circle 260px at var(--mx, 50%) var(--my, 50%), rgba(255, 255, 255, .28), rgba(255, 255, 255, 0) 70%); }
+.plate.lens.hot::before { opacity: 1; }
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) { .plate, body.has-dash-bg .nav-bar.glass, body.has-dash-bg .subnav.glass { background: var(--card) !important; } }
+@media (prefers-reduced-transparency: reduce) { .plate, body.has-dash-bg .nav-bar.glass { background: var(--card) !important; -webkit-backdrop-filter: none !important; backdrop-filter: none !important; } }
+@media (hover: none), (pointer: coarse), (prefers-reduced-motion: reduce) { .plate.lens::before { display: none; } }
+
+/* the nav bar on the dashboard is a light plate too */
+body.has-dash-bg .nav-bar.glass { background: var(--plate); color: var(--ink); border-color: var(--plate-edge); box-shadow: inset 0 1px 0 var(--plate-hi), var(--plate-shadow); -webkit-backdrop-filter: blur(22px) saturate(140%); backdrop-filter: blur(22px) saturate(140%); }
+body.has-dash-bg .brand, body.has-dash-bg .brand:hover { color: var(--copper-text); }
+body.has-dash-bg .brand span { color: var(--muted); }
+body.has-dash-bg nav.main a { color: var(--muted); }
+body.has-dash-bg nav.main a:hover { color: var(--ink); background: rgba(127, 120, 110, .14); }
+body.has-dash-bg nav.main a[aria-current] { color: var(--ink); box-shadow: inset 0 -1px 0 var(--copper); }
+body.has-dash-bg .nav-bar :focus-visible { outline-color: var(--copper); }
+
+.d2.wrap { max-width: 1400px; padding-top: 8px; }
+.d2-head { padding: 20px 26px 18px; margin: 0 0 14px; }
+.d2-h1 { margin: 0; font: 400 clamp(1.7rem, 3.2vw, 2.45rem)/1.12 var(--display); font-variation-settings: "opsz" 48; letter-spacing: -.01em; text-wrap: balance; }
+.d2-h1 em { font-style: italic; color: var(--copper-text); }
+.d2-lede { margin: 8px 0 0; color: var(--muted); font-size: 15px; max-width: 64ch; }
+.d2-bar { position: sticky; top: var(--filtertop, 72px); z-index: 15; padding: 10px 16px 10px; margin: 0 0 14px; }
+.d2-bar .dlab { color: var(--muted); }
+.d2-bar .dseg { color: var(--ink); background: transparent; border: 1px solid var(--muted); border-radius: 3px; }
+.d2-bar .dseg:hover:not(:disabled) { background: rgba(127, 120, 110, .16); }
+.d2-bar .dseg[aria-pressed="true"] { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+.d2-bar .dseg:focus-visible { outline: 2px solid var(--copper); }
+.d2-bar .dnotes { color: var(--muted); }
+.d2-bar .dreadout { color: var(--ink); border-top: 1px solid var(--rule); }
+.d2-bar .dreadout.idle, .d2-bar .dreadout .sep { color: var(--muted); }
+.d2-kpis { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); padding: 6px 20px 8px; margin: 0 0 14px; }
+.d2-kpis .kpi { border-left: 1px solid var(--rule); }
+.d2-kpis .kpi:first-child { border-left: 0; padding-left: 0; }
+.d2-kpis .klabel { color: var(--muted); }
+.d2-kpis .kfig { color: var(--ink); }
+.d2-kpis .kctx { color: var(--muted); }
+.d2-grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 14px; align-items: stretch; }
+.d2-panel { padding: 16px 18px 14px; min-width: 0; display: flex; flex-direction: column; }
+.d2-panel .dsrc { margin-top: auto; padding-top: 8px; color: var(--muted); }
+.s8 { grid-column: span 8; } .s4 { grid-column: span 4; } .s12 { grid-column: span 12; }
+.d2-panel .dhead h2 { font: 600 1rem/1.3 var(--sans); }
+.d2-acts { display: inline-flex; gap: 14px; align-items: center; }
+.d2-expand { display: inline-flex; gap: 6px; align-items: center; font: 500 11px/1 var(--mono); letter-spacing: .06em; text-transform: uppercase; color: var(--ink); background: transparent; border: 1px solid var(--muted); border-radius: 3px; padding: 5px 8px; cursor: pointer; }
+.d2-expand:hover { background: rgba(127, 120, 110, .16); }
+.d2-expand:focus-visible { outline: 2px solid var(--copper); outline-offset: 2px; }
+.d2-host { min-height: 120px; min-width: 0; }
+.d2-fade { animation: d2fade 300ms ease both; }
+@keyframes d2fade { from { opacity: .2; } to { opacity: 1; } }
+.d2-panel .chart text, .d2-panel svg text { font: 400 10.5px var(--mono); fill: var(--muted); }
+.d2-panel svg text.lbl { font: 500 11.5px var(--sans); fill: var(--ink); }
+.d2-panel .dlabel { font: 500 12px var(--sans); fill: var(--ink); }
+
+/* five small multiples on one scale */
+.sm { display: grid; gap: 4px; margin-top: 4px; }
+.sm-row { display: grid; grid-template-columns: 90px minmax(0, 1fr); gap: 8px; align-items: center; }
+.sm-n { font-weight: 500; font-size: 13px; line-height: 1.15; }
+.sm-n small { display: block; font: 400 11px var(--mono); color: var(--muted); margin-top: 2px; }
+.sm-row.cu .sm-n { color: var(--copper-text); }
+.sm-axis .ro { display: flex; justify-content: space-between; font: 400 11px var(--mono); color: var(--muted); padding-right: 38px; }
+
+/* the donut and the three facts */
+.d2-uses { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 32px; align-items: center; }
+.d2-facts { display: grid; gap: 20px; }
+.d2-fig { margin: 0; font: 400 clamp(2rem, 3vw, 2.8rem)/1 var(--display); font-variation-settings: "opsz" 48; color: var(--ink); }
+.d2-fact-t { margin: 2px 0 8px; color: var(--ink); }
+.d2-track { height: 10px; background: var(--track); border-radius: 2px; overflow: hidden; }
+.d2-track span { display: block; height: 100%; background: var(--copper); }
+.d2-donut-list { margin: 0; }
+.dn-list { margin: 8px 0 0; padding-left: 1.2em; }
+.donut { display: block; overflow: visible; max-width: 100%; }
+.donut text { fill: var(--ink); }
+.donut .dn-label { font: 500 12.5px var(--sans); }
+.donut .dn-lp { font: 600 12.5px var(--mono); fill: var(--copper-text); }
+.donut .dn-c-big { font-family: var(--display); font-variant-numeric: lining-nums tabular-nums; font-variation-settings: "opsz" 48; }
+.donut .dn-c-big.idle { fill: var(--muted); }
+.donut .dn-c-name { font: 500 12px var(--sans); }
+.donut .dn-slice { transition: transform .26s ease-out, opacity .26s ease-out; transform-box: view-box; transform-origin: var(--ox, 50%) var(--oy, 50%); outline: none; cursor: pointer; }
+.donut .dn-slice.on { transform: translate(var(--dx), var(--dy)) scale(1.07); }
+.donut.has-on .dn-slice:not(.on) { opacity: .6; }
+.donut .dn-slice:focus-visible .dn-outline { stroke: var(--ink); stroke-width: 2; }
+@media (prefers-reduced-motion: reduce) {
+  .donut .dn-slice { transition: none; }
+  .donut .dn-slice.on { transform: translate(var(--dx), var(--dy)); }
+  .d2-fade { animation: none; }
+}
+
+/* the dialog */
+.d2-dialog { width: min(1180px, calc(100vw - 24px)); max-width: none; max-height: calc(100vh - 24px); margin: auto; padding: 0; overflow: auto; color: var(--ink); }
+.d2-dialog::backdrop { background: rgba(22, 16, 12, .5); -webkit-backdrop-filter: blur(3px); backdrop-filter: blur(3px); }
+.dlg-in { padding: 20px 24px 18px; }
+.dlg-head { display: flex; justify-content: space-between; gap: 16px; align-items: flex-start; }
+.dlg-title { margin: 0; font: 400 1.5rem/1.25 var(--display); font-variation-settings: "opsz" 30; }
+.dlg-sub { min-height: 0; }
+.dlg-chart { min-width: 0; margin: 6px 0 10px; }
+.dlg-readout { min-height: 1.5em; }
+html.dlg-open, html.dlg-open body { overflow: hidden; }
+.d2-foot { padding: 16px 22px; margin: 14px 0 0; display: grid; gap: 10px; }
+.d2-foot .dline, .d2-foot .dfacts span, .dfoot-note { color: var(--muted); }
+
+@media (max-width: 1100px) {
+  .d2-kpis { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .d2-kpis .kpi:nth-child(4) { border-left: 0; padding-left: 0; }
+  .d2-kpis .kpi:nth-child(n + 4) { border-top: 1px solid var(--rule); }
+  .s8, .s4 { grid-column: span 12; }
+  .d2-grid .p-ratio, .d2-grid .p-dollar, .d2-grid .p-supply { grid-column: span 12; }
+  .d2-uses { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 620px) {
+  .d2-kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); padding: 4px 14px 8px; }
+  .d2-kpis .kpi { border-left: 1px solid var(--rule); padding-left: var(--s3); }
+  .d2-kpis .kpi:nth-child(odd) { border-left: 0; padding-left: 0; }
+  .d2-kpis .kpi:nth-child(n + 3) { border-top: 1px solid var(--rule); }
+  .d2-head { padding: 16px 16px 14px; }
+  .d2-bar { padding: 8px 12px; }
+  .d2-panel { padding: 14px 14px 12px; }
+  .d2-dialog { width: calc(100vw - 12px); max-height: calc(100vh - 24px); }
+  .dlg-in { padding: 14px 14px 14px; }
+}
+body.has-dash-bg .btn { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+body.has-dash-bg .btn.secondary { background: transparent; color: var(--ink); border-color: var(--muted); }
+.donut .dn-slice { will-change: transform, opacity; }
+.dlg-readout { color: var(--ink); border-top: 1px solid var(--rule); padding-top: 6px; }
+.dlg-readout.idle, .dlg-readout .sep { color: var(--muted); }
+.dlg-chart .d2-uses { grid-template-columns: minmax(0, 1fr) 280px; }
+@media (max-width: 900px) { .dlg-chart .d2-uses { grid-template-columns: minmax(0, 1fr); } }

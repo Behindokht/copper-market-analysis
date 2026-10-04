@@ -53,7 +53,7 @@
     f.appendChild(mk("feBlend", { "in": "cR", in2: "cG", mode: "screen", result: "rg" }));
     f.appendChild(mk("feBlend", { "in": "rg", in2: "cB", mode: "screen" }));
     host.appendChild(f);
-    el.style.backdropFilter = "url(#" + id + ") blur(" + FROST + "px) saturate(" + SATURATE + ")";
+    el.style.backdropFilter = "url(#" + id + ") blur(" + (+el.getAttribute("data-frost") || FROST) + "px) saturate(" + SATURATE + ")";
     el.style.webkitBackdropFilter = el.style.backdropFilter;
   }
 
@@ -92,6 +92,7 @@
 
   CMA.glass = {
     // register every .lens element inside scope (the whole page at start, a view when it is built)
+    refresh: function () { setTimeout(refreshAll, 60); },
     init: function (scope) {
       scope = scope || document;
       Array.prototype.forEach.call(scope.querySelectorAll(".lens"), function (el) {
