@@ -2,7 +2,7 @@
    The nav jumps to chapters and marks the one the reader is in. */
 (function () {
   var CMA = window.CMA, t = CMA.t, h = CMA.h;
-  var NAV = [["record", "record"], ["just-copper", "just"], ["dollar", "dollar"], ["aluminium", "aluminium"], ["supply", "supply"], ["demand", "demand"], ["summary", "summary"], ["quality", "quality"]];
+  var NAV = [["uses", "uses"], ["record", "record"], ["just-copper", "just"], ["dollar", "dollar"], ["supply", "supply"], ["demand", "demand"], ["aluminium", "aluminium"], ["summary", "summary"], ["quality", "quality"]];
   var LEGACY = { ratio: "aluminium", story: "record" };      // old page links still land in the right place
   var built = {}, spy = null, current = null;
 

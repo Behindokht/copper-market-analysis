@@ -1031,3 +1031,88 @@ SELECT 'res_dashboard_checks', 'the list of checks shown on the site has no fail
        CASE WHEN SUM(status = 'FAIL') = 0 THEN 'PASS' ELSE 'FAIL' END,
        SUM(status = 'PASS') || ' passed, ' || SUM(status = 'WARN') || ' warnings, ' || SUM(status = 'FAIL') || ' failed'
 FROM res_dashboard_checks;
+
+-- check: end-use shares sum to 100
+SELECT 'copper_end_use', 'the six end-use shares add up to 100 percent (one scope, one year)',
+       CASE WHEN SUM(share_pct) = 100 AND COUNT(*) = 6 AND COUNT(DISTINCT scope || year) = 1 THEN 'PASS' ELSE 'FAIL' END,
+       COUNT(*) || ' sectors add up to ' || SUM(share_pct) || ' percent'
+FROM copper_end_use;
+
+-- check: physical constants are present
+SELECT 'physical_constants', 'copper and aluminium both have a conductivity and a density, and annealed copper is 100 percent IACS by definition',
+       CASE WHEN SUM(property = 'density_20C') = 2 AND SUM(property LIKE '%conductivity') = 2
+                 AND (SELECT value FROM physical_constants WHERE material LIKE 'Copper%' AND property = 'volume_conductivity') = 100.0 THEN 'PASS' ELSE 'FAIL' END,
+       SUM(property = 'density_20C') || ' densities, ' || SUM(property LIKE '%conductivity') || ' conductivities'
+FROM physical_constants;
+
+-- check: copper context facts are present
+SELECT 'copper_context_facts', 'facts F01 to F07 are present, the percentages are between 0 and 100 and each has a source',
+       CASE WHEN COUNT(*) = 7 AND SUM(fact_id IN ('F01', 'F02', 'F03', 'F04', 'F05', 'F06', 'F07')) = 7
+                 AND SUM(unit = 'percent' AND (value < 0 OR value > 100)) = 0 AND SUM(source_id IS NULL) = 0 THEN 'PASS' ELSE 'FAIL' END,
+       COUNT(*) || ' facts'
+FROM copper_context_facts;
+
+-- check: the ICSG mine output equals the USGS figure for 2024
+SELECT 'copper_context_facts', 'ICSG world mine production 2024 (F05) equals the USGS world mine production 2024 (both about 23 million tonnes)',
+       CASE WHEN ABS(f.value * 1000 - u.value) / u.value < 0.02 THEN 'PASS' ELSE 'WARN' END,
+       f.value || ' million tonnes (ICSG) vs ' || u.value || ' thousand tonnes (USGS)'
+FROM copper_context_facts f, stg_usgs_copper u
+WHERE f.fact_id = 'F05' AND u.country = 'World total' AND u.statistic_detail = 'Mine production: rounded' AND u.year = 2024;
+
+-- check: end-use result table equals the collected table requires=res_uses_end_use
+SELECT 'res_uses_end_use', 'the end-use result table has the six sectors and the same shares as the collected ICSG table, adding up to 100',
+       CASE WHEN COUNT(*) = 6 AND SUM(r.share_pct) = 100 AND SUM(r.share_pct = c.share_pct) = 6 THEN 'PASS' ELSE 'FAIL' END,
+       COUNT(*) || ' sectors, sum ' || SUM(r.share_pct)
+FROM res_uses_end_use r JOIN copper_end_use c ON c.sector = r.sector;
+
+-- check: the 12-month change on the plaque requires=res_uses_facts
+SELECT 'res_uses_facts', 'the 12-month change equals the World Bank prices of August 2026 and August 2025',
+       CASE WHEN ABS(f.value - (a.value / b.value - 1) * 100) < 0.01 THEN 'PASS' ELSE 'FAIL' END,
+       ROUND(f.value, 2) || '% = ' || a.value || ' / ' || b.value || ' - 1'
+FROM res_uses_facts f, stg_wb_prices_monthly a, stg_wb_prices_monthly b
+WHERE f.fact_id = 'copper_12m_change_pct' AND a.commodity = 'Copper' AND a.date = '2026-08-01' AND b.commodity = 'Copper' AND b.date = '2025-08-01';
+
+-- check: refinery shares match USGS requires=res_refined_vs_mined
+SELECT 'res_refined_vs_mined', 'refinery output of each country in the chart equals the USGS figure, and every share is of the USGS world total',
+       CASE WHEN SUM(ABS(r.refinery_kt - u.value) < 0.01) = COUNT(*) AND SUM(ABS(r.refinery_share_pct - ROUND(100.0 * u.value / r.world_refinery_kt, 1)) < 0.01) = COUNT(*) THEN 'PASS' ELSE 'FAIL' END,
+       SUM(ABS(r.refinery_kt - u.value) < 0.01) || ' of ' || COUNT(*) || ' countries match'
+FROM res_refined_vs_mined r JOIN stg_usgs_copper u ON u.country = r.country AND u.statistic_detail = 'Refinery production' AND u.year = 2025 AND u.section LIKE 'World Mine%';
+
+-- check: Japan has no mine output requires=res_refined_vs_mined
+SELECT 'res_refined_vs_mined', 'a country without a USGS mine figure has no mine share (never zero)',
+       CASE WHEN SUM(mine_listed = 0 AND mine_share_pct IS NULL) = SUM(mine_listed = 0) AND SUM(mine_listed = 0) >= 1 THEN 'PASS' ELSE 'FAIL' END,
+       SUM(mine_listed = 0) || ' country without a mine figure'
+FROM res_refined_vs_mined;
+
+-- check: aluminium break-even recomputed from the physical constants requires=res_aluminium_case
+SELECT 'res_aluminium_case', 'the break-even ratio equals 1 / ((1 / conductivity) x (aluminium density / copper density)) from the collected constants',
+       CASE WHEN ABS(b.value - 1.0 / ((100.0 / a.value) * (d.value / c.value))) < 0.0005 THEN 'PASS' ELSE 'FAIL' END,
+       ROUND(b.value, 4) || ' from conductivity ' || a.value || ' percent IACS, densities ' || d.value || ' and ' || c.value
+FROM res_aluminium_case b,
+     (SELECT value FROM physical_constants WHERE material LIKE 'Aluminium%' AND property = 'volume_conductivity') a,
+     (SELECT value FROM physical_constants WHERE material LIKE 'Copper%' AND property = 'density_20C') c,
+     (SELECT value FROM physical_constants WHERE material LIKE 'Aluminium%' AND property = 'density_20C') d
+WHERE b.fact_id = 'breakeven_ratio';
+
+-- check: the run above the break-even is unbroken requires=res_aluminium_case
+SELECT 'res_aluminium_case', 'no month after the last month below the break-even is at or below it, and that last month is the one named',
+       CASE WHEN SUM(m.cu_al_ratio <= b.be AND m.month > l.lb || '-01') = 0
+                 AND MAX(CASE WHEN m.cu_al_ratio <= b.be THEN m.month END) = l.lb || '-01' THEN 'PASS' ELSE 'FAIL' END,
+       'last month at or below the break-even: ' || l.lb
+FROM mart_cu_al_ratio m,
+     (SELECT CAST(value AS REAL) AS be FROM res_aluminium_case WHERE fact_id = 'breakeven_ratio') b,
+     (SELECT value AS lb FROM res_aluminium_case WHERE fact_id = 'last_month_below') l;
+
+-- check: the demand total against Russia requires=res_demand_scale
+SELECT 'res_demand_scale', 'the 2030 reference total in the scale sentence equals the sensitivity table, and Russia equals the USGS figure',
+       CASE WHEN ABS(t.value - s.headline_total_t / 1000.0) < 0.5 AND ABS(r.value - u.value) < 0.01 THEN 'PASS' ELSE 'FAIL' END,
+       ROUND(t.value, 0) || ' kt against Russia ' || r.value || ' kt'
+FROM res_demand_scale t, res_demand_scale r, res_demand_sensitivity s, stg_usgs_copper u
+WHERE t.fact_id = 'total_2030_kt' AND r.fact_id = 'russia_mine_2025e_kt' AND s.bar_order = 0
+  AND u.country = 'Russia' AND u.statistic_detail = 'Mine production' AND u.year = 2025 AND u.section LIKE 'World Mine%';
+
+-- check: the figure list of the story brief requires=res_story_figure_checks
+SELECT 'res_story_figure_checks', 'every figure computed for the story brief reproduces its expected value',
+       CASE WHEN SUM(status = 'PASS') = COUNT(*) THEN 'PASS' ELSE 'FAIL' END,
+       SUM(status = 'PASS') || ' of ' || COUNT(*) || ' figures pass'
+FROM res_story_figure_checks;

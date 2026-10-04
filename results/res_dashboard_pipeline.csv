@@ -1,9 +1,9 @@
 kind,n_tables
 baseline,7
-collected,10
+collected,13
 mart,14
 raw,10
 register,2
-result,40
+result,47
 staging,9
 view,8

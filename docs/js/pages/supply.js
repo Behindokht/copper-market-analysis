@@ -182,6 +182,37 @@
       return h("tr", {}, h("td", { text: r.country === "World total" ? T("world_row") : r.display_name }), h("td", { text: kt(r.production_2025e_kt) }), h("td", { text: CMA.n1(r.share_of_world_production_pct) + "%" }),
         h("td", { text: kt(r.reserves_kt) }), h("td", { text: CMA.n1(r.share_of_world_reserves_pct) + "%" }), h("td", { text: kt(r.reserve_life_years) }));
     }));
+    // ---- mined here, refined there: mine and refinery share of eight countries, paired
+    var RM = CMA.rows(window.CMA_DATA.supply.refined), none = RM.filter(function (r) { return !r.mine_listed; });
+    if (none.some(function (r) { return r.mine_share_pct !== null; })) { throw new Error("a country with no mine figure must not get a mine share"); }
+    var byC = {};
+    RM.forEach(function (r) { byC[r.country] = r; });
+    var wmine = RM[0].world_mine_kt, wref = RM[0].world_refinery_kt, topShare = Math.max.apply(null, RM.map(function (r) { return Math.max(r.mine_share_pct || 0, r.refinery_share_pct); })), sc = Math.ceil(topShare / 10) * 10;
+    var pctTxt = function (v) { return CMA.n1(v) + "%"; };
+    var mrRows = RM.map(function (r) {
+      var mineVal = r.mine_listed ? pctTxt(r.mine_share_pct) : T("mr_none");
+      return h("li", { class: "mrrow", "aria-hidden": "true" },
+        h("div", { class: "mrname", text: r.display_name }),
+        h("div", { class: "mrbars" },
+          h("div", { class: "mrbar mine" }, h("div", { class: "mrtrack" }, r.mine_listed ? h("span", { class: "mrfill", style: "width:" + (r.mine_share_pct / sc * 100) + "%" }) : null), h("span", { class: "mrval", text: mineVal })),
+          h("div", { class: "mrbar ref" }, h("div", { class: "mrtrack" }, h("span", { class: "mrfill", style: "width:" + (r.refinery_share_pct / sc * 100) + "%" }), null), h("span", { class: "mrval", text: pctTxt(r.refinery_share_pct) }))));
+    });
+    var mrAria = T("mr_aria", { n: RM.length, year: year, list: RM.map(function (r) { return T("mr_aria_item", { name: r.display_name, mine: r.mine_listed ? pctTxt(r.mine_share_pct) : T("mr_none"), ref: pctTxt(r.refinery_share_pct) }); }).join("; ") });
+    var mrHead = h("thead", {}, h("tr", {}, ["mr_col_country", "mr_col_mine", "mr_col_mine_share", "mr_col_ref", "mr_col_ref_share"].map(function (k) { return h("th", { scope: "col", text: T(k) }); })));
+    var mrBody = h("tbody", {}, RM.map(function (r) {
+      return h("tr", {}, h("td", { text: r.display_name }), h("td", { text: r.mine_listed ? kt(r.mine_kt) : T("mr_none") }), h("td", { text: r.mine_listed ? pctTxt(r.mine_share_pct) : T("mr_none") }),
+        h("td", { text: kt(r.refinery_kt) }), h("td", { text: pctTxt(r.refinery_share_pct) }));
+    }));
+    box.appendChild(h("section", { class: "card chart-card mr", "aria-labelledby": "mr-title" },
+      h("h3", { id: "mr-title", class: "qtitle", text: T("mr_title") }),
+      h("p", { text: T("mr_above", { chile_mine: CMA.n0(byC.Chile.mine_share_pct), chile_ref: CMA.n0(byC.Chile.refinery_share_pct), china_mine: CMA.n0(byC["China"].mine_share_pct), china_ref: CMA.n0(byC["China"].refinery_share_pct) }) }),
+      h("ul", { class: "bars", style: "list-style:none;margin:10px 0 0;padding:0", role: "img", "aria-label": mrAria }, mrRows),
+      h("p", { class: "mrkey" }, h("span", { class: "mine" }, h("i"), T("mr_mine")), h("span", { class: "ref" }, h("i"), T("mr_refinery")), h("span", { class: "muted", text: T("mr_axis") })),
+      h("p", { text: T("mr_below", { ref_mt: CMA.n0(wref / 1000), mine_mt: CMA.n0(wmine / 1000), year: year }) }),
+      h("p", { text: T("mr_conc", { n: CMA.CHAPTER_NO.record }) }),
+      h("details", { class: "tableview" }, h("summary", { text: T("mr_table") }), h("div", { class: "tablewrap" }, h("table", {}, mrHead, mrBody))),
+      CMA.chip(["supply.refined"])));
+
     box.appendChild(h("aside", { class: "note", "aria-labelledby": "sup-ns" },
       h("h3", { id: "sup-ns", text: T("notshow.title") }), h("ul", {}, window.CMA_STRINGS.supply.notshow.items.map(function (x) { return h("li", { text: x }); }))));
     box.appendChild(CMA.fold(T("details_lead"), [h("div", { class: "tablewrap tall" }, h("table", {}, head, body))]));

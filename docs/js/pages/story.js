@@ -1,17 +1,20 @@
-/* The story: one long page. An opener, then chapters in order: 1 record (with guess 2), the interlude, 2 dollar (with guess 1), 3 aluminium, 4 supply, 5 demand,
-   6 what it adds up to. Each chapter has an anchor; the data-quality page is a separate appendix. Every number comes from the data files in window.CMA_DATA. */
+/* The story: one long page. An opener, then eight chapters in order: 1 uses, 2 record (with guess 2), 3 not only copper, 4 dollar (with guess 1), 5 supply,
+   6 demand, 7 aluminium, 8 what it adds up to. Each chapter has an anchor; the data-quality page is a separate appendix. Every number comes from the data files in window.CMA_DATA. */
 (function () {
   var CMA = window.CMA, t = CMA.t, h = CMA.h;
 
   var CHAPTERS = [
-    { id: "record", label: "chapter", numeral: "i", page: "record" },
-    { id: "just-copper", label: "interlude", numeral: "", page: "just" },
-    { id: "dollar", label: "chapter", numeral: "ii", page: "dollar" },
-    { id: "aluminium", label: "chapter", numeral: "iii", page: "ratio" },
-    { id: "supply", label: "chapter", numeral: "iv", page: "supply", wide: true },
-    { id: "demand", label: "chapter", numeral: "v", page: "demand" },
-    { id: "summary", label: "summary_index", numeral: "vi", page: "summary" }
+    { id: "uses", key: "uses", label: "chapter", numeral: "i", page: "uses" },
+    { id: "record", key: "record", label: "chapter", numeral: "ii", page: "record" },
+    { id: "just-copper", key: "just", label: "chapter", numeral: "iii", page: "just" },
+    { id: "dollar", key: "dollar", label: "chapter", numeral: "iv", page: "dollar" },
+    { id: "supply", key: "supply", label: "chapter", numeral: "v", page: "supply", wide: true },
+    { id: "demand", key: "demand", label: "chapter", numeral: "vi", page: "demand" },
+    { id: "aluminium", key: "aluminium", label: "chapter", numeral: "vii", page: "aluminium" },
+    { id: "summary", key: "summary", label: "summary_index", numeral: "viii", page: "summary" }
   ];
+  CMA.CHAPTER_NO = {};
+  CHAPTERS.forEach(function (c, i) { CMA.CHAPTER_NO[c.key] = i + 1; });
   CMA.CHAPTER_IDS = CHAPTERS.map(function (c) { return c.id; });
   CMA.CHAPTER_COUNT = CHAPTERS.filter(function (c) { return c.label === "chapter" || c.label === "summary_index"; }).length;
 
@@ -25,6 +28,8 @@
 
     // ---- opener: dark, with the copper plate photo when docs/img/copper-plate.jpg exists (see tools/photo_flag.py), plain ink if not
     var realRec = CMA.realRecord();
+    var U = {};
+    CMA.rows(window.CMA_DATA.uses.figures).forEach(function (r) { U[r.fact_id] = r; });
     var nChecks = CMA.rows(window.CMA_DATA.quality.checks).filter(function (r) { return r.status === "PASS"; }).length;
     var sparkSvg = CMA.svg("svg", { class: "spark spark-title", viewBox: "-40 -40 80 80", "aria-hidden": "true" });
     CMA.spark.build(sparkSvg);
@@ -34,16 +39,17 @@
       h("p", { class: "unit", text: t("hero.plaque_line") }),
       h("dl", { class: "cert" },
         h("div", {}, h("dt", { text: t("hero.cert_nominal") }), h("dd", {}, t("hero.cert_nominal_v", { n: CMA.n0(R.series_months.value) }), CMA.chip(["story.record_facts"]))),
+        h("div", {}, h("dt", { text: t("hero.cert_12m") }), h("dd", {}, t("hero.cert_12m_v", { pct: CMA.n0(U.copper_12m_change_pct.value), month: CMA.monthShort(U.copper_12m_ago_month.value + "-01"), price: CMA.usd0(U.copper_12m_ago_usd_t.value) }), CMA.chip(["uses.figures"]))),
         h("div", {}, h("dt", { text: t("hero.cert_real") }), h("dd", {}, t("hero.cert_real_v", { pct: CMA.n0(realRec.belowPct), month: CMA.monthLong(realRec.month) }), CMA.chip(["story.record_facts", "chapters.records"])))));
-    var hero = h("section", { class: "hero" }, h("div", { class: "wrap hero-grid" },
+    var hero = h("section", { class: "hero", id: "top" }, h("div", { class: "wrap hero-grid" },
       h("div", {},
         h("p", { class: "eyebrow rise", style: "--i:1", text: t("hero.eyebrow") }),
         h("h1", { class: "rise", style: "--i:2" }, h("em", { text: t("hero.title_em") }), h("span", { class: "spark-anchor" }, sparkSvg), t("hero.title_rest")),
-        h("p", { class: "lede rise", style: "--i:3", text: t("hero.lead", { years: Math.floor(R.series_months.value / 12) }) }),
+        h("p", { class: "lede rise", style: "--i:3", text: t("hero.lead", { years: Math.floor(R.series_months.value / 12), change: CMA.n0(U.copper_12m_change_pct.value), chapters: window.CMA_STRINGS.hero.number_words[CMA.CHAPTER_COUNT] }) }),
         h("ul", { class: "facts rise", style: "--i:4" },
           h("li", {}, h("b", { class: "num", text: CMA.n0(R.series_months.value) }), h("span", { class: "mono", text: t("hero.fact_months", { year: R.series_months.month.slice(0, 4) }) })),
           h("li", {}, h("b", { class: "num", text: CMA.n0(nChecks) }), h("span", { class: "mono", text: t("hero.fact_checks") })))),
-      plaque));
+      plaque), h("div", { class: "wrap" }, CMA.drivers("hero")));
     if (window.CMA_PHOTO) { hero.classList.add("has-photo"); hero.style.setProperty("--photo", 'url("' + window.CMA_PHOTO + '")'); }
     root.appendChild(hero);
     if (CMA.glass) { CMA.glass.init(root); }
@@ -96,10 +102,11 @@
       showRecord(saved2);
     }
 
-    // =============================== interlude
+    // =============================== chapter 1 (uses) and chapter 3 (not only copper)
+    CMA.chapters.uses(bodies.uses);
     CMA.chapters.just(bodies["just-copper"]);
 
-    // =============================== chapter 2: the dollar, guess 1 first
+    // =============================== chapter 4: the dollar, guess 1 first
     var g1 = F, guess = 50, locked = false, haveGuess = false, shown1 = false;
     var slider = h("input", { type: "range", id: "g1-slider", min: "0", max: "100", step: "1", value: "50" });
     var out = h("output", { class: "guess-value", for: "g1-slider", text: "50%" });
@@ -109,6 +116,7 @@
     var rest1 = h("div", { class: "chapterrest" });
     reveal1.appendChild(result1);
     reveal1.appendChild(rest1);
+    bodies.dollar.appendChild(h("p", { class: "intro", text: t("dollar.usual") }));
     bodies.dollar.appendChild(h("p", { class: "hint", text: t("story.guess1.question") + " " + t("story.guess1.hint") }));
     bodies.dollar.appendChild(h("div", { class: "row" }, h("label", { for: "g1-slider", class: "sr", text: t("story.guess1.slider_label") }), slider, out, lockBtn));
     var skip1 = h("p", { class: "skiprow" }, skipButton(function () { showDollar(); }));
@@ -177,10 +185,10 @@
     revealWhenPassed(bodies.record.querySelector("fieldset.opts"), function () { showRecord(null); });
     revealWhenPassed(slider.parentNode, function () { if (!haveGuess) { showDollar(); } });
 
-    // =============================== chapters 3 to 6
-    CMA.chapters.ratio(bodies.aluminium);
+    // =============================== chapters 5 to 8
     CMA.chapters.supply(bodies.supply);
     CMA.chapters.demand(bodies.demand);
+    CMA.chapters.aluminium(bodies.aluminium);
     CMA.chapters.summary(bodies.summary);
     refreshReset();
 

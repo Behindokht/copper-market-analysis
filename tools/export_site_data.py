@@ -35,8 +35,14 @@ PAGES = {
         "euro": "res_euro_record",
         "events": "res_events",
     },
+    "uses": {
+        "end_use": "res_uses_end_use",
+        "facts": "res_context_facts",
+        "figures": "res_uses_facts",
+    },
     "supply": {
         "countries": "res_supply_countries",
+        "refined": "res_refined_vs_mined",
     },
     "dollar": {
         "correlations": "res_dollar_correlations",
@@ -59,12 +65,14 @@ PAGES = {
         "scenario_today": "res_cu_al_scenario_today",
         "series": "res_ratio_series",
         "facts": "res_ratio_facts",
+        "case": "res_aluminium_case",
     },
     "demand": {
         "sensitivity": "res_demand_sensitivity",
         "assumptions": "res_demand_assumptions",
         "context": "res_demand_context",
         "ranges": "res_demand_ranges",
+        "scale": "res_demand_scale",
         "ev_cases": "res_demand_ev_cases",
         "dc_cases": "res_demand_dc_cases",
     },

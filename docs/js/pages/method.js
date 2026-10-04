@@ -34,6 +34,14 @@
         return h("li", {}, h("span", { class: "flow-n mono", text: String(k + 1) }), h("b", { text: st[0] }), h("span", { class: "flow-c num", text: st[1] }));
       })),
       h("p", { class: "small muted", text: notebooks.join(", ") })));
+    // the 34 prediction tests: a result that did not hold up, kept here and not in the story
+    var TH = CMA.rows(window.CMA_DATA.ratio.threshold), nHolm = TH.filter(function (r) { return r.p_holm < 0.05; }).length;
+    var testsBody = h("div", { class: "fold-body" });
+    wrap.appendChild(h("section", { class: "card", "aria-labelledby": "m-tests" },
+      h("h3", { id: "m-tests", class: "qtitle", text: T("tests_title") }),
+      h("p", { text: T("tests_line", { n_holm: nHolm, n_all: TH.length }) }),
+      h("details", { class: "fold" }, h("summary", { text: T("tests_summary") }), testsBody)));
+    CMA.method.tests(testsBody);
     function list(titleKey, key, id) {
       return h("section", { class: "cancan", "aria-labelledby": id }, h("h3", { id: id, text: T(titleKey) }),
         h("ul", {}, window.CMA_STRINGS.method[key].map(function (x) { return h("li", { text: x }); })));

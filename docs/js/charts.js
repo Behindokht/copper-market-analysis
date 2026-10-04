@@ -9,6 +9,7 @@
        series: [{id, color, values: [number|null], label: {i, dx, dy, text, anchor}}],
        marks: [{series, i, lines: [text], dx, dy, anchor}],
        gap: {i, series, label},
+       band: {v, label},
        tip: function (i) -> {title, lines: [text]},
        aria: text, onMove: function (i) }                                   */
   CMA.lineChart = function (host, cfg) {
@@ -66,6 +67,22 @@
         if (!narrow) {
           var gl = svg("text", { x: gx - 6, y: mt + ph - 8, "text-anchor": "end", class: "ax" }); gl.textContent = cfg.gap.label; s.appendChild(gl);
           box(gx - 6 - textW(cfg.gap.label), mt + ph - 22, gx - 6, mt + ph - 4);
+        }
+      }
+
+      // a shaded band above a dashed reference line, with its label directly under the line (wrapped to the chart width)
+      if (cfg.band) {
+        var by = Y(cfg.band.v);
+        s.appendChild(svg("rect", { class: "bandfill", x: ml, y: mt, width: pw, height: Math.max(0, by - mt) }));
+        s.appendChild(svg("line", { x1: ml, x2: ml + pw, y1: by, y2: by, class: "bandline" }));
+        if (!narrow) {      // on a narrow screen the label is a line of text under the chart (the line, not the label, carries the meaning there)
+          var bw = Math.min(200, pw * 0.3), words = cfg.band.label.split(" "), lns = [], cur2 = "";
+          words.forEach(function (w) { if (cur2 && textW(cur2 + " " + w) > bw) { lns.push(cur2); cur2 = w; } else { cur2 = cur2 ? cur2 + " " + w : w; } });
+          lns.push(cur2);
+          var bt = svg("text", { x: ml + pw - 8, y: by + 16, "text-anchor": "end", class: "ax bandlabel" });
+          lns.forEach(function (ln, k) { var ts = svg("tspan", { x: ml + pw - 8, dy: k === 0 ? 0 : 14 }); ts.textContent = ln; bt.appendChild(ts); });
+          s.appendChild(bt);
+          box(ml + pw - 8 - bw, by, ml + pw, by + 6 + 14 * lns.length);
         }
       }
 

@@ -1,0 +1,8 @@
+fact_id,source_id,year,statement,value,unit,notes
+F01,S31,2024,China's share of world refined copper usage,58.0,percent,
+F02,S31,2024,Share of global copper use supplied by recycled copper,33.0,percent,ICSG wording: about one-third
+F03,S31,2024,Secondary (from scrap) share of refined copper production,17.0,percent,
+F04,S31,2024,World refined copper usage,27.4,million tonnes,
+F05,S31,2024,World mine production,23.0,million tonnes,
+F06,S31,2024,Wire share of first-use semis production,63.0,percent,Most copper is first made into wire
+F07,S06,2025,Aluminium substitutes for copper in automobile radiators; cooling and refrigeration tube; electrical equipment; and power cable,,text,"USGS MCS 2026 copper chapter, Substitutes section (verbatim list)"

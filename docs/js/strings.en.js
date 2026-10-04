@@ -8,12 +8,13 @@ window.CMA_STRINGS = {
   "title": "Copper market analysis"
  },
  "nav": {
+  "uses": "Uses",
   "record": "Record",
   "just": "Not only copper",
   "dollar": "Dollar",
-  "aluminium": "Aluminium",
   "supply": "Supply",
   "demand": "Demand",
+  "aluminium": "Aluminium",
   "summary": "Summary",
   "quality": "Data quality",
   "chapters_aria": "Chapters of the story"
@@ -22,7 +23,7 @@ window.CMA_STRINGS = {
   "eyebrow": "Data analysis portfolio. SQL and Python.",
   "title_em": "Copper",
   "title_rest": " is at a record price. Is it as special as it looks?",
-  "lead": "Copper just hit its highest price in {years} years of data. Six short chapters test how special that is, with every number traceable to its source.",
+  "lead": "Copper just hit its highest price in {years} years of data, up {change}% in a year. {chapters} short chapters test how special that is, with every number traceable to its source.",
   "fact_months": "monthly prices since {year}",
   "fact_checks": "checks passed",
   "plaque_aria": "Latest copper price",
@@ -32,9 +33,27 @@ window.CMA_STRINGS = {
   "cert_nominal": "Nominal",
   "cert_nominal_v": "Highest of {n} months",
   "cert_real": "Real, US CPI",
-  "cert_real_v": "{pct}% below the {month} record"
+  "cert_real_v": "{pct}% below the {month} record",
+  "cert_12m": "Last 12 months",
+  "cert_12m_v": "+{pct}% ({month}: {price})",
+  "number_words": [
+   "Zero",
+   "One",
+   "Two",
+   "Three",
+   "Four",
+   "Five",
+   "Six",
+   "Seven",
+   "Eight",
+   "Nine",
+   "Ten"
+  ]
  },
  "pages": {
+  "uses": {
+   "title": "What is copper for, and who uses it?"
+  },
   "record": {
    "title": "Is copper at a record high right now?"
   },
@@ -43,6 +62,9 @@ window.CMA_STRINGS = {
   },
   "dollar": {
    "title": "Does copper get cheaper when the US dollar gets stronger?"
+  },
+  "aluminium": {
+   "title": "Copper is expensive. Why not just use aluminium?"
   },
   "ratio": {
    "title": "Does a high copper-to-aluminium price ratio say anything about the next year?"
@@ -158,6 +180,7 @@ window.CMA_STRINGS = {
  "dollar": {
   "intro": "This chapter compares monthly changes in the copper price with monthly changes in the US dollar. A higher dollar number means a stronger dollar.",
   "answer": "Mostly yes, but loosely. In most months, copper got cheaper when the dollar got stronger. The link is far from exact.",
+  "usual": "The usual explanation: copper is priced in dollars, so a stronger dollar makes it dearer for buyers who pay in euros, yuan or yen. This chapter tests whether the two move against each other; it does not test why.",
   "sc_title": "When the dollar rose, did copper fall?",
   "sc_hint": "Each dot is one month. The shaded corners hold the months when copper and the dollar moved in opposite directions.",
   "sc_x": "Broad dollar index, change in the month (%)",
@@ -182,7 +205,7 @@ window.CMA_STRINGS = {
   "sc_dir_unchanged": "no change",
   "level_title": "The two prices as levels",
   "level_hint": "This chart shows levels, not monthly changes. Both lines end higher, which is why the scatter above is the chart that answers the question.",
-  "bridge": "The dollar tracks about a third of copper's monthly moves. Another clue sits in the price of its cheaper rival: when copper gets this expensive compared with aluminium, does anything follow?",
+  "bridge": "The dollar goes with about a third of copper's monthly moves. The rest has to come from the metal itself: who digs it up, and who uses it.",
   "main_title": "Do copper and the dollar move in opposite directions?",
   "main_y": "Index, {base_month} = 100",
   "label_copper": "Copper price",
@@ -273,7 +296,6 @@ window.CMA_STRINGS = {
   "answer": "It has happened too rarely to judge whether it predicts anything.",
   "plain": "Only {n_holm} of {n_all} overlapping tests gives a clear answer once you allow for trying so many.",
   "findings_title": "Why the answer is weak",
-  "bridge": "Prices are one side. The other is who digs copper out of the ground, and how much is left.",
   "details_lead": "The tests, the episode lists and the slope figures behind the answer.",
   "weak_note": "Most rows cross zero. A row is only a clear result if its whole line sits on one side of zero. Even then, a row with a hollow dot rests on a few episodes only. Read the pattern across rows, not the best row.",
   "ep_explain": "An episode is one stretch of months when the ratio stayed high, counted once. Episodes can be very long. For a ratio of {t} or more, one episode began in {month} and ran for {n} months in the 12-month test.",
@@ -374,6 +396,7 @@ window.CMA_STRINGS = {
  "demand": {
   "intro": "This chapter adds up the copper that electric cars and data centres might need each year in 2030, with 2035 beside it. It is a scenario built from stated assumptions. Results are shown in thousand tonnes (kt) and as a share of today's world mine output, {mine} million tonnes (USGS estimate for 2025).",
   "answer": "In the reference case, electric cars and data centres need extra copper equivalent to {tot_pct}% of today's mine output in 2030. Other assumptions give {r1_lo}% to {r1_hi}%.",
+  "scale": "For scale: {pct}% of today's mine output is about {mt} million tonnes a year, roughly what Russia mines in a year.",
   "main_title": "How much extra copper, in the reference case?",
   "main_hint": "Each bar adds the two effects, each against its own starting point: the EV transition against 2025 and the data-centre build against the 2024 build.",
   "seg_ev": "EV transition",
@@ -384,7 +407,7 @@ window.CMA_STRINGS = {
   "range_line": "Changing one assumption at a time gives {lo}% to {hi}% for 2030.",
   "main_aria": "Stacked bars for {y1} and {y2}. {y1}: {t1}. {y2}: {t2}.",
   "more_title": "Change the assumptions, see the gross data-centre copper and the open issues",
-  "bridge": "That is the demand side. Here is what the whole story adds up to, and what it cannot tell you.",
+  "bridge": "Both new uses run on electricity, and electricity is copper's main job. When copper costs this much, why not carry the current with aluminium instead?",
   "explorer_open": "Change the assumptions",
   "details_lead": "The sensitivity chart, the copper inputs and the known limits.",
   "finding_3": "The reference case is a convenience choice, not the most likely case. It uses the IEA Current Policies Scenario for cars and the IEA Base Case for data centres. It uses the middle copper figures, a straight line to 2030 for car sales and an even yearly data-centre build.",
@@ -548,6 +571,7 @@ window.CMA_STRINGS = {
   "limits_hint": "Limits of the data that are known and shown on the pages. They are information, not warnings.",
   "reason": {
    "K01": "The sources do not say which capacity the copper per MW figure refers to. The Demand page shows both readings.",
+   "K07": "The ICSG figures on the first chapter were read from extracted text, and their page numbers are not yet checked in the PDF. Nothing else about them is in doubt.",
    "K02": "An outside source reports more than twice the data-centre copper for 2025 that the model gives for the 2024 build. The reason is not known. The figure is shown and not used.",
    "company_diff": "Company production differs by more than a fifth between two articles for some companies, so the articles may use different bases.",
    "company_source": "Company production figures come from news articles, not company reports. They are not used on any page of this site.",
@@ -639,6 +663,23 @@ window.CMA_STRINGS = {
  "supply": {
   "answer": "{top2_names} mine {top2_share}% of the world's copper. These are USGS estimates for {year}.",
   "reserves_line": "Known reserves equal about {years} years of today's output. That is a simple ratio, not a countdown.",
+  "mr_title": "Mined here, refined there",
+  "mr_above": "Mining and refining sit in different places. Chile mines {chile_mine}% of the world's copper and refines {chile_ref}%. China mines {china_mine}% and refines {china_ref}%.",
+  "mr_below": "The world refined {ref_mt} million tonnes in {year} but mined {mine_mt} million. Refineries also melt scrap, which is how recycled copper re-enters the market.",
+  "mr_conc": "Concentration matters because one accident or strike can move world supply. The Grasberg mine accident in September 2025 is on the price chart in chapter {n}.",
+  "mr_mine": "Mine output",
+  "mr_refinery": "Refinery output",
+  "mr_none": "no mine output listed",
+  "mr_axis": "Share of world output (percent)",
+  "mr_value": "{mine} mined, {ref} refined",
+  "mr_aria": "Paired marks for {n} countries: the share of world mine output and the share of world refinery output, {year} estimates. {list}.",
+  "mr_aria_item": "{name}: mine {mine}, refinery {ref}",
+  "mr_table": "Show the shares as a table",
+  "mr_col_country": "Country",
+  "mr_col_mine": "Mine output (kt)",
+  "mr_col_mine_share": "Share of world mine output",
+  "mr_col_ref": "Refinery output (kt)",
+  "mr_col_ref_share": "Share of world refinery output",
   "pair_note": "{a} + {b}: {share}% of world output",
   "intro": "On the map, the area of each circle shows the size of a country's mine output. The list beside it gives the exact figures.",
   "map_title": "Which countries mine the most copper?",
@@ -673,9 +714,9 @@ window.CMA_STRINGS = {
   "notshow": {
    "title": "What this chapter does not show",
    "items": [
-    "It does not show where copper is refined, only where it is mined.",
     "Reserve life is a simple ratio. It is not a forecast of when a country runs out, because reserves and output both change.",
     "It says nothing about who owns the mines or how much is recycled.",
+    "Refinery output includes copper refined from scrap.",
     "The USGS rounds its figures, and the 2025 output figures are estimates."
    ]
   },
@@ -688,11 +729,12 @@ window.CMA_STRINGS = {
    },
    "attribution": "Mine output and reserves: US Geological Survey, Mineral Commodity Summaries 2026. Map outline: Made with Natural Earth (public domain), redistributed by world-atlas (ISC licence). Country codes: UN Statistics Division M49."
   },
-  "bridge": "Supply is concentrated in a few countries. On the demand side: how much more copper could electric cars and data centres need?"
+  "bridge": "Supply is concentrated twice: where copper is mined and where it is refined. On the demand side, which new uses could need much more of it?"
  },
  "summary": {
-  "verdict": "Less special than it looks. In today's money it is below {peak_month}. Gold and tin are at or near records too. Part of copper's monthly moves go with the dollar. What stands out is how concentrated supply is, and how much electric cars and data centres could add in one scenario.",
+  "verdict": "Less special than it looks, in one way. In today's money copper is below {peak_month}, and gold and tin are at or near records too. More special in others. Supply is concentrated twice, in a few mining countries and in Chinese refineries. And aluminium has been the cheaper way to carry electricity for almost 18 years, yet most copper still becomes wire.",
   "list_title": "In one sentence per chapter",
+  "s_uses": "Most copper becomes wire, and China uses more than half of it.",
   "guess_title": "Your guesses",
   "guess1": "Guess 1: you guessed {guess}%. The answer is {actual}%.",
   "guess2": "Guess 2: you picked \"{choice}\". The answer is \"{answer}\".",
@@ -700,8 +742,8 @@ window.CMA_STRINGS = {
   "s_record": "Copper is at a record as quoted and in euros, but not in today's money.",
   "s_just": "Tin and gold are at or near records as quoted too, so it is not only copper.",
   "s_dollar": "A stronger dollar has usually gone with cheaper copper, but loosely.",
-  "s_aluminium": "A high copper-to-aluminium ratio has been too rare to say what follows.",
-  "s_supply": "Chile and DR Congo mine {top2_share}% of the world's copper.",
+  "s_aluminium": "Aluminium has been the cheaper conductor metal every month since {since}.",
+  "s_supply": "Chile and DR Congo mine {top2_share}% of the world's copper; China refines {china_ref}%.",
   "s_demand": "Electric cars and data centres could add copper equal to about {demand_pct}% of today's mine output by 2030, in one scenario.",
   "go": "Go to the chapter",
   "cannot_title": "What we cannot say",
@@ -709,7 +751,8 @@ window.CMA_STRINGS = {
    "Nothing here explains why the price is at a record.",
    "The demand scenario is about 2030. It cannot explain today's price.",
    "These pages make no forecast and give no investment advice.",
-   "A link between two series in a sample is not proof that one moves the other."
+   "A link between two series in a sample is not proof that one moves the other.",
+   "It does not measure how much buyers switch to aluminium."
   ],
   "appendix_title": "Can you trust these numbers?",
   "appendix_text": "Every number comes from a listed source and passes automatic checks. The appendix shows the checks, the open problems and the sources.",
@@ -718,6 +761,9 @@ window.CMA_STRINGS = {
  "method": {
   "title": "How I built this",
   "intro": "This page shows the steps from raw downloads to the charts, with the real counts at each step, the tools, and the main decisions.",
+  "tests_title": "A test that did not hold up: does a high ratio predict a fall back?",
+  "tests_line": "I also tested whether a high copper-to-aluminium price ratio predicts a fall back. It does not, clearly: only {n_holm} of {n_all} overlapping tests gave a clear answer.",
+  "tests_summary": "Show the 34 tests",
   "flow_title": "From raw files to the site",
   "step_raw": "Raw files loaded as they are",
   "step_staging": "SQL staging: types, gaps and duplicates cleaned",
@@ -755,6 +801,149 @@ window.CMA_STRINGS = {
    "Run the browser checks automatically on every change."
   ],
   "back": "Back to the summary"
+ },
+ "drivers": {
+  "title": "What moves the price of copper",
+  "tag_tested": "Tested",
+  "tag_shown": "Shown",
+  "tag_scenario": "Scenario",
+  "tag_computed": "Computed",
+  "tag_context": "Context",
+  "tag_not_covered": "Not covered",
+  "items": [
+   {
+    "name": "The US dollar",
+    "tag": "tested",
+    "line": "Copper is priced in dollars. Chapter {n_dollar}."
+   },
+   {
+    "name": "Where copper is mined and refined",
+    "tag": "shown",
+    "line": "A few countries mine most of it; China refines about half. Chapter {n_supply}."
+   },
+   {
+    "name": "New demand from cars and data centres",
+    "tag": "scenario",
+    "line": "Built from stated assumptions. Chapter {n_demand}."
+   },
+   {
+    "name": "Cheaper substitutes",
+    "tag": "computed",
+    "line": "When aluminium does the job for less. Chapter {n_aluminium}."
+   },
+   {
+    "name": "China's demand",
+    "tag": "context",
+    "line": "China uses {china}% of the world's refined copper. Chapter {n_uses}."
+   },
+   {
+    "name": "Recycling",
+    "tag": "context",
+    "line": "About a third of copper use comes from recycled copper. Chapter {n_uses}."
+   },
+   {
+    "name": "Warehouse stocks, interest rates, investor money",
+    "tag": "not_covered",
+    "line": "No licence-free data here. The 10-year US yield barely changed the dollar result."
+   }
+  ]
+ },
+ "uses": {
+  "answer": "Mostly for carrying electricity. Nearly two thirds of copper is first made into wire, and buildings are its biggest single user.",
+  "chart_title": "Where does the world's copper go?",
+  "caption": "Share of copper and copper-alloy products by end use, {year}. ICSG.",
+  "sectors": {
+   "Building construction": "Building construction",
+   "Consumer and general products, cooling and electronics": "Consumer products, cooling and electronics",
+   "Infrastructure (power and telecom)": "Power and telecom networks",
+   "Transport": "Transport",
+   "Industrial equipment": "Industrial equipment",
+   "Other": "Other"
+  },
+  "bar_aria": "{name}: {pct} percent",
+  "tile_wire": "of copper is first made into wire",
+  "tile_china": "of the world's refined copper is used in China",
+  "tile_recycled": "of copper use comes from recycled copper",
+  "tile_third": "About 1/3",
+  "scale_line": "Mines produced {mined} million tonnes in {year}. The world used {used} million tonnes of refined copper. Recycling fills much of the gap.",
+  "notshow": {
+   "title": "What this chapter does not show",
+   "items": [
+    "These are shares of copper products, not of refined copper. ICSG measures end use at the product stage.",
+    "It does not show how use changes over time.",
+    "The figures are for the world in {year} and are not split by country."
+   ]
+  },
+  "sources": {
+   "names": {
+    "S31": "ICSG World Copper Factbook 2025 (end use, China's share, recycling)"
+   },
+   "attribution": "Copper end use, shares by country and recycling: International Copper Study Group, The World Copper Factbook 2025. Cited, not republished."
+  },
+  "bridge": "Something used this widely is priced every day. In {month} that price set a record. Is it really one?"
+ },
+ "aluminium": {
+  "answer": "On metal cost alone, aluminium wins easily. For the same electrical job, the aluminium costs about a ninth of the copper today, and aluminium has been the cheaper conductor metal every month since {since}. Yet most copper still becomes wire.",
+  "chart_title": "How much more does copper cost than aluminium?",
+  "chart_hint": "The line is the copper price divided by the aluminium price, month by month. Both are World Bank monthly averages in US dollars.",
+  "band": "Above this line, aluminium is the cheaper way to carry electricity",
+  "ctx_label": "Copper-to-aluminium ratio",
+  "ctx_label_short": "Ratio",
+  "m_latest": "{value}, latest",
+  "m_prev": "{value}, the high before the last two years",
+  "tip_ratio": "Ratio: {value}",
+  "tip_side": "{side}",
+  "tip_above": "Aluminium is the cheaper conductor metal",
+  "tip_below": "Copper is the cheaper conductor metal",
+  "aria": "Line chart of the copper-to-aluminium price ratio from {from} to {to}. A dashed line at {be} marks the break-even. Focus the chart and use the arrow keys to move along it.",
+  "table": "Show the data as a table",
+  "col_month": "Month",
+  "col_ratio": "Ratio",
+  "explain_title": "Why the line sits at about two",
+  "explain_1": "Aluminium conducts {cond}% as well, so the wire must be about {wider}% wider.",
+  "explain_2": "But aluminium is so light that the wider wire still weighs half as much.",
+  "explain_3": "So aluminium is cheaper whenever copper costs more than about twice as much per tonne.",
+  "diagram_aria": "Two wire cross-sections for the same electrical job: a copper circle and an aluminium circle about {wider} percent wider.",
+  "diagram_cu": "Copper",
+  "diagram_al": "Aluminium",
+  "replaces_title": "Where aluminium already replaces copper",
+  "replaces": "{list}.",
+  "replaces_src": "Source: USGS Mineral Commodity Summaries 2026, copper, the section on substitutes.",
+  "holds_title": "Why copper holds on",
+  "holds": "Space: the aluminium wire is about {wider}% wider. Where space is tight, as in motors, transformers and electronics, the smaller copper wire wins.",
+  "working_title": "Show the working",
+  "working_lead": "The numbers behind the line at about two, and the run of months above it.",
+  "w_what": "Step",
+  "w_value": "Value",
+  "w_cond": "Aluminium conductivity, as a share of copper's",
+  "w_area": "Cross-section needed for the same job",
+  "w_width": "Width of the wire, against copper",
+  "w_mass": "Mass of aluminium needed, as a share of the copper's",
+  "w_break": "Break-even price ratio",
+  "w_ratio": "Copper-to-aluminium ratio, {month}",
+  "w_cost": "Aluminium metal for the same job, as a share of the copper metal's cost",
+  "w_last_below": "Last month below the break-even",
+  "w_run": "Months above it since then",
+  "w_share": "Share of all months since {start} above the break-even",
+  "w_note": "Conductivity and density are from NBS Circular 31 (S32). Prices are World Bank monthly averages (S02). Inflation cancels in a ratio of two prices in the same currency.",
+  "notshow": {
+   "title": "What this chapter does not show",
+   "items": [
+    "Metal cost only. Making, insulating and installing the cable are not included, and a wider aluminium cable needs more insulation.",
+    "It does not measure how much switching actually happens.",
+    "The ratio uses monthly average prices; inflation cancels in a ratio of two prices in the same currency.",
+    "Other reasons buyers stay with copper, such as connections and safety rules, are not covered here."
+   ]
+  },
+  "sources": {
+   "names": {
+    "S02": "World Bank commodity prices (copper and aluminium)",
+    "S32": "NBS Circular 31, Copper Wire Tables (conductivity and density)",
+    "S06": "USGS Mineral Commodity Summaries 2026, copper (substitutes)"
+   },
+   "attribution": "Copper and aluminium prices: adapted from World Bank Commodity Price Data (CC BY 4.0). Conductivity and density: US National Bureau of Standards, Copper Wire Tables, Circular 31. Substitutes: US Geological Survey. The ratio, the break-even and the run above it are my own calculations."
+  },
+  "bridge": "That is the last chapter. Here is what the whole story adds up to, and what it cannot tell you."
  },
  "foot": {
   "details": "Show the details",

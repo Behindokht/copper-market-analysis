@@ -1,0 +1,6 @@
+source_id,material,property,value,unit,notes
+S32,Copper (annealed standard),resistivity_20C,1.7241,microhm-cm,International Annealed Copper Standard
+S32,Copper (annealed standard),density_20C,8.89,g/cm3,
+S32,Copper (annealed standard),volume_conductivity,100.0,percent IACS,by definition
+S32,Aluminium (commercial hard-drawn),volume_conductivity,61.0,percent IACS,
+S32,Aluminium (commercial hard-drawn),density_20C,2.70,g/cm3,

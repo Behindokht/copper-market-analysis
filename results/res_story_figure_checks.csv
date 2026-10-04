@@ -1,0 +1,57 @@
+figure_id,figure,expected_in_brief,computed,tolerance,unit,status
+U1,"end-use share, Building construction",26,26.0,0.0,percent,PASS
+U1,"end-use share, Consumer and general products, cooling and electronics",23,23.0,0.0,percent,PASS
+U1,"end-use share, Infrastructure (power and telecom)",17,17.0,0.0,percent,PASS
+U1,"end-use share, Transport",13,13.0,0.0,percent,PASS
+U1,"end-use share, Industrial equipment",12,12.0,0.0,percent,PASS
+U1,"end-use share, Other",9,9.0,0.0,percent,PASS
+U2,the six end-use shares add up to 100,100,100.0,0.0,percent,PASS
+U3,buildings are the biggest single user,Building construction,Building construction,0.0,,PASS
+U4,wire share of first use (63%),63,63.0,0.0,percent,PASS
+U5,China's share of refined use (58%),58,58.0,0.0,percent,PASS
+U6,recycled share of use (about a third),33,33.0,0.0,percent,PASS
+U7,"mine production 2024, million tonnes",23,23.0,0.0,Mt,PASS
+U8,"refined use 2024, million tonnes",27.4,27.4,0.0,Mt,PASS
+O1,copper price in August 2025 (USD per tonne),9670,9670.0,0.0,USD/t,PASS
+O2,copper price in August 2026 (USD per tonne),14326,14326.0,0.0,USD/t,PASS
+O3,"change over the last 12 months, shown as +48%",48,48.0,0.0,percent,PASS
+O4,the exact 12-month change (+48.1%),48.1,48.1489,0.05,percent,PASS
+S1,world mine output 2025 (kt),23000,23000.0,0.0,kt,PASS
+S2,world refinery output 2025 (kt),29000,29000.0,0.0,kt,PASS
+S3,China: mine share of world output,7.8,7.8,0.05,percent,PASS
+S4,China: refinery share of world output,48.3,48.3,0.05,percent,PASS
+S3,Congo (Kinshasa): mine share of world output,13.9,13.9,0.05,percent,PASS
+S4,Congo (Kinshasa): refinery share of world output,9.7,9.7,0.05,percent,PASS
+S3,Chile: mine share of world output,23.0,23.0,0.05,percent,PASS
+S4,Chile: refinery share of world output,5.9,5.9,0.05,percent,PASS
+S3,Peru: mine share of world output,11.7,11.7,0.05,percent,PASS
+S4,Peru: refinery share of world output,1.2,1.2,0.05,percent,PASS
+S3,Japan: no mine output listed by USGS,not listed,not listed,0.0,,PASS
+S4,Japan: refinery share of world output,4.8,4.8,0.05,percent,PASS
+S3,Russia: mine share of world output,5.7,5.7,0.05,percent,PASS
+S4,Russia: refinery share of world output,3.3,3.3,0.05,percent,PASS
+S3,United States: mine share of world output,4.3,4.3,0.05,percent,PASS
+S4,United States: refinery share of world output,2.9,2.9,0.05,percent,PASS
+S3,Zambia: mine share of world output,4.1,4.1,0.05,percent,PASS
+S4,Zambia: refinery share of world output,0.9,0.9,0.05,percent,PASS
+S5,"Chile mines 23% and refines 6% (rounded, as written)",23/6,23/6,0.0,,PASS
+S6,"China mines 8% and refines 48% (rounded, as written)",8/48,8/48,0.0,,PASS
+S7,Chile and DR Congo mine 37% of the world's copper,37,36.9,0.5,percent,PASS
+S8,China refines 48% (summary sentence),48,48.0,0.0,percent,PASS
+A1,aluminium conducts 61% as well as copper,0.61,0.61,0.0,share,PASS
+A2,cross-section needed (1.64 times),1.64,1.6393,0.005,x,PASS
+A3,the aluminium wire is about 28% wider,28,28.0369,0.5,percent,PASS
+A4,mass of aluminium for the same job (0.50 of the copper),0.5,0.4979,0.005,x,PASS
+A5,break-even price ratio (2.01),2.01,2.0085,0.005,ratio,PASS
+A6,copper-to-aluminium ratio in August 2026 (4.41),4.41,4.4066,0.005,ratio,PASS
+A7,aluminium metal for the same conductance costs 11% of the copper metal,11,11.0,0.0,percent,PASS
+A8,that is about one ninth,11.11111111111111,11.2986,1.0,percent,PASS
+A9,every month since December 2008 is above the break-even: last month below is November 2008,2008-11,2008-11,0.0,,PASS
+A10,the ratio in November 2008 (2.007),2.007,2.007,0.0005,ratio,PASS
+A11,all months after November 2008 are above,0,0.0,0.0,months,PASS
+A12,first month of the unbroken run is December 2008,2008-12,2008-12,0.0,,PASS
+A13,share of months since 1960 above the break-even (42%),42,42.0,0.0,percent,PASS
+A14,December 2008 to August 2026 is 17 years 9 months,17 years 9 months,17 years 9 months,0.0,,PASS
+D1,reference total for 2030 (about 1.2 million tonnes),1189,1189.0,0.5,kt,PASS
+D2,"Russia mines 1,300 kt (2025e)",1300,1300.0,0.0,kt,PASS
+D3,"the total is within 10% of Russian mine output, so 'roughly' stands",yes,yes,0.0,,PASS

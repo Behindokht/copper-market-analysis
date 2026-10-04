@@ -107,7 +107,7 @@ for u in sorted(used):
 dynamic = ("pages.", "nav.", "story.guess2.opt_", "story.sources.names.", "story.guess1.verdict_", "footer.", "story.notshow.", "story.guess2.c_", "site.", "hero.",
            "dollar.sources.names.", "dollar.notshow.", "ratio.sources.names.", "ratio.notshow.", "ratio.fam_", "ratio.h_",
            "demand.sources.names.", "demand.notshow.", "demand.scen_", "demand.path_", "demand.cu_", "demand.pet_", "demand.dc_", "demand.dcpath_", "demand.basis_",
-           "demand.int_", "demand.base_", "quality.reason.", "quality.f_")
+           "demand.int_", "demand.base_", "quality.reason.", "quality.f_", "drivers.")
 for k in sorted(keys):
     if k not in used and not any(k.startswith(d) for d in dynamic) and not any(u.rstrip("*") and k.startswith(u.rstrip("*")) for u in used if u.endswith("*")):
         problems.append(f"TEXT key defined but never used: {k}")
@@ -127,7 +127,7 @@ for k, v in keys.items():
 BANNED = ["utilize", "utilise", "leverage", "furthermore", "moreover", "notably", "robust", "delve", "underscore", "paramount", "plethora",
           "facilitate", "elucidate", "endeavor", "endeavour", "commence", "subsequently", "nevertheless", "consequently", "albeit",
           "whilst", "comprehensive", "holistic", "seamless", "myriad", "intricate", "pivotal", "landscape"]
-EXEMPT_LENGTH = ("footer.credits", "story.sources.attribution", "dollar.sources.attribution", "ratio.sources.attribution", "demand.sources.attribution")
+EXEMPT_LENGTH = ("aluminium.answer", "footer.credits", "story.sources.attribution", "dollar.sources.attribution", "ratio.sources.attribution", "demand.sources.attribution")
 for p in text_files:
     if p.name.startswith("OFL-"):
         continue

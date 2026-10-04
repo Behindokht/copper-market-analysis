@@ -286,6 +286,12 @@
       h("p", { class: "finding", text: T("range_line", { lo: vars.r1_lo, hi: vars.r1_hi }) }),
       h("p", { class: "small muted", text: T("state_ref") }));
     wrap.appendChild(mainCard);
+    // for scale: only said when the total is within 10 percent of Russian mine output (checked in notebook 06 and again here)
+    var SCALE = {};
+    CMA.rows(window.CMA_DATA.demand.scale).forEach(function (r) { SCALE[r.fact_id] = r; });
+    if (SCALE.within_10_pct.value === 1 && Math.abs(SCALE.total_2030_kt.value - ref30.total / 1000) < 1 && Math.abs(SCALE.total_2030_kt.value / SCALE.russia_mine_2025e_kt.value - 1) <= 0.1) {
+      wrap.appendChild(h("p", { class: "finding" }, T("scale", { pct: pct(ref30.total), mt: CMA.n1(SCALE.total_2030_kt.value / 1000) }) + " ", CMA.chip(["demand.scale"])));
+    }
     // everything else sits one click deeper
     wrap.appendChild(CMA.fold(T("more_title"), [xcard, rcard, findingsEl, basisHost, issues, nsEl, sensEl, limitsEl, inputsEl]));
     CMA.sources.add(window.CMA_STRINGS.demand.sources.names, T("sources.attribution"));

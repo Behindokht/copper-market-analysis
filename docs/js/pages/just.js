@@ -34,8 +34,8 @@
     var notes = rows.filter(function (r) { return r.note_kind; }).map(function (r) {
       return h("li", {}, h("b", { text: names[r.commodity] + ". " }), T("note_" + r.note_kind, { until: r.note_until && r.note_until.length === 7 ? CMA.monthLong(r.note_until + "-01") : (r.note_until || "") }));
     });
-    box.appendChild(h("section", { class: "events", "aria-labelledby": "just-notes" },
-      h("h3", { id: "just-notes", text: T("notes_title") }), h("ul", {}, notes)));
+    var notesEl = h("section", { class: "events", "aria-labelledby": "just-notes" },
+      h("h3", { id: "just-notes", text: T("notes_title") }), h("ul", {}, notes));
 
     // the exact records, behind the fold
     var usd = function (r, v) { return r.commodity === "brent" ? "$" + CMA.n1(v) : CMA.usd0(v); };
@@ -48,7 +48,7 @@
     }));
     box.appendChild(h("aside", { class: "note", "aria-labelledby": "just-ns" },
       h("h3", { id: "just-ns", text: T("notshow.title") }), h("ul", {}, window.CMA_STRINGS.just.notshow.items.map(function (x) { return h("li", { text: x }); }))));
-    box.appendChild(CMA.fold(T("details_lead"), [h("div", { class: "tablewrap" }, h("table", {}, head, body)), h("p", { class: "small muted", text: T("unit_note") })]));
+    box.appendChild(CMA.fold(T("details_lead"), [notesEl, h("div", { class: "tablewrap" }, h("table", {}, head, body)), h("p", { class: "small muted", text: T("unit_note") })]));
     CMA.sources.add({ S02: window.CMA_STRINGS.story.sources.names.S02, S04: window.CMA_STRINGS.story.sources.names.S04, S27: T("sources.names.S27") }, null);
     CMA.bridge(box, T("bridge"));
   };

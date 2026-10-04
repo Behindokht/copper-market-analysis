@@ -1,4 +1,5 @@
-/* Copper vs aluminium page. Every number comes from window.CMA_DATA.ratio (derived result files from notebook 02 and 04). */
+/* The 34 prediction tests (does a high copper-to-aluminium ratio predict a fall back?), shown on the "How I built this" page.
+   Every number comes from window.CMA_DATA.ratio (derived result files from notebooks 02 and 04). */
 (function () {
   var CMA = window.CMA, h = CMA.h, svg = CMA.svg;
   var T = function (key, vars) { return CMA.t("ratio." + key, vars); };
@@ -8,9 +9,10 @@
   function range(lo, hi, f) { f = f || CMA.f1; return " (" + f(lo) + " to " + f(hi) + ")"; }
   function sum(a, f) { return a.reduce(function (t, x) { return t + f(x); }, 0); }
 
-  CMA.chapters.ratio = function (box) {
+  CMA.method = CMA.method || {};
+  CMA.method.tests = function (box) {
     var D = window.CMA_DATA.ratio;
-    var TH = CMA.rows(D.threshold), EP = CMA.rows(D.episodes), SL = CMA.rows(D.slopes), SC = CMA.rows(D.scenario_today), SR = CMA.rows(D.series);
+    var TH = CMA.rows(D.threshold), EP = CMA.rows(D.episodes), SL = CMA.rows(D.slopes);
     var F = {};
     CMA.rows(D.facts).forEach(function (r) { F[r.fact_id] = r; });
 
@@ -35,9 +37,6 @@
     };
 
     var wrap = box;
-    wrap.appendChild(h("p", { class: "hook", text: T("hook", vars) }));
-    wrap.appendChild(h("p", { class: "answer", text: T("answer") }));
-    wrap.appendChild(h("p", { class: "intro", text: T("intro", vars) }));
     var findingsEl = (h("section", { class: "findings", "aria-label": "Findings" },
       h("p", { class: "finding", text: T("finding_1", vars) }),
       h("p", { class: "finding", text: T("finding_2", vars) }),
@@ -201,53 +200,6 @@
       }).observe(host);
     }
 
-    // =============================== context: how unusual is today?
-    var cx = h("div", { class: "card chart-card" });
-    cx.appendChild(h("h3", { class: "qtitle", text: T("ctx_title") }));
-    cx.appendChild(h("p", { class: "hint", text: T("ctx_hint", vars) }));
-    var chost = h("div", { class: "chart-host" });
-    cx.appendChild(chost);
-    var n = SR.length, vals = SR.map(function (r) { return r.ratio; });
-    var iLast = n - 1, iPrev = SR.findIndex(function (r) { return r.month === F.ratio_highest_before_last_24m.month; });
-    var marks = [
-      { series: "ratio", i: iPrev, lines: [CMA.monthLong(SR[iPrev].month), T("m_prev", { value: CMA.f2(vals[iPrev]) })], dx: -10, dy: -36, anchor: "end" },
-      { series: "ratio", i: iLast, lines: [CMA.monthLong(SR[iLast].month), T("m_latest", { value: CMA.f2(vals[iLast]) })], dx: -16, dy: -30, anchor: "end" }
-    ];
-    cx.appendChild(h("ol", { class: "marklist" }, marks.map(function (m) { return h("li", { text: m.lines[0] + ": " + m.lines[1] }); })));
-    var xTicks = [];
-    SR.forEach(function (r, i) { var y = +r.month.slice(0, 4); if (r.month.slice(5, 7) === "01" && y % 10 === 0) { xTicks.push({ i: i, label: String(y) }); } });
-    CMA.lineChart(chost, {
-      n: n, yMax: 5, yTicks: [0, 1, 2, 3, 4, 5], yFormat: CMA.n0, yLabel: T("ctx_y"), xTicks: xTicks, marginRight: 24,
-      series: [{ id: "ratio", color: "--copper", values: vals, label: { text: T("ctx_label"), short: T("ctx_label_short") } }],
-      marks: marks,
-      tip: function (i) {
-        var r = SR[i];
-        return { title: CMA.monthLong(r.month), lines: [T("tip_ratio", { value: CMA.f2(r.ratio) }), T("tip_cu", { value: CMA.usd0(r.copper_usd_t) }), T("tip_al", { value: CMA.usd0(r.aluminium_usd_t) })] };
-      },
-      aria: T("ctx_aria", { from: CMA.monthLong(SR[0].month), to: CMA.monthLong(SR[n - 1].month) })
-    });
-    var cthead = h("thead", {}, h("tr", {}, ["ctx_col_month", "ctx_col_ratio", "ctx_col_cu", "ctx_col_al"].map(function (k) { return h("th", { scope: "col", text: T(k) }); })));
-    var ctbody = h("tbody");
-    SR.forEach(function (r) {
-      ctbody.appendChild(h("tr", {}, h("td", { text: r.month.slice(0, 7) }), h("td", { text: CMA.f2(r.ratio) }), h("td", { text: CMA.usd0(r.copper_usd_t) }), h("td", { text: CMA.usd0(r.aluminium_usd_t) })));
-    });
-    cx.appendChild(h("details", { class: "tableview" }, h("summary", { text: T("ctx_table") }), h("div", { class: "tablewrap" }, h("table", {}, cthead, ctbody))));
-
-    // =============================== scenario arithmetic
-    var scBody = h("tbody");
-    SC.forEach(function (r) {
-      scBody.appendChild(h("tr", {}, h("td", { text: cap(r.reference) }), h("td", { class: "res num", text: CMA.n1(r.reference_ratio) }),
-        h("td", { class: "res num", text: CMA.pctChange(r.copper_change_needed_pct) }), h("td", { class: "res num", text: CMA.pctChange(r.aluminium_change_needed_pct) })));
-    });
-    var scEl = (h("section", { class: "numbers", "aria-labelledby": "ratio-sc" },
-      h("h3", { id: "ratio-sc", text: T("sc_title") }),
-      h("p", { class: "verdict", text: T("sc_warn") }),
-      h("p", { class: "hint", text: T("sc_hint", vars) }),
-      h("div", { class: "numwrap" }, h("table", { class: "numtable" },
-        h("thead", {}, h("tr", {}, h("th", { scope: "col", text: T("sc_col_ref") }), h("th", { class: "res", scope: "col", text: T("sc_col_ratio") }),
-          h("th", { class: "res", scope: "col", text: T("sc_col_cu") }), h("th", { class: "res", scope: "col", text: T("sc_col_al") }))),
-        scBody))));
-
     // =============================== the level alone: slopes
     var recent = SL.filter(function (r) { return r.period.slice(0, 4) === "2000"; });
     var recentStart = recent[0].period.slice(0, 7);
@@ -270,15 +222,8 @@
           h("th", { class: "res", scope: "col", text: T("slope_col_r2") }), h("th", { class: "mon", scope: "col", text: T("slope_col_months") }))),
         slBody))));
 
-    // =============================== the page in its final order: hook and answer, one simple chart, findings, the arithmetic, limits, details, foot
-    wrap.appendChild(cx);
-    wrap.appendChild(h("p", { class: "finding", text: T("plain", vars) }));
-    wrap.appendChild(scEl);
+    // =============================== the tests, behind one fold: the picker and dot chart, why the answer is weak, the slopes
     foldItems.unshift(h("section", { "aria-labelledby": "ratio-why" }, h("h3", { id: "ratio-why", text: T("findings_title") }), findingsEl));
-    wrap.appendChild(h("aside", { class: "note", "aria-labelledby": "ratio-ns" },
-      h("h3", { id: "ratio-ns", text: T("notshow.title") }), h("ul", {}, window.CMA_STRINGS.ratio.notshow.items.map(function (x) { return h("li", { text: x }); }))));
-    wrap.appendChild(CMA.fold(T("details_lead"), foldItems));
-    CMA.sources.add(window.CMA_STRINGS.ratio.sources.names, T("sources.attribution"));
-    CMA.bridge(wrap, T("bridge"));
+    foldItems.forEach(function (el) { wrap.appendChild(el); });
   };
 })();

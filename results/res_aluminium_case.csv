@@ -1,0 +1,16 @@
+fact_id,value,unit,note
+conductivity_vs_copper,0.61,share,NBS Circular 31 (S32): hard-drawn aluminium against the annealed copper standard
+density_copper,8.89,g/cm3,S32
+density_aluminium,2.7,g/cm3,S32
+area_factor,1.639344262295082,x,"cross-section of aluminium wire per unit of copper wire, 1 / conductivity"
+width_factor,1.2803687993289599,x,"diameter of the aluminium wire per unit of copper wire, square root of the area factor"
+mass_factor,0.4978885835991812,x,mass of aluminium per unit of copper mass for the same electrical job
+breakeven_ratio,2.0084814814814815,ratio,aluminium is the cheaper conductor metal when copper costs more than this many times aluminium per tonne
+ratio_latest,4.406644109504768,ratio,"copper price divided by aluminium price, 2026-08"
+cost_share_latest,11.298588477460129,percent,"aluminium metal for the same conductance as a share of the copper metal's cost, latest month"
+last_month_below,2008-11,month,last month with the ratio at or below the break-even
+last_below_ratio,2.0070194384449245,ratio,
+first_month_of_run,2008-12,month,first month of the unbroken run above the break-even
+run_months,213,months,"months from the first month of the run to the latest month, both included"
+share_months_above,42.125,percent,share of all months since January 1960 with the ratio above the break-even
+months_total,800,months,months in the ratio series

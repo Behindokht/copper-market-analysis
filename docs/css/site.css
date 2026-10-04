@@ -508,3 +508,52 @@ footer.foot .fine { font-size: .85rem; margin-top: 18px; }
 
 /* tabular lining numerals wherever digits line up (last, because the font shorthand above resets font-variant-numeric) */
 .num, table, svg text, output, .tabular, .bignum, .guess-value, .price, .facts b, .chart-tip, .meter .lab, .chip, .verdict, .marklist { font-variant-numeric: lining-nums tabular-nums; }
+
+/* brief v2: uses chapter, aluminium chapter, driver strip, mined-versus-refined chart */
+.chart .bandfill { fill: var(--verdigris); opacity: .08; }
+.chart .bandline { stroke: var(--verdigris); stroke-width: 1.4; stroke-dasharray: 6 4; }
+.chart .bandlabel { fill: var(--ink); }
+.usetiles { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--s4); margin: var(--s4) 0; }
+.usetile { background: var(--card); border: 1px solid var(--rule); border-radius: 4px; padding: var(--s4); display: grid; gap: var(--s2); align-content: start; }
+.usetile b { font: 500 2rem/1.1 var(--display); color: var(--copper-text); font-variant-numeric: tabular-nums; }
+.usetile span { color: var(--muted); font-size: .9375rem; }
+.explain { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: var(--s4); align-items: center; margin: var(--s4) 0; }
+.explain ol { margin: 0; padding-left: 1.2em; }
+.explain li { margin: 6px 0; max-width: 34em; }
+.wirediagram { width: 210px; height: auto; }
+.wirediagram .cu { fill: var(--copper); }
+.wirediagram .al { fill: none; stroke: var(--verdigris); stroke-width: 3; stroke-dasharray: 6 4; }
+.wirediagram text { font: 500 12px var(--mono); fill: var(--ink); }
+.drivers { margin: var(--s5) 0; }
+.drivers h3 { margin-bottom: var(--s3); }
+.drivers ul { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: var(--s3); }
+.drivers li { background: var(--card); border: 1px solid var(--rule); border-radius: 4px; padding: var(--s3) var(--s4); display: grid; gap: 6px; align-content: start; color: var(--ink); }
+.drivers li b { font: 600 1rem var(--sans); }
+.drivers li p { margin: 0; color: var(--muted); font-size: .875rem; }
+.dtag { font: 500 11px/1 var(--mono); letter-spacing: .08em; text-transform: uppercase; padding: 4px 6px; border: 1px solid var(--rule); border-radius: 2px; justify-self: start; color: var(--ink); }
+.dtag.tested { border-color: var(--copper-text); color: var(--copper-text); }
+.dtag.scenario { border-style: dashed; }
+.hero .drivers li { background: rgba(250, 249, 246, .06); border-color: rgba(244, 239, 230, .22); color: #F4EFE6; }
+.hero .drivers li p { color: rgba(244, 239, 230, .78); }
+.hero .drivers .dtag { color: #F4EFE6; border-color: rgba(244, 239, 230, .4); }
+.hero .drivers .dtag.tested { color: var(--copper-bright); border-color: var(--copper-bright); }
+.mr .mrrow { display: grid; grid-template-columns: 9em minmax(0, 1fr); gap: var(--s3); align-items: center; padding: 8px 0; border-bottom: 1px solid var(--rule); }
+.mr .mrname { font-weight: 500; }
+.mr .mrbars { display: grid; gap: 4px; }
+.mr .mrbar { display: grid; grid-template-columns: minmax(0, 1fr) 9em; gap: var(--s2); align-items: center; }
+.mr .mrtrack { height: 12px; background: var(--track); border-radius: 2px; overflow: hidden; }
+.mr .mrfill { display: block; height: 100%; }
+.mr .mine .mrfill { background: var(--verdigris); }
+.mr .ref .mrfill { background: var(--copper); }
+.mr .mrval { font-size: .8125rem; color: var(--ink); font-variant-numeric: tabular-nums; }
+.mr .mrkey { display: flex; flex-wrap: wrap; gap: var(--s4); margin: 8px 0 0; font-size: .875rem; }
+.mr .mrkey i { display: inline-block; width: 12px; height: 12px; margin-right: 6px; vertical-align: -1px; border-radius: 2px; }
+.mr .mrkey .mine i { background: var(--verdigris); }
+.mr .mrkey .ref i { background: var(--copper); }
+@media (max-width: 620px) {
+  .usetiles { grid-template-columns: minmax(0, 1fr); }
+  .explain { grid-template-columns: minmax(0, 1fr); }
+  .mr .mrrow { grid-template-columns: minmax(0, 1fr); gap: 4px; }
+}
+.chart-host[data-narrow="false"] ~ .bandkey, .bandkey { display: none; }
+.chart-host[data-narrow="true"] ~ .bandkey { display: block; }

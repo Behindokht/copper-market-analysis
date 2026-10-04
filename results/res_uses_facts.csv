@@ -1,0 +1,5 @@
+fact_id,value,unit,note
+copper_12m_change_pct,48.15,percent,"August 2026 against August 2025, World Bank monthly average as quoted"
+copper_12m_ago_usd_t,9670.0,USD per tonne,August 2025
+copper_12m_ago_month,2025-08,month,
+copper_latest_usd_t,14326.0,USD per tonne,August 2026

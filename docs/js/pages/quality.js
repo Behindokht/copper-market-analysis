@@ -8,13 +8,14 @@
     var d = String(c.description);
     if (/^known issue K01/.test(d)) { return "K01"; }
     if (/^known issue K02/.test(d)) { return "K02"; }
+    if (/^known issue K07/.test(d)) { return "K07"; }
     if (c.table_name === "company_production" && /different bases/.test(d)) { return "company_diff"; }
     if (c.table_name === "company_production" && /secondary articles/.test(d)) { return "company_source"; }
     if (c.table_name === "mine_production") { return "mine_source"; }
     if (c.table_name === "stg_fred_monthly" && /CPIAUCSL/.test(d)) { return "cpi_gap"; }
     return "other";
   }
-  var ORDER = ["K01", "K02", "company_diff", "company_source", "mine_source", "cpi_gap", "other"];
+  var ORDER = ["K01", "K02", "K07", "company_diff", "company_source", "mine_source", "cpi_gap", "other"];
 
   CMA.pages.quality = function (root) {
     var D = window.CMA_DATA.quality;

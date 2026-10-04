@@ -1,0 +1,5 @@
+fact_id,value,unit,note
+total_2030_kt,1189.15,kt,"reference case, EV transition plus data-centre extra"
+russia_mine_2025e_kt,1300.0,kt,USGS estimate
+difference_pct,8.526923076923069,percent,absolute difference as a share of Russian output
+within_10_pct,1.0,1 = yes,so the page may say roughly

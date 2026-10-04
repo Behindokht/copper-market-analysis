@@ -82,6 +82,9 @@ Collected by hand (every row has a `source_id`):
 | scenario_assumptions | Project modelling assumptions for the demand scenario (source S20, marked as assumptions, not data) | S20 |
 | events | Markers for the chapter 1 price chart: month, short label, one-line description, kind (event or record in our own data), status (proposed until the owner approves), source. Wording is 'around this time', never a cause | S02, S22 to S26 |
 | usgs_country_iso | USGS country names mapped to ISO alpha-3 and UN M49 codes for the supply map; 'Other countries' is flagged as not placeable. A check fails if any USGS name is unmatched | S06, S28 |
+| copper_end_use | World copper use by end-use sector, 2024, as shares of copper and copper-alloy semis use (six sectors add up to 100, checked) | S31 |
+| copper_context_facts | Seven single facts: China's share of refined use, recycled share, secondary refined share, refined use and mine output in 2024, wire share of first use, and the USGS list of where aluminium replaces copper | S31, S06 |
+| physical_constants | Resistivity, conductivity and density of annealed copper and hard-drawn aluminium (NBS Circular 31), for the aluminium break-even | S32 |
 | known_issues | Register of unresolved issues and limitations; unresolved ones show as WARN and limitations as INFO in data_checks | S05, S11, S13 |
 
 Reference tables: `sources` (the register), `data_checks` (every check the build ran), `tables_catalog` (description, grain, date range and publishing note for each table).

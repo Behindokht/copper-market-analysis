@@ -1,0 +1,9 @@
+country,display_name,mine_kt,mine_share_pct,refinery_kt,refinery_share_pct,mine_listed,world_mine_kt,world_refinery_kt
+China,China,1800.0,7.8,14000.0,48.3,1,23000.0,29000.0
+Congo (Kinshasa),DR Congo,3200.0,13.9,2800.0,9.7,1,23000.0,29000.0
+Chile,Chile,5300.0,23.0,1700.0,5.9,1,23000.0,29000.0
+Peru,Peru,2700.0,11.7,340.0,1.2,1,23000.0,29000.0
+Japan,Japan,,,1400.0,4.8,0,23000.0,29000.0
+Russia,Russia,1300.0,5.7,950.0,3.3,1,23000.0,29000.0
+United States,United States,1000.0,4.3,850.0,2.9,1,23000.0,29000.0
+Zambia,Zambia,940.0,4.1,270.0,0.9,1,23000.0,29000.0
