@@ -89,7 +89,7 @@
   }
   function segGroup(groupKey, options) {
     var lid = "fl-" + groupKey, btns = {};
-    var row = h("div", { class: "fseg", "aria-labelledby": lid });
+    var row = h("div", { class: "fseg clear", "aria-labelledby": lid });
     options.forEach(function (o) {
       var b = h("button", { type: "button", "data-v": o, text: T(groupKey + "_" + o), "aria-pressed": "false" });
       b.addEventListener("click", function () { if (b.disabled) { return; } var n = {}; Object.keys(state).forEach(function (k) { n[k] = state[k]; }); n[groupKey] = o; setState(n); });
@@ -375,7 +375,7 @@
   function buildPanel(p) {
     var host = h("div", { class: "d2-host", "data-panel": p.key }), titleId = "dp-" + p.key;
     p.title = h("h2", { id: titleId }); p.subEl = h("p", { class: "sub" });
-    var btn = h("button", { type: "button", class: "xb", "aria-haspopup": "dialog", "aria-label": T("expand_aria", { title: T(p.key === "price" ? "price_title_nominal" : p.key + "_title") }) }, h("span", { text: T("expand") }), icon());
+    var btn = h("button", { type: "button", class: "xb clear", "aria-haspopup": "dialog", "aria-label": T("expand_aria", { title: T(p.key === "price" ? "price_title_nominal" : p.key + "_title") }) }, h("span", { text: T("expand") }), icon());
     btn.addEventListener("click", function () { openDialog(p, btn); });
     var head = h("div", { class: "ph" }, p.title);
     if (p.ro) { p.roEl = h("span", { class: "ro", id: "ro-" + p.key }); head.appendChild(p.roEl); }
@@ -389,7 +389,7 @@
 
   // ------------------------------------------------------------ the dialog: one native <dialog>, the same chart redrawn at the larger size
   function buildDialog() {
-    var title = h("h2", { id: "dlg-t" }), ro = h("span", { class: "ro", id: "x-ro" }), close = h("button", { type: "button", class: "xb", id: "dlg-x", text: T("dlg_close") });
+    var title = h("h2", { id: "dlg-t" }), ro = h("span", { class: "ro", id: "x-ro" }), close = h("button", { type: "button", class: "xb clear", id: "dlg-x", text: T("dlg_close") });
     var sub = h("p", { class: "sub" }), chart = h("div", { class: "dlg-chart", id: "dlg-b" }), tab = h("div", { class: "tw" }), evs = h("div", { class: "evlist", hidden: true });
     var det = h("details", { class: "dd", id: "dlg-d" }, h("summary", { text: T("dlg_numbers") }), tab), pf = h("div", { class: "pf" });
     var el = h("dialog", { id: "dlg", "aria-labelledby": "dlg-t", class: "glass" }, h("div", { class: "dh" }, title, ro, close), sub, chart, det, evs, pf);

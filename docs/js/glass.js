@@ -1,13 +1,13 @@
 /* Liquid glass, in plain JavaScript and SVG (no library at run time). The effect follows the idea of rdev/liquid-glass-react (MIT, see CREDITS.md):
    a rim lens that bends the backdrop strongly at the edge and not at all in the centre, a small colour split at the rim, light frost, a soft highlight that
    follows the pointer, and on the opener plaque a small tilt that settles like a spring.
-   Where: the nav bars, the sticky filter bar, the opener plaque and the closing panel (every element with class "lens"). Nowhere else, never on charts or reading text.
+   Where: the header bar only (the element with class "lens"). Round 4 took it off every large plate (it left a white smudge in the headline plate) and the small clear-glass controls sit inside reading glass, which is a backdrop root, so there is nothing behind them to bend.
    Bending uses an SVG filter inside backdrop-filter, which only Chromium supports. Safari and Firefox keep plain frosted glass (set in the CSS).
    prefers-reduced-transparency and browsers without backdrop-filter get the solid colour (CSS). Touch screens and reduced motion get no pointer effects.
    Nothing here runs by itself: no idle animation. Contrast is checked by tools/glass_contrast.py. */
 (function () {
   var CMA = window.CMA, NS = "http://www.w3.org/2000/svg";
-  var SCALE = 66, SPLIT = 2, FROST = 22, SATURATE = "160%", TILT = 2, SPRING = 0.15;
+  var SCALE = 66, SPLIT = 2, TILT = 2, SPRING = 0.15;
   var host = null, items = [], counter = 0, started = false;
   var mq = function (q) { return !!(window.matchMedia && window.matchMedia(q).matches); };
   var plain = function () { return mq("(prefers-reduced-transparency: reduce)") || !(window.CSS && CSS.supports && (CSS.supports("backdrop-filter", "blur(1px)") || CSS.supports("-webkit-backdrop-filter", "blur(1px)"))); };
@@ -53,7 +53,8 @@
     f.appendChild(mk("feBlend", { "in": "cR", in2: "cG", mode: "screen", result: "rg" }));
     f.appendChild(mk("feBlend", { "in": "rg", in2: "cB", mode: "screen" }));
     host.appendChild(f);
-    el.style.backdropFilter = "blur(" + (+el.getAttribute("data-frost") || FROST) + "px) saturate(" + SATURATE + ") url(#" + id + ")";      // blur first, then bend: text scrolling under a plate stays unreadable
+    var base = getComputedStyle(el).getPropertyValue("--bf").trim() || "blur(14px) saturate(190%)";
+    el.style.backdropFilter = base + " url(#" + id + ")";      // the plate's own blur and saturation first, then the bend: text scrolling under the header stays unreadable
     el.style.webkitBackdropFilter = el.style.backdropFilter;
   }
 

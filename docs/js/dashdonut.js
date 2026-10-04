@@ -88,6 +88,7 @@
         var m = seg[k][2]; if (narrow) { return; }
         var l = P(R + 14 + (Math.cos(m) < 0 ? 10 : 0), m), lx = l[0], ly = l[1], right = Math.sin(m) >= 0, lines = u.name.length > 22 && u.name.indexOf(", ") > 0 ? [u.name.slice(0, u.name.indexOf(", ") + 1), u.name.slice(u.name.indexOf(", ") + 2)] : [u.name];
         var y = ly + (Math.cos(m) < 0 ? dep : 0) - lines.length * 7 + 4;
+        if (Math.cos(m) > 0.4) { y = ly - 8 - lines.length * 14; }          // a label above the ring sits wholly above it, so no text lies on the slice
         var tx = el("text", { x: lx, y: y, "text-anchor": right ? "start" : "end", class: "lbl", "pointer-events": "none" }, svg);
         lines.forEach(function (ln, i) { el("tspan", { x: lx, dy: i ? 13 : 0 }, tx).textContent = ln; });
         el("text", { x: lx, y: y + lines.length * 13, "text-anchor": right ? "start" : "end", "pointer-events": "none", style: "fill:var(--ink);font-weight:500" }, svg).textContent = u.pct + "%";

@@ -41,6 +41,7 @@ BUTTONS_JS = r"""() => {
       const cs = getComputedStyle(e), bg = parse(cs.backgroundColor);
       if (bg && bg[3] > 0) layers.push(bg);
       if (bg && bg[3] >= 0.99) break;
+      if (e.classList && e.classList.contains('smoke')) { layers.push([20, 25, 24, 1]); break; }
       if (cs.backdropFilter && cs.backdropFilter !== 'none' || cs.webkitBackdropFilter && cs.webkitBackdropFilter !== 'none') { layers.push([halo[0], halo[1], halo[2], 1]); break; }
     }
     let c = [halo[0], halo[1], halo[2]];
@@ -260,6 +261,11 @@ def run(engine):
                         # labels and callouts must be inside their panel
                         inside = pg.evaluate("""() => Array.from(document.querySelectorAll('#dashboard .panel')).every(p => { const r = p.getBoundingClientRect(); return Array.from(p.querySelectorAll('svg text')).every(t => { const b = t.getBoundingClientRect(); return !b.width || (b.left >= r.left - 1 && b.right <= r.right + 1); }); })""")
                         ok(inside, tt + "dashboard: a chart label sticks out of its panel")
+                    if view == "story":
+                        pg.evaluate("document.querySelectorAll('#story details').forEach(d => d.open = true)")
+                        pg.wait_for_timeout(2500)
+                    ov = pg.evaluate(OVERLAP_JS, "#dashboard .dchart svg, #dashboard .p-dollar svg, #dashboard .p-supply svg" if view == "dashboard" else "#story svg.chart, #story .chart svg, #story .scatter svg")
+                    ok(not ov, tt + f"{view}: chart labels touch lines or dots: {ov}")
                     pg.evaluate("window.scrollTo(0, 0)")
                     top = pg.evaluate("document.getElementById('topbar').getBoundingClientRect()")
                     first = pg.evaluate("(() => { const e = document.querySelector('#%s .head, #%s .opener'); return e ? e.getBoundingClientRect().top : 0; })()" % (view, view))
@@ -274,6 +280,37 @@ def run(engine):
         big = pg.evaluate("""() => Array.from(document.querySelectorAll('.panel, .head, .kpis, .sheet, .opener .smoke, .closing, .bridge, dialog, footer')).filter(e => { const f = e.style.backdropFilter || e.style.webkitBackdropFilter || ''; return /url\\(/.test(f); }).map(e => e.className)""")
         ok(not big, t + f"large plates must not carry a refraction filter, found {big}")
         ctx.close()
+        # the header hides what scrolls under it: the bar looks the same with the page content behind it and with the content hidden (high-pass difference, 0 to 255; legible text would show as edges)
+        try:
+            import io
+            import numpy as np
+            from PIL import Image, ImageFilter
+            for scheme in ("light", "dark"):
+                ctx = b.new_context(viewport={"width": 1400, "height": 900}, color_scheme=scheme, reduced_motion="reduce")
+                pg = ctx.new_page()
+                open_view(pg, "story", "#story .opener")
+                reveal_story(pg)
+                worst = 0.0
+                for sel in ("#record h2", "#just-copper h2", "#dollar .answer", "#aluminium h2"):
+                    pg.evaluate("(s) => { const e = document.querySelector(s); window.scrollTo(0, e.getBoundingClientRect().top + scrollY - 46); }", sel)
+                    pg.wait_for_timeout(500)
+                    r = pg.evaluate("(() => { const r = document.getElementById('topbar').getBoundingClientRect(); return [r.left, r.top, r.width, r.height]; })()")
+                    clip = {"x": r[0] + 1, "y": max(0, r[1]), "width": r[2] - 2, "height": r[3]}
+                    pg.add_style_tag(content="#topbar * { color: transparent !important; border-color: transparent !important; } #topbar::after { display: none !important; }")      # the bar's own text and rules are the same in both pictures: leave them out
+                    pg.wait_for_timeout(200)
+                    A = Image.open(io.BytesIO(pg.screenshot(clip=clip))).convert("L")
+                    pg.add_style_tag(content="#story, #dashboard, #quality, #method { visibility: hidden !important; }")
+                    pg.wait_for_timeout(300)
+                    B = Image.open(io.BytesIO(pg.screenshot(clip=clip))).convert("L")
+                    pg.evaluate("document.querySelectorAll('style').forEach(s => { if (s.textContent.indexOf('visibility: hidden !important') >= 0 || s.textContent.indexOf('#topbar * { color: transparent') >= 0) s.remove(); })")
+                    D = np.abs(np.asarray(A).astype(float) - np.asarray(B).astype(float))
+                    Dimg = Image.fromarray(np.clip(D, 0, 255).astype("uint8"))
+                    hp = np.abs(np.asarray(Dimg).astype(float) - np.asarray(Dimg.filter(ImageFilter.GaussianBlur(4))).astype(float))
+                    worst = max(worst, float(hp[6:-6, 8:-8].max()))
+                ok(worst <= 12.0, t + f"{scheme}: text under the header is still legible through it (high-pass difference {worst:.1f}, limit 12)")
+                ctx.close()
+        except ImportError:
+            pass
         ok(not errs, t + f"script errors: {errs}")
         b.close()
 

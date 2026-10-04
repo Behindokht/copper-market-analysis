@@ -74,11 +74,21 @@
       if (cfg.band) {
         var by = Y(cfg.band.v);
         s.appendChild(svg("line", { x1: ml, x2: ml + pw, y1: by, y2: by, class: "bandline" }));
-        var bl = svg("text", { x: ml + pw - 4, y: by + 13, "text-anchor": "end", class: "ax" }); bl.textContent = cfg.band.label; s.appendChild(bl);
-        var zb = svg("text", { x: ml + pw - 4, y: by + 27, "text-anchor": "end", class: "ax" }); zb.textContent = cfg.band.zoneBottom; s.appendChild(zb);
-        var zt = svg("text", { x: ml + 6, y: mt + 12, class: "ax zonetop" }); zt.textContent = cfg.band.zoneTop; s.appendChild(zt);
-        box(ml + pw - 4 - 130, by, ml + pw, by + 32);
-        box(ml, mt, ml + 110, mt + 16);
+        // the two labels under the line go where they touch no data: right end, then left end; if neither is clear only the first label is tried, and if that is not clear no label is drawn (the tick and the text say the rest)
+        var wL = textW(cfg.band.label) + 8, wFull = Math.max(wL, textW(cfg.band.zoneBottom) + 8), put = null;
+        [[wFull, 33, true], [wL, 18, false]].forEach(function (c) {
+          if (put) { return; }
+          if (crossings(ml + pw - 4 - c[0], by + 1, ml + pw, by + c[1]) === 0) { put = { right: true, w: c[0], h: c[1], two: c[2] }; }
+          else if (crossings(ml + 4, by + 1, ml + 4 + c[0], by + c[1]) === 0) { put = { right: false, w: c[0], h: c[1], two: c[2] }; }
+        });
+        if (put) {
+          var bx = put.right ? ml + pw - 4 : ml + 6, ban = put.right ? "end" : "start";
+          var bl = svg("text", { x: bx, y: by + 14, "text-anchor": ban, class: "ax" }); bl.textContent = cfg.band.label; s.appendChild(bl);
+          if (put.two) { var zb = svg("text", { x: bx, y: by + 29, "text-anchor": ban, class: "ax" }); zb.textContent = cfg.band.zoneBottom; s.appendChild(zb); }
+          box(put.right ? ml + pw - 4 - put.w : ml + 4, by, put.right ? ml + pw : ml + 4 + put.w, by + put.h + 1);
+        }
+        var zt = svg("text", { x: ml + 6, y: mt + 13, class: "ax zonetop" }); zt.textContent = cfg.band.zoneTop; s.appendChild(zt);
+        box(ml, mt, ml + textW(cfg.band.zoneTop) + 8, mt + 17);
       }
 
       // lines, broken wherever a value is missing
@@ -186,7 +196,7 @@
             if (best === null || sc < best.sc) { best = { sc: sc, x: x0, base: base, x1: x1, y0: y0, y1: y1 }; }
           });
         }
-        if (!best) { return; }
+        if (!best || best.sc >= 1000) { return; }
         box(best.x - 2, best.y0, best.x1 + 2, best.y1);
         var t = svg("text", { x: best.x, y: best.base, "text-anchor": "start", class: "lbl endmark", fill: color("--ink") });
         t.textContent = ltext;
@@ -313,12 +323,13 @@
     var xMax = nice(Math.max.apply(null, rows.map(function (r) { return Math.abs(r[cfg.x]); })), 2);
     var yMax = nice(Math.max.apply(null, rows.map(function (r) { return Math.abs(r[cfg.y]); })), 10);
 
-    function draw() {
+    function draw(again) {
+      var forceTop = again === true;          // when no clear spot exists inside the corner, the labels go above the plot
       var W = Math.max(300, Math.round(host.clientWidth || 600));
       lastW = W;
       var narrow = W < 560;
       var H = Math.round(Math.min(480, Math.max(300, W * 0.62)));
-      var ml = narrow ? 40 : 52, mr = 12, mt = 30, mb = 42, pw = W - ml - mr, ph = H - mt - mb;
+      var ml = narrow ? 40 : 52, mr = 12, mt = (narrow || forceTop) ? 70 : 30, mb = 42, pw = W - ml - mr, ph = H - mt - mb;
       var X = function (v) { return ml + (v + xMax) / (2 * xMax) * pw; };
       var Y = function (v) { return mt + (yMax - v) / (2 * yMax) * ph; };
       host.textContent = "";
@@ -337,6 +348,7 @@
         var ty = svg("text", { x: ml - 6, y: Y(u) + 4, "text-anchor": "end", class: "ax" }); ty.textContent = CMA.minus(String(u)); s.appendChild(ty);
       }
       var xl = svg("text", { x: ml + pw, y: H - 6, "text-anchor": "end", class: "ax" }); xl.textContent = cfg.xLabel; s.appendChild(xl);
+      if (narrow || forceTop) { s.setAttribute("class", "narrow"); }
       var yl = svg("text", { x: ml, y: 14, "text-anchor": "start", class: "ax" }); yl.textContent = cfg.yLabel; s.appendChild(yl);
       // the regression line, drawn in % terms (it is fitted on log changes)
       var d = "", fitPts = [];
@@ -375,10 +387,12 @@
       var spot = null, qx1 = X(0) - 8, qy1 = Y(0) - 8;
       for (var by0 = mt + 8; by0 + bh <= qy1; by0 += 6) {
         for (var bx0 = ml + 8; bx0 + bw <= qx1; bx0 += 10) {
-          var sc = hitsIn(bx0, by0, bx0 + bw, by0 + bh) + (bx0 - ml) * 0.01 + (by0 - mt) * 0.01;
-          if (spot === null || sc < spot.sc) { spot = { sc: sc, x: bx0, y: by0 }; }
+          var h0 = hitsIn(bx0, by0, bx0 + bw, by0 + bh), sc = h0 + (bx0 - ml) * 0.01 + (by0 - mt) * 0.01;
+          if (spot === null || sc < spot.sc) { spot = { sc: sc, h: h0, x: bx0, y: by0 }; }
         }
       }
+      if (!narrow && !forceTop && (!spot || spot.h >= 1)) { draw(true); return; }
+      if (narrow || forceTop) { spot = { x: ml, y: 22 }; }
       if (!spot) { spot = { x: ml + 12, y: mt + 8 }; }
       big.setAttribute("x", spot.x + 2); big.setAttribute("y", spot.y - bb.y);
       cnt.setAttribute("x", spot.x + 2); cnt.setAttribute("y", spot.y + bb.height + 2 - cb.y);

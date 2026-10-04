@@ -154,8 +154,17 @@
     probe.onerror = function () { document.body.classList.add("no-photo"); };
     probe.src = m[1];
   })();
+  // the header sticks flush to the top, so no text shows in a gap above it; it squares its top corners while it is stuck
+  var stuckTick = 0;
+  function stuck() {
+    cancelAnimationFrame(stuckTick);
+    stuckTick = requestAnimationFrame(function () { var b = document.getElementById("topbar"); b.classList.toggle("stuck", b.getBoundingClientRect().top <= 0.5); });
+  }
+  window.addEventListener("scroll", stuck, { passive: true });
+  window.addEventListener("resize", stuck);
   buildHeader();
   buildFooter();
+  stuck();
   if (CMA.glass) { CMA.glass.init(document); }
   navOffset();
   window.addEventListener("resize", navOffset);
