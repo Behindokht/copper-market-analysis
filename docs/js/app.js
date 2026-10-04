@@ -10,30 +10,42 @@
   function buildHeader() {
     var brand = document.getElementById("brand");
     brand.appendChild(document.createTextNode(t("site.brand")));
-    brand.appendChild(h("span", { text: t("site.brand_sub") }));
+    brand.appendChild(h("small", { text: t("site.brand_sub") }));
     var nav = document.getElementById("nav");
     nav.setAttribute("aria-label", t("nav.main_aria"));
     TOP.forEach(function (n) { nav.appendChild(h("a", { href: "#" + n[0], "data-target": n[0], text: t("nav." + n[1]) })); });
     var sub = document.getElementById("subnav");
     sub.setAttribute("aria-label", t("nav.chapters_aria"));
-    NAV.forEach(function (n) { sub.appendChild(h("a", { href: "#" + n[0], "data-target": n[0], text: t("nav." + n[1]) })); });
+    NAV.forEach(function (n, k) { sub.appendChild(h("a", { href: "#" + n[0], "data-target": n[0], text: (k + 1) + " " + t("nav." + n[1]) })); });
+    // the status line (dashboard only): the month of the data and the counts from the checks the appendix lists
+    var st = document.getElementById("status"), checks = CMA.rows(window.CMA_DATA.quality.checks), K = {};
+    CMA.rows(window.CMA_DATA.dash.kpis).forEach(function (r) { K[r.fact_id] = r.value; });
+    var count = function (x) { return checks.filter(function (r) { return r.status === x; }).length; };
+    var vals = { month: CMA.monthShort(K.latest_month + "-01"), passed: count("PASS"), fail: count("FAIL"), warn: count("WARN") };
+    st.setAttribute("aria-label", t("dashboard.status_aria"));
+    st.appendChild(h("span", { class: "dot", "aria-hidden": "true" }));
+    var stText = h("span", {});
+    st.appendChild(stText);
+    t("dashboard.status").split(/(\{\w+\})/).forEach(function (part) {
+      var m = /^\{(\w+)\}$/.exec(part);
+      if (!m) { stText.appendChild(document.createTextNode(part)); } else if (m[1] === "warn") { stText.appendChild(document.createTextNode(String(vals.warn))); } else { stText.appendChild(h("b", { text: String(vals[m[1]]) })); }
+    });
   }
 
+  // the slim smoked footer: one line, the credits behind a fold
   function buildFooter() {
     var f = window.CMA_STRINGS.footer, el = document.getElementById("footer");
     var addr = f.email_user + "@" + f.email_domain;      // assembled here, so the address is not written out in the page source
-    var mailText = h("span", { class: "num", text: addr });
-    var mailLink = h("a", { href: "mailto:" + addr, text: f.email_link });
-    el.appendChild(h("div", { class: "wrap" },
-      h("div", { class: "cols" },
-        h("div", {}, h("h2", { text: f.name }), h("p", { text: f.tagline })),
-        h("div", {}, h("h2", { text: f.links_title }),
-          h("p", {}, h("a", { href: f.repo_url, text: f.repo_label, rel: "noopener" })),
-          h("p", {}, h("a", { href: f.portfolio_url, text: f.portfolio_label, rel: "noopener" })),
-          h("p", {}, h("a", { href: "#method", text: f.method_label }))),
-        h("div", {}, h("h2", { text: f.contact_title }), h("p", {}, f.email_label + " ", mailText), h("p", {}, mailLink))),
-      h("details", {}, h("summary", { text: f.credits_summary }), f.credits.map(function (c) { return h("p", { class: "small", text: c }); })),
-      h("p", { class: "fine", text: f.disclaimer })));
+    el.appendChild(h("div", { class: "foot-row" },
+      h("span", { text: f.slim_left }),
+      h("span", { class: "foot-right" },
+        h("span", { class: "foot-slot", id: "foot-slot" }),
+        h("a", { href: "#method", text: f.method_label }),
+        h("a", { href: f.repo_url, text: f.repo_label_short, rel: "noopener" }),
+        h("a", { href: f.portfolio_url, text: f.portfolio_label_short, rel: "noopener" }),
+        h("a", { href: "mailto:" + addr, text: f.email_link_short }),
+        h("span", { class: "muted", text: f.slim_right }))),
+      h("details", { class: "foot-credits" }, h("summary", { text: f.credits_summary }), f.credits.map(function (c) { return h("p", { class: "small", text: c }); }), h("p", { class: "small", text: f.disclaimer })));
   }
 
   function mark(target) {
@@ -70,10 +82,15 @@
   function view(name) {
     curView = name === "method" ? "method" : name;
     ["dashboard", "story", "quality", "method"].forEach(function (v) { document.getElementById(v).hidden = name !== v; });
-    document.getElementById("subnav-wrap").hidden = name !== "story";
-    document.body.classList.toggle("has-dash-bg", name === "dashboard");      // the photo background and the light plates belong to the dashboard only
-    var nb = document.querySelector(".nav-bar"); if (nb) { if (name === "dashboard") { nb.setAttribute("data-frost", "12"); } else { nb.removeAttribute("data-frost"); } }
+    var photo = name === "dashboard" || name === "story";
+    document.body.classList.toggle("has-bg", photo);             // the photo background and the light glass plates: dashboard and story
+    var bar = document.getElementById("topbar");
+    bar.setAttribute("data-view", name);
+    document.getElementById("subnav").hidden = name !== "story";
+    document.getElementById("status").hidden = name !== "dashboard";
+    document.documentElement.style.setProperty("--hmax", name === "dashboard" ? "1400px" : "1180px");
     if (!built[name]) { built[name] = true; CMA.pages[name](document.getElementById(name)); if (CMA.glass) { CMA.glass.init(document.getElementById(name)); } }
+    var slot = document.getElementById("foot-slot"); if (slot) { slot.hidden = name !== "dashboard"; }
     navOffset();
     if (CMA.glass && CMA.glass.refresh) { CMA.glass.refresh(); }
   }
@@ -123,17 +140,20 @@
     }
   }
 
-  // anchors land below the floating nav: its height plus 16 px, measured, not guessed
+  // anchors land below the sticky header: its height plus 16 px, measured, not guessed
   function navOffset() {
-    var bar = document.querySelector(".nav-bar"), sub = document.getElementById("subnav-wrap");
-    if (bar) {
-      var bottom = bar.getBoundingClientRect().bottom;
-      document.documentElement.style.setProperty("--filtertop", Math.ceil(bottom + 8) + "px");
-      if (sub && !sub.hidden) { bottom = Math.max(bottom, sub.getBoundingClientRect().bottom); }
-      document.documentElement.style.setProperty("--navh", Math.ceil(bottom + 16) + "px");
-    }
+    var bar = document.getElementById("topbar");
+    if (bar) { document.documentElement.style.setProperty("--navh", Math.ceil(bar.getBoundingClientRect().bottom + 16) + "px"); }
   }
 
+  // without the photo file the smoked plates would sit on plain paper: they get a denser tint (the photo is local only, known issue K08)
+  (function () {
+    var m = /url\(["']?([^"')]+)["']?\)/.exec(getComputedStyle(document.documentElement).getPropertyValue("--bg-photo") || "");
+    if (!m) { document.body.classList.add("no-photo"); return; }
+    var probe = new Image();
+    probe.onerror = function () { document.body.classList.add("no-photo"); };
+    probe.src = m[1];
+  })();
   buildHeader();
   buildFooter();
   if (CMA.glass) { CMA.glass.init(document); }

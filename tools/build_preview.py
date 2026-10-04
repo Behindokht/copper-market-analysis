@@ -15,7 +15,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 DOCS = ROOT / "docs"
-SCRIPTS = ["js/strings.en.js", "js/photo.js", "data/story.js", "data/chapters.js", "data/quality.js", "data/dollar.js", "data/ratio.js", "data/dash.js", "data/uses.js", "data/supply.js", "data/map.js", "data/demand.js", "data/provenance.js",
+SCRIPTS = ["js/strings.en.js", "data/story.js", "data/chapters.js", "data/quality.js", "data/dollar.js", "data/ratio.js", "data/dash.js", "data/uses.js", "data/supply.js", "data/map.js", "data/demand.js", "data/provenance.js",
            "js/util.js", "js/glass.js", "js/charts.js", "js/dashchart.js", "js/dashdonut.js", "js/pages/drivers.js", "js/pages/uses.js", "js/pages/record.js", "js/pages/just.js", "js/pages/dollar.js", "js/pages/ratio.js", "js/pages/aluminium.js", "js/pages/supply.js",
            "js/pages/demand.js", "js/pages/summary.js", "js/pages/dashboard.js", "js/pages/story.js", "js/pages/quality.js", "js/pages/method.js", "js/app.js"]
 
@@ -25,9 +25,6 @@ def esc(js):
 
 
 def main():
-    sys.path.insert(0, str(ROOT / "tools"))
-    import photo_flag
-    photo_flag.write()
     out = Path(sys.argv[sys.argv.index("--out") + 1]) if "--out" in sys.argv else ROOT / "preview" / "copper-market-preview.html"
     out.parent.mkdir(parents=True, exist_ok=True)
     css = (DOCS / "css" / "site.css").read_text(encoding="utf-8")
@@ -42,16 +39,18 @@ def main():
     body = body[: body.index("<script")]
     title = re.search(r"<title>(.*?)</title>", html).group(1)
 
-    parts = [f"<title>{title}</title>", "<style>", css, "</style>", body.strip()]
+    parts = [f"<title>{title}</title>", "<style>", css, "</style>"]
+    if "--with-photo" in sys.argv:
+        # private previews only: embed the background photo, which is not in docs/ (its licence is not confirmed, known issue K08), so the look can be judged
+        photo = Path(sys.argv[sys.argv.index("--with-photo") + 1])
+        mime = "image/webp" if photo.suffix.lower() == ".webp" else "image/jpeg"
+        parts += ["<style>:root { --bg-photo: url(data:%s;base64,%s); }</style>" % (mime, base64.b64encode(photo.read_bytes()).decode("ascii"))]
+    parts += [body.strip()]
     start = sys.argv[sys.argv.index("--start") + 1] if "--start" in sys.argv else None   # open on this page, for example: --start ratio
     for rel in SCRIPTS:
         if start and rel == "js/app.js":
             parts += ["<script>", f'if (!location.hash) {{ location.hash = "#{start}"; }}', "</script>"]
         code = (DOCS / rel).read_text(encoding="utf-8")
-        if rel == "js/photo.js" and "--with-photo" in sys.argv:
-            # private previews only: embed a photo that is not in docs/ (its licence is not confirmed), so the look can be judged
-            photo = Path(sys.argv[sys.argv.index("--with-photo") + 1])
-            code = code.replace("null", '"data:image/jpeg;base64,' + base64.b64encode(photo.read_bytes()).decode("ascii") + '"')
         parts += ["<script>", esc(code), "</script>"]
     out.write_text("\n".join(parts) + "\n", encoding="utf-8", newline="\n")
     print(f"wrote {out} ({out.stat().st_size / 1024:.0f} KB)")

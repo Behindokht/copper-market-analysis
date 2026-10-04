@@ -12,7 +12,8 @@
     if (!(span > 0)) { return [lo]; }
     var raw = span / count, mag = Math.pow(10, Math.floor(Math.log10(raw))), norm = raw / mag;
     var step = (norm < 1.5 ? 1 : norm < 3 ? 2 : norm < 7 ? 5 : 10) * mag, out = [];
-    for (var v = Math.ceil(lo / step - 1e-9) * step; v <= hi + step * 1e-9; v += step) { out.push(Math.round(v / step) * step); }
+    var top = Math.ceil(hi / step - 1e-9) * step;          // the top tick is at or above the highest value, so the last point and its label stay inside the plot
+    for (var v = Math.ceil(lo / step - 1e-9) * step; v <= top + step * 1e-9; v += step) { out.push(Math.round(v / step) * step); }
     return out;
   }
   function logTicks(lo, hi) {
@@ -89,7 +90,11 @@
         var y = Y(r.v);
         if (y < mt || y > mt + ph) { return; }
         s.appendChild(svg("line", { x1: ml, x2: ml + pw, y1: y, y2: y, class: r.dashed ? "bandline" : "zeroline" }));
-        var t = svg("text", { x: ml + pw - 4, y: y - 5, "text-anchor": "end", class: "ax" }); t.textContent = r.label; s.appendChild(t);
+        var t = svg("text", { x: ml + pw - 4, y: r.below ? y + 13 : y - 5, "text-anchor": "end", class: "ax" }); t.textContent = r.label; s.appendChild(t);
+        if (r.zones) {           // "aluminium cheaper" top left; "copper cheaper" at the right, under the break-even label and clear of the line
+          var z1 = svg("text", { x: ml + 6, y: mt + 12, class: "zone", fill: color("--verdigris-text") }); z1.setAttribute("style", "fill:" + color("--verdigris-text")); z1.textContent = r.zones[0]; s.appendChild(z1);
+          var z2 = svg("text", { x: ml + pw - 4, y: y + 27, "text-anchor": "end", class: "zone" }); z2.textContent = r.zones[1]; s.appendChild(z2);
+        }
       });
 
       var plot = svg("g", { class: "plot", "clip-path": "url(#" + clipId + ")" });
@@ -104,9 +109,35 @@
           if (v == null) { pen = false; return; }
           d += (pen ? "L" : "M") + X(i).toFixed(1) + " " + Y(v).toFixed(1); pen = true;
         });
+        if (sr.area && d) { var ia = sr.values.findIndex(function (q) { return q != null; }), ib = sr.values.length - 1; while (ib > 0 && sr.values[ib] == null) { ib--; } plot.appendChild(svg("path", { d: d + "L" + X(ib).toFixed(1) + " " + Y(lo).toFixed(1) + "L" + X(ia).toFixed(1) + " " + Y(lo).toFixed(1) + "Z", fill: color("--fill") })); }
         plot.appendChild(svg("path", { d: d, fill: "none", stroke: color(sr.color), "stroke-width": sr.width || 1.8, "stroke-linejoin": "round", "stroke-linecap": "round", "stroke-dasharray": sr.dash || null }));
       });
 
+      (cfg.lineLabels || []).forEach(function (l) {
+        var sr = cfg.series.filter(function (x) { return x.id === l.series; })[0], w = textW(l.text) + 8, best = null;
+        for (var f = 0.2; f <= 0.88; f += 0.04) {
+          var i = Math.round(f * (n - 1)), v = sr.values[i];
+          if (v == null) { continue; }
+          [-1, 1].forEach(function (side) {
+            var cy = Y(v) + side * 15, x0 = X(i) - w / 2, x1 = X(i) + w / 2, y0 = cy - 11, y1 = cy + 4, hits = 0;
+            if (y0 < mt || y1 > mt + ph) { return; }
+            cfg.series.forEach(function (o) {
+              for (var k = Math.max(0, Math.floor((x0 - ml) / pw * (n - 1))); k <= Math.min(n - 1, Math.ceil((x1 - ml) / pw * (n - 1))); k++) {
+                var ov = o.values[k]; if (ov == null) { continue; }
+                var yy = Y(ov); if (yy > y0 - 3 && yy < y1 + 3) { hits++; }
+              }
+            });
+            (cfg.refLines || []).forEach(function (r) { var yy = Y(r.v); if (yy > y0 - 4 && yy < y1 + 14) { hits += 5; } });
+            if (best === null || hits < best.hits) { best = { hits: hits, x: X(i), y: cy }; }
+          });
+          if (best && best.hits === 0) { break; }
+        }
+        if (best) {
+          var t = svg("text", { x: best.x, y: best.y, "text-anchor": "middle", class: "dlabel", fill: color(l.ink || sr.color) });
+          t.setAttribute("style", "paint-order:stroke;stroke:" + color("--card") + ";stroke-width:3px;stroke-linejoin:round");
+          t.textContent = l.text; s.appendChild(t);
+        }
+      });
       // direct labels at the line ends, pushed apart so they never overlap
       var labs = (cfg.endLabels || []).map(function (l) {
         var sr = cfg.series.filter(function (x) { return x.id === l.series; })[0], i = sr.values.length - 1;

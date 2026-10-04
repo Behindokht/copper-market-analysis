@@ -16,7 +16,7 @@
     var byOutput = places.slice().sort(function (a, b) { return b.production_2025e_kt - a.production_2025e_kt; });
     var top2 = byOutput.slice(0, 2);
     var top2share = top2.reduce(function (s, r) { return s + r.share_of_world_production_pct; }, 0);
-    var kt = function (v) { return CMA.n0(v); };
+    var kt = function (v) { return CMA.n0(v); }, mt = CMA.mt;     // kt: whole numbers (years); mt: thousand tonnes shown as million tonnes
 
     box.appendChild(h("p", { class: "answer", text: T("answer", { top2_names: top2.map(function (r) { return r.display_name; }).join(" and "), top2_share: CMA.n0(top2share), year: year }) }));
     box.appendChild(h("p", { class: "finding", text: T("reserves_line", { years: CMA.n0(world.reserve_life_years) }) }));
@@ -140,29 +140,29 @@
       listHost.appendChild(h("h4", { text: T("list_title_" + mode) }));
       listHost.appendChild(h("ol", {}, sorted.slice(0, 10).map(function (r, k) {
         return h("li", {}, h("span", { class: "rank mono", text: String(k + 1) }),
-          h("div", {}, h("b", { text: r.display_name }), h("div", { class: "num", text: T("list_value_" + mode, { kt: kt(r[m.key]), share: CMA.n1(r[m.share]) }) }),
+          h("div", {}, h("b", { text: r.display_name }), h("div", { class: "num", text: T("list_value_" + mode, { mt: mt(r[m.key]), share: CMA.n1(r[m.share]) }) }),
             h("div", { class: "small muted", text: T("life", { n: kt(r.reserve_life_years) }) })));
       })));
       notesHost.textContent = "";
       if (mode === "output") {
-        notesHost.appendChild(h("p", { class: "small muted", text: T("other_note", { kt: kt(other.production_2025e_kt), share: CMA.n1(other.share_of_world_production_pct) }) }));
+        notesHost.appendChild(h("p", { class: "small muted", text: T("other_note", { mt: mt(other.production_2025e_kt), share: CMA.n1(other.share_of_world_production_pct) }) }));
         notesHost.appendChild(h("p", { class: "small muted", text: T("estimate_note", { year: year }) }));
       } else {
-        notesHost.appendChild(h("p", { class: "small muted", text: T("other_note_reserves", { kt: kt(other.reserves_kt), share: CMA.n1(other.share_of_world_reserves_pct) }) }));
+        notesHost.appendChild(h("p", { class: "small muted", text: T("other_note_reserves", { mt: mt(other.reserves_kt), share: CMA.n1(other.share_of_world_reserves_pct) }) }));
       }
       notesHost.appendChild(h("p", { class: "small muted", text: T("life_note") }));
-      altText.textContent = T("text_alt", { list: sorted.slice(0, 5).map(function (r) { return r.display_name + " " + kt(r[m.key]) + " kt"; }).join(", ") });
+      altText.textContent = T("text_alt", { list: sorted.slice(0, 5).map(function (r) { return r.display_name + " " + mt(r[m.key]) + " " + T("unit_mt"); }).join(", ") });
     }
 
     function describe(r) {
-      return [r.display_name, T("tip_output", { year: year, kt: kt(r.production_2025e_kt), share: CMA.n1(r.share_of_world_production_pct) }),
-        T("tip_reserves", { kt: kt(r.reserves_kt), share: CMA.n1(r.share_of_world_reserves_pct) }), T("tip_life", { n: kt(r.reserve_life_years) })].join(". ");
+      return [r.display_name, T("tip_output", { year: year, mt: mt(r.production_2025e_kt), share: CMA.n1(r.share_of_world_production_pct) }),
+        T("tip_reserves", { mt: mt(r.reserves_kt), share: CMA.n1(r.share_of_world_reserves_pct) }), T("tip_life", { n: kt(r.reserve_life_years) })].join(". ");
     }
     function showTip(r, g) {
       tip.textContent = "";
       tip.appendChild(h("strong", { text: r.display_name }));
-      [T("tip_output", { year: year, kt: kt(r.production_2025e_kt), share: CMA.n1(r.share_of_world_production_pct) }),
-        T("tip_reserves", { kt: kt(r.reserves_kt), share: CMA.n1(r.share_of_world_reserves_pct) }), T("tip_life", { n: kt(r.reserve_life_years) })]
+      [T("tip_output", { year: year, mt: mt(r.production_2025e_kt), share: CMA.n1(r.share_of_world_production_pct) }),
+        T("tip_reserves", { mt: mt(r.reserves_kt), share: CMA.n1(r.share_of_world_reserves_pct) }), T("tip_life", { n: kt(r.reserve_life_years) })]
         .forEach(function (l) { tip.appendChild(h("div", { text: l })); });
       tip.hidden = false;
       var wrapR = mapwrap.getBoundingClientRect(), gr = g.getBoundingClientRect();
@@ -179,8 +179,8 @@
       .map(function (c) { return h("th", { scope: "col", text: T(c[0], c[1]) }); })));
     var all = rows.filter(function (r) { return r.country !== "World total"; }).sort(function (a, b) { return b.production_2025e_kt - a.production_2025e_kt; }).concat([world]);
     var body = h("tbody", {}, all.map(function (r) {
-      return h("tr", {}, h("td", { text: r.country === "World total" ? T("world_row") : r.display_name }), h("td", { text: kt(r.production_2025e_kt) }), h("td", { text: CMA.n1(r.share_of_world_production_pct) + "%" }),
-        h("td", { text: kt(r.reserves_kt) }), h("td", { text: CMA.n1(r.share_of_world_reserves_pct) + "%" }), h("td", { text: kt(r.reserve_life_years) }));
+      return h("tr", {}, h("td", { text: r.country === "World total" ? T("world_row") : r.display_name }), h("td", { text: mt(r.production_2025e_kt) }), h("td", { text: CMA.n1(r.share_of_world_production_pct) + "%" }),
+        h("td", { text: mt(r.reserves_kt) }), h("td", { text: CMA.n1(r.share_of_world_reserves_pct) + "%" }), h("td", { text: kt(r.reserve_life_years) }));
     }));
     // ---- mined here, refined there: mine and refinery share of eight countries, paired
     var RM = CMA.rows(window.CMA_DATA.supply.refined), none = RM.filter(function (r) { return !r.mine_listed; });
@@ -200,8 +200,8 @@
     var mrAria = T("mr_aria", { n: RM.length, year: year, list: RM.map(function (r) { return T("mr_aria_item", { name: r.display_name, mine: r.mine_listed ? pctTxt(r.mine_share_pct) : T("mr_none"), ref: pctTxt(r.refinery_share_pct) }); }).join("; ") });
     var mrHead = h("thead", {}, h("tr", {}, ["mr_col_country", "mr_col_mine", "mr_col_mine_share", "mr_col_ref", "mr_col_ref_share"].map(function (k) { return h("th", { scope: "col", text: T(k) }); })));
     var mrBody = h("tbody", {}, RM.map(function (r) {
-      return h("tr", {}, h("td", { text: r.display_name }), h("td", { text: r.mine_listed ? kt(r.mine_kt) : T("mr_none") }), h("td", { text: r.mine_listed ? pctTxt(r.mine_share_pct) : T("mr_none") }),
-        h("td", { text: kt(r.refinery_kt) }), h("td", { text: pctTxt(r.refinery_share_pct) }));
+      return h("tr", {}, h("td", { text: r.display_name }), h("td", { text: r.mine_listed ? mt(r.mine_kt) : T("mr_none") }), h("td", { text: r.mine_listed ? pctTxt(r.mine_share_pct) : T("mr_none") }),
+        h("td", { text: mt(r.refinery_kt) }), h("td", { text: pctTxt(r.refinery_share_pct) }));
     }));
     box.appendChild(h("section", { class: "card chart-card mr", "aria-labelledby": "mr-title" },
       h("h3", { id: "mr-title", class: "qtitle", text: T("mr_title") }),

@@ -28,8 +28,8 @@
     var vars = { peak_month: CMA.monthLong(CMA.realRecord().month), peak_above: CMA.n0(CMA.realRecord().belowPct), others: J.othersText, is_are: J.isAre, top2_share: CMA.n0(top2), demand_pct: CMA.n0(ref.headline_total_pct_of_mine), china_ref: CMA.n0(china.refinery_share_pct),
       since: CMA.monthLong(String(C.first_month_of_run.value) + "-01") };
     function checkCount(status) { return CMA.rows(D.quality.checks).filter(function (r) { return r.status === status; }).length; }
-    CMA.verdictText = T("verdict", vars);                // the closing section of the story shows the same sentence
-    box.appendChild(h("p", { class: "answer summary-verdict", text: CMA.verdictText }));
+    CMA.closingVars = { peak_above: vars.peak_above, peak_month: vars.peak_month };         // the closing panel of the story: two short sentences from the same figures
+    box.appendChild(h("p", { class: "answer summary-verdict", text: T("verdict", vars) }));
 
     var items = [["s_uses", "uses", ["uses.end_use", "uses.facts"]], ["s_record", "record", ["story.record_facts", "chapters.euro"]], ["s_just", "just-copper", ["chapters.records"]],
       ["s_dollar", "dollar", ["story.guess_dollar", "dollar.correlations"]], ["s_supply", "supply", ["supply.countries", "supply.refined"]], ["s_demand", "demand", ["demand.sensitivity"]],
@@ -37,10 +37,8 @@
     box.appendChild(h("section", { class: "found", "aria-labelledby": "sum-list" },
       h("h3", { id: "sum-list", text: T("list_title") }),
       h("ul", {}, items.map(function (it) {
-        return h("li", {}, T(it[0], vars) + " ", CMA.chip(it[2]), " ", h("a", { href: "#" + it[1], text: T("go") }));
+        return h("li", {}, T(it[0], vars), h("a", { href: "#" + it[1], text: T("go") }));
       }))));
-
-    box.appendChild(CMA.drivers("sum"));
 
     function list(titleKey, key, id) {
       return h("section", { class: "cancan", "aria-labelledby": id },

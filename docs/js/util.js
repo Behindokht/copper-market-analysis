@@ -49,6 +49,12 @@
   CMA.f2 = function (x) { return CMA.minus((Math.round(x * 100) / 100).toFixed(2)); };
   CMA.s1 = function (x) { return (x >= 0 ? "+" : "") + CMA.f1(x); };
   CMA.s2 = function (x) { return (x >= 0 ? "+" : "") + CMA.f2(x); };
+  CMA.ordinal = function (n) { var v = n % 100, sfx = (v >= 11 && v <= 13) ? "th" : ({ 1: "st", 2: "nd", 3: "rd" }[n % 10] || "th"); return n + sfx; };
+  // a quantity in thousand tonnes as million tonnes with one decimal (two when it is under 0.1), for the story and the dashboard; thousand tonnes stay in the appendix
+  CMA.mt = function (kt) {
+    var v = Math.abs(kt) / 1000, txt = v >= 100 ? CMA.n0(v) : (v >= 0.1 ? v.toFixed(1) : v.toFixed(2));
+    return (kt < 0 ? "−" : "") + txt;
+  };
   CMA.pctChange = function (x) { return (x >= 0 ? "+" : "") + CMA.minus(Math.abs(x) >= 100 ? CMA.n0(x) : (Math.round(x * 10) / 10).toFixed(1)) + "%"; };
   var MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
   CMA.monthLong = function (iso) { return MONTHS[parseInt(iso.slice(5, 7), 10) - 1] + " " + iso.slice(0, 4); };
@@ -157,16 +163,41 @@
       if (!real.length) { panel.appendChild(CMA.h("p", { class: "muted", text: CMA.t("story.chip_none") })); }
       real.forEach(function (c) { panel.appendChild(CMA.h("p", { class: "small" }, CMA.t("story.chip_check", { no: c.no, description: c.description }) + " ", CMA.h("span", { class: "pill " + c.status.toLowerCase(), text: c.status }))); });
     });
-    return CMA.h("details", { class: "chipx" }, CMA.h("summary", { "aria-label": CMA.t("story.chip_label") + ": " + srcs.join(" "), text: CMA.t("story.chip_source") }), panel);
+    return CMA.h("details", { class: "chipx", "data-src": srcs.map(function (sid) { return (window.CMA_STRINGS.story.src_short || {})[sid] || (reg[sid] && reg[sid].publisher) || sid; }).filter(function (x, i, a) { return a.indexOf(x) === i; }).join(", ") }, CMA.h("summary", { "aria-label": CMA.t("story.chip_label") + ": " + srcs.join(" "), text: CMA.t("story.chip_source") }), panel);
   };
   // "Limits": a mono label over a hairline and the first two limits as plain sentences. The full list goes in the chapter's fold (limits.full).
   CMA.limits = function (items, fullTitle) {
     var h = CMA.h;
     return {
-      short: h("div", { class: "limits" }, h("p", { class: "mono limits-label", text: CMA.t("foot.limits") }), items.slice(0, 2).map(function (x) { return h("p", { class: "limit", text: x }); })),
+      short: h("div", { class: "limits" }, h("h4", { text: CMA.t("foot.limits") }), h("div", {}, items.slice(0, 2).map(function (x) { return h("p", { text: x }); }))),
       full: h("section", { class: "limits-full" }, h("h3", { text: fullTitle }), h("ul", {}, items.map(function (x) { return h("li", { text: x }); })))
     };
   };
-  CMA.bridge = function (box, text) { box.appendChild(CMA.h("p", { class: "bridge", text: text })); };
+  // a bridge sentence sits on smoked glass between two chapters: it is moved out of the chapter's sheet, and stays hidden while the reveal it was built in is closed
+  CMA.bridge = function (box, text) {
+    var el = CMA.h("p", { class: "bridge smoke", text: text }), sec = box.closest ? box.closest(".chapter") : null;
+    if (sec && sec.parentNode) { sec.parentNode.insertBefore(el, sec.nextSibling); } else { box.appendChild(el); }
+    el._rev = box.closest ? box.closest(".reveal") : null;
+    el.hidden = !!(el._rev && el._rev.hidden);
+  };
+  CMA.syncBridges = function () {
+    Array.prototype.forEach.call(document.querySelectorAll(".bridge"), function (el) { if (el._rev) { el.hidden = el._rev.hidden; } });
+    var st = document.getElementById("story"); if (st && CMA.figify) { CMA.figify(st); }
+  };
+  // every chart card inside a chapter sheet ends like a figure of the study: a rule, a short source line, the "Source" link (the chip, moved down)
+  CMA.figify = function (root) {
+    Array.prototype.forEach.call(root.querySelectorAll(".chart-card"), function (card) {
+      if (card.querySelector(".fig-foot")) { return; }
+      var chip = card.querySelector("details.chipx");
+      if (!chip) { return; }
+      var foot = CMA.h("div", { class: "fig-foot" }, CMA.h("span", { text: chip.getAttribute("data-src") || "" }));
+      chip.parentNode.removeChild(chip);
+      foot.appendChild(chip);
+      card.appendChild(foot);
+    });
+  };
+  // the foot of a figure: a rule, a short source line, the "Source" link
+  CMA.figFoot = function (text, keys) { return CMA.h("div", { class: "fig-foot" }, CMA.h("span", { text: text }), keys && keys.length ? CMA.chip(keys) : null); };
+
   CMA.pages = CMA.pages || {};
 })();

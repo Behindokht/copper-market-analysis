@@ -1,4 +1,4 @@
-/* Chapter 1: what is copper for, and who uses it? End-use bars (ICSG, 2024), three fact tiles and the mined-versus-used line.
+/* Chapter 1: what is copper for, and who uses it? The 3D copper donut (the same component as the dashboard, larger) with the three facts beside it, as in the story study.
    Data: window.CMA_DATA.uses (end_use, facts, figures). The page stops if the shares no longer add up to 100. */
 (function () {
   var CMA = window.CMA, t = CMA.t, h = CMA.h;
@@ -11,22 +11,23 @@
     var year = rows[0].year;
     if (rows.reduce(function (s, r) { return s + r.share_pct; }, 0) !== 100) { throw new Error("the end-use shares no longer add up to 100"); }
     var names = window.CMA_STRINGS.uses.sectors;
-    var maxShare = Math.max.apply(null, rows.map(function (r) { return r.share_pct; })), scale = Math.ceil(maxShare / 5) * 5 + 5;
+    var data = rows.map(function (r) { return { name: names[r.sector], pct: r.share_pct }; });
 
     box.appendChild(h("p", { class: "answer", text: T("answer") }));
 
-    var list = h("ul", { class: "bars", role: "img", "aria-label": rows.map(function (r) { return T("bar_aria", { name: names[r.sector], pct: r.share_pct }); }).join(". ") }, rows.map(function (r) {
-      return h("li", { class: "brow dc", "aria-hidden": "true" },
-        h("div", { class: "bname", text: names[r.sector] }),
-        h("div", { class: "btrack" }, h("span", { class: "bfill", style: "width:" + (r.share_pct / scale * 100) + "%" })),
-        h("div", { class: "bval num", text: r.share_pct + "%" }));
-    }));
-    box.appendChild(h("div", { class: "card chart-card" },
-      h("h3", { class: "qtitle", text: T("chart_title") }), list,
-      h("p", { class: "small muted", text: T("caption", { year: year }) }), CMA.chip(["uses.end_use"])));
+    var left = h("div", { class: "donut-wrap" }), leg = h("ul", { class: "eu-leg" }), facts = h("div", { class: "facts" });
+    [["F06", "fact_wire", CMA.n0(F.F06.value) + "%"], ["F01", "fact_china", CMA.n0(F.F01.value) + "%"], ["F02", "fact_recycled", T("fact_third")]].forEach(function (f) {
+      var v = F[f[0]].value;
+      facts.appendChild(h("div", { class: "fact" }, h("b", { text: f[2] }), h("span", { text: T(f[1]) }), h("i", { style: "--w:" + v + "%", role: "img", "aria-label": T("fact_aria", { text: T(f[1]), pct: CMA.n0(v) }) })));
+    });
+    box.appendChild(h("div", { class: "fig" },
+      h("h3", { text: T("chart_title") }), h("p", { class: "sub", text: T("caption", { year: year }) }),
+      h("div", { class: "eu-wrap" }, h("div", {}, left, leg), facts),
+      CMA.figFoot(T("source_line"), ["uses.end_use", "uses.facts"])));
+    CMA.donut(left, { data: data, idle: [String(year), T("donut_idle")], height: 360, legend: leg,
+      aria: T("donut_aria", { list: data.map(function (d) { return d.name + " " + d.pct + "%"; }).join(", "), year: year }) });
 
-    box.appendChild(h("p", {}, T("facts_line", { wire: CMA.n0(F.F06.value), china: CMA.n0(F.F01.value) }) + " ", CMA.chip(["uses.facts"])));
-    box.appendChild(h("p", { class: "small" }, T("scale_line", { mined: CMA.n0(F.F05.value), used: CMA.n1(F.F04.value), year: F.F05.year }) + " ", CMA.chip(["uses.facts"])));
+    box.appendChild(h("p", { class: "small", style: "margin-top:16px" }, T("scale_line", { mined: CMA.n0(F.F05.value), used: CMA.n1(F.F04.value), year: F.F05.year })));
 
     var lim = CMA.limits(window.CMA_STRINGS.uses.notshow.items.map(function (x) { return CMA.fill(x, { year: year }); }), T("notshow.title"));
     box.appendChild(lim.short);

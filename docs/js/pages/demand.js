@@ -16,7 +16,7 @@
     var mine = ctx.world_mine_production_2025e_t.value;
     // whole kilotonnes, halves rounded to the even number: the same rule as Python's round(), so the page matches the notebook
     var r0 = function (x) { var f = Math.floor(x); return x - f === 0.5 ? (f % 2 === 0 ? f : f + 1) : Math.round(x); };
-    var ktv = function (k) { return CMA.minus(CMA.n0(r0(k))); };
+    var ktv = function (k) { return CMA.mt(k); };     // thousand tonnes in, million tonnes out
     var kt = function (t) { return ktv(t / 1000); };
     var pct = function (t) { return CMA.minus(CMA.n1(t / mine * 100)); };
 
@@ -68,7 +68,7 @@
         h("div", { class: "rname", text: name }),
         h("div", { class: "rtrack" }, h("span", { class: "rbar", style: "left:" + left + "%;width:" + width + "%" }),
           h("span", { class: "rref", style: "left:" + (refPct / axisMax * 100) + "%" })),
-        h("div", { class: "rval", text: T("range_value", { lo: CMA.n1(lo), hi: CMA.n1(hi), lo_kt: ktv(loKt), hi_kt: ktv(hiKt) }) }),
+        h("div", { class: "rval", text: T("range_value", { lo: CMA.n1(lo), hi: CMA.n1(hi), lo_mt: ktv(loKt), hi_mt: ktv(hiKt) }) }),
         note ? h("div", { class: "small muted", text: note }) : null, extra);
     }
     var ticks = [];
@@ -85,7 +85,7 @@
         ref: CMA.n1(refPct) + "%", one_lo: vars.r1_lo + "%", one_hi: vars.r1_hi + "%", all_lo: vars.r2_lo + "%", all_hi: vars.r2_hi + "%" }) },
         h("li", { class: "rrow" }, h("div", { class: "rname", text: T("range_ref") }),
           h("div", { class: "rtrack" }, h("span", { class: "rdot", style: "left:" + (refPct / axisMax * 100) + "%" })),
-          h("div", { class: "rval", text: T("range_ref_value", { pct: CMA.n1(refPct), kt: kt(refRow.headline_total_t) }) })),
+          h("div", { class: "rval", text: T("range_ref_value", { pct: CMA.n1(refPct), mt: kt(refRow.headline_total_t) }) })),
         rangeRow(T("range_one"), rg["one_at_a_time:low"].total_pct_of_mine, rg["one_at_a_time:high"].total_pct_of_mine, rg["one_at_a_time:low"].total_kt, rg["one_at_a_time:high"].total_kt,
           T("range_cases", { n: CMA.n0(rg["one_at_a_time:low"].cases_considered) })),
         rangeRow(T("range_all"), rg["all_combinations:low"].total_pct_of_mine, rg["all_combinations:high"].total_pct_of_mine, rg["all_combinations:low"].total_kt, rg["all_combinations:high"].total_kt,
@@ -153,12 +153,12 @@
     }
     function panel(year) {
       var c = calc(year, s);
-      var val = function (t) { return T("value", { kt: kt(t), pct: pct(t) }); };
+      var val = function (t) { return T("value", { mt: kt(t), pct: pct(t) }); };
       var rows = [
         bar("ev", T("row_ev"), T("row_ev_sub"), c.ev, val(c.ev)),
         bar("dc", T("row_dc"), T("row_dc_sub"), c.dcNew, val(c.dcNew)),
-        bar("dcx", T("row_dcx"), T("row_dcx_sub"), c.dcExtra, c.dcExtra < 0 ? T("value_slow", { kt: kt(c.dcExtra) }) : val(c.dcExtra)),
-        bar("mkt", T("row_mkt"), T("row_mkt_sub"), c.mkt, T("value_band", { kt: kt(c.mkt), pct: pct(c.mkt), lo: kt(c.mktLo), hi: kt(c.mktHi) })),
+        bar("dcx", T("row_dcx"), T("row_dcx_sub"), c.dcExtra, c.dcExtra < 0 ? T("value_slow", { mt: kt(c.dcExtra) }) : val(c.dcExtra)),
+        bar("mkt", T("row_mkt"), T("row_mkt_sub"), c.mkt, T("value_band", { mt: kt(c.mkt), pct: pct(c.mkt), lo: kt(c.mktLo), hi: kt(c.mktHi) })),
         bar("total", T("row_total"), T("row_total_sub"), c.total, val(c.total))
       ];
       var summary = [T("row_ev") + " " + val(c.ev), T("row_dc") + " " + val(c.dcNew), T("row_total") + " " + val(c.total)].join(". ");
@@ -174,15 +174,15 @@
       var lowerNew = (1 - it.new_capacity_copper_t / w.new_capacity_copper_t) * 100;
       var bothPos = w.extra_vs_base_t > 0 && it.extra_vs_base_t > 0;
       var lowerExtra = bothPos ? (1 - it.extra_vs_base_t / w.extra_vs_base_t) * 100 : null;
-      var val = function (t) { return T("value", { kt: kt(t), pct: pct(t) }); };
+      var val = function (t) { return T("value", { mt: kt(t), pct: pct(t) }); };
       basisHost.textContent = "";
       basisHost.appendChild(h("div", { class: "row" }, h("h3", { id: "dm-basis", class: "qtitle", text: T("basis_title") }), h("span", { class: "pill warn", text: T("basis_open") })));
       basisHost.appendChild(h("p", { text: T("basis_text", { t_lo: num(asm.dc_cu_t_per_mw.low), t_hi: num(asm.dc_cu_t_per_mw.high), year: 2030 }) }));
       basisHost.appendChild(h("ul", { class: "bars" },
         bar("dc", T("basis_new") + ": " + T("basis_whole"), null, w.new_capacity_copper_t, val(w.new_capacity_copper_t)),
         bar("dcx", T("basis_new") + ": " + T("basis_it"), null, it.new_capacity_copper_t, val(it.new_capacity_copper_t)),
-        bar("dc", T("basis_extra") + ": " + T("basis_whole"), null, w.extra_vs_base_t, w.extra_vs_base_t < 0 ? T("value_slow", { kt: kt(w.extra_vs_base_t) }) : val(w.extra_vs_base_t)),
-        bar("dcx", T("basis_extra") + ": " + T("basis_it"), null, it.extra_vs_base_t, it.extra_vs_base_t < 0 ? T("value_slow", { kt: kt(it.extra_vs_base_t) }) : val(it.extra_vs_base_t))));
+        bar("dc", T("basis_extra") + ": " + T("basis_whole"), null, w.extra_vs_base_t, w.extra_vs_base_t < 0 ? T("value_slow", { mt: kt(w.extra_vs_base_t) }) : val(w.extra_vs_base_t)),
+        bar("dcx", T("basis_extra") + ": " + T("basis_it"), null, it.extra_vs_base_t, it.extra_vs_base_t < 0 ? T("value_slow", { mt: kt(it.extra_vs_base_t) }) : val(it.extra_vs_base_t))));
       basisHost.appendChild(h("p", { class: "verdict", text: T("basis_result", { pct: CMA.n0(lowerNew) }) + " " + (bothPos ? T("basis_result_extra", { pct: CMA.n0(lowerExtra) }) : T("basis_result_none")) }));
     }
 
@@ -212,7 +212,7 @@
     }).filter(function (g) { return g.swing > 0; }).sort(function (a, b) { return b.swing - a.swing; });
     var tdom = Math.ceil(Math.max.apply(null, items.map(function (g) { return Math.max(-g.lo, g.hi); })) / 100000) * 100000;
     var signed = function (t) { return (t > 0 ? "+" : "") + kt(t); };
-    var lab = function (t) { return Math.abs(t) < 500 ? T("sens_tiny") : T("sens_value", { value: signed(t) }); };
+    var lab = function (t) { return Math.abs(t) < 5000 ? T("sens_tiny") : T("sens_value", { value: signed(t) }); };
     var tbars = h("ul", { class: "tornado" }, items.map(function (g) {
       var negW = -g.lo / tdom * 50, posW = g.hi / tdom * 50;
       return h("li", { class: "trow", "aria-label": T("sens_aria", { label: g.label, lo: signed(g.lo), hi: signed(g.hi) }) },
@@ -273,15 +273,15 @@
           h("span", { class: "seg ev", style: "width:" + wEv + "%", title: T("seg_ev") }),
           h("span", { class: "seg dcx", style: "width:" + wDc + "%", title: T("seg_dc") })),
         h("div", { class: "segvals small" },
-          h("span", {}, h("i", { class: "sw2 ev" }), T("seg_ev") + ": " + T("seg_value", { kt: kt(c.ev) })),
-          h("span", {}, h("i", { class: "sw2 dcx" }), T("seg_dc") + ": " + T("seg_value", { kt: kt(c.dcExtra) }))),
-        h("div", { class: "bval num" }, h("span", { class: "small muted", style: "display:block", text: T("total_label") }), T("bar_total", { kt: kt(c.total), pct: pct(c.total) })));
+          h("span", {}, h("i", { class: "sw2 ev" }), T("seg_ev") + ": " + T("seg_value", { mt: kt(c.ev) })),
+          h("span", {}, h("i", { class: "sw2 dcx" }), T("seg_dc") + ": " + T("seg_value", { mt: kt(c.dcExtra) }))),
+        h("div", { class: "bval num" }, h("span", { class: "small muted", style: "display:block", text: T("total_label") }), T("bar_total", { mt: kt(c.total), pct: pct(c.total) })));
     }
     var mainCard = h("div", { class: "card chart-card" },
       h("h3", { class: "qtitle", text: T("main_title") }),
       h("p", { class: "hint", text: T("main_hint") }),
       h("ul", { class: "stacks", role: "img", "aria-label": T("main_aria", { y1: 2030, y2: 2035,
-        t1: T("bar_total", { kt: kt(ref30.total), pct: pct(ref30.total) }), t2: T("bar_total", { kt: kt(ref35.total), pct: pct(ref35.total) }) }) },
+        t1: T("bar_total", { mt: kt(ref30.total), pct: pct(ref30.total) }), t2: T("bar_total", { mt: kt(ref35.total), pct: pct(ref35.total) }) }) },
         stack(2030, ref30), stack(2035, ref35)),
       h("p", { class: "finding", text: T("range_line", { lo: vars.r1_lo, hi: vars.r1_hi }) }),
       h("p", { class: "small muted", text: T("state_ref") }));

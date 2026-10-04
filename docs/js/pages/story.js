@@ -1,4 +1,5 @@
-/* The story: one long page. An opener, then eight chapters in order: 1 uses, 2 record (with guess 2), 3 not only copper, 4 dollar (with guess 1), 5 supply,
+/* The story: one long page, built to match design_reference/story-study.html: the patina photo behind everything, an opener on smoked glass, light glass sheets for the chapters,
+   smoked bridges between them, a smoked closing panel. (Older note: one long page.) An opener, then eight chapters in order: 1 uses, 2 record (with guess 2), 3 not only copper, 4 dollar (with guess 1), 5 supply,
    6 demand, 7 aluminium, 8 what it adds up to. Each chapter has an anchor; the data-quality page is a separate appendix. Every number comes from the data files in window.CMA_DATA. */
 (function () {
   var CMA = window.CMA, t = CMA.t, h = CMA.h;
@@ -26,52 +27,42 @@
     CMA.sources.reset();
     root.textContent = "";
 
-    // ---- opener: dark, with the copper plate photo when docs/img/copper-plate.jpg exists (see tools/photo_flag.py), plain ink if not
+    // ---- opener: smoked glass over the photo (no photo of its own: the patina photo is the only photo on the site)
     var realRec = CMA.realRecord();
     var U = {};
     CMA.rows(window.CMA_DATA.uses.figures).forEach(function (r) { U[r.fact_id] = r; });
-    var runDate = CMA.rows(window.CMA_DATA.quality.checks)[0].run_date, checkDate = parseInt(runDate.slice(8, 10), 10) + " " + CMA.monthLong(runDate);
-    var nChecks = CMA.rows(window.CMA_DATA.quality.checks).filter(function (r) { return r.status === "PASS"; }).length;
-    var sparkSvg = CMA.svg("svg", { class: "spark spark-title", viewBox: "-40 -40 80 80", "aria-hidden": "true" });
-    CMA.spark.build(sparkSvg);
-    var plaque = h("aside", { class: "plaque glass lens tilt rise", style: "--i:5", "aria-label": t("hero.plaque_aria") },
-      h("p", { class: "mono", text: t("hero.plaque_label", { month: CMA.monthLong(R.nominal_latest.month) }) }),
-      h("p", { class: "price num" }, CMA.usd0(R.nominal_latest.value), h("small", { text: t("hero.plaque_unit") }), CMA.chip(["story.record_facts"])),
-      h("p", { class: "unit", text: t("hero.plaque_line") }),
-      h("dl", { class: "cert" },
-        h("div", {}, h("dt", { text: t("hero.cert_nominal") }), h("dd", {}, t("hero.cert_nominal_v", { n: CMA.n0(R.series_months.value) }), CMA.chip(["story.record_facts"]))),
-        h("div", {}, h("dt", { text: t("hero.cert_12m") }), h("dd", {}, t("hero.cert_12m_v", { pct: CMA.n0(U.copper_12m_change_pct.value), month: CMA.monthShort(U.copper_12m_ago_month.value + "-01"), price: CMA.usd0(U.copper_12m_ago_usd_t.value) }), CMA.chip(["uses.figures"]))),
-        h("div", {}, h("dt", { text: t("hero.cert_real") }), h("dd", {}, t("hero.cert_real_v", { pct: CMA.n0(realRec.belowPct), month: CMA.monthLong(realRec.month) }), CMA.chip(["story.record_facts", "chapters.records"])))));
-    var hero = h("section", { class: "hero", id: "top" }, h("div", { class: "wrap hero-grid" },
-      h("div", {},
-        h("p", { class: "eyebrow rise", style: "--i:1", text: t("hero.eyebrow") }),
-        h("h1", { class: "rise", style: "--i:2" }, h("em", { text: t("hero.title_em") }), h("span", { class: "spark-anchor" }, sparkSvg), t("hero.title_rest")),
-        h("p", { class: "lede rise", style: "--i:3", text: t("hero.lead", { years: Math.floor(R.series_months.value / 12), change: CMA.n0(U.copper_12m_change_pct.value), chapters: window.CMA_STRINGS.hero.number_words[CMA.CHAPTER_COUNT] }) }),
-        h("p", { class: "hurry rise", style: "--i:3" }, h("a", { href: "#summary", text: t("hero.summary_link") })),
-        h("ul", { class: "facts rise", style: "--i:4" },
-          h("li", {}, h("b", { class: "num", text: CMA.n0(R.series_months.value) }), h("span", { class: "mono", text: t("hero.fact_months", { year: R.series_months.month.slice(0, 4) }) })),
-          h("li", {}, h("b", { class: "num", text: CMA.n0(nChecks) }), h("span", { class: "mono", text: t("hero.fact_checks") }))),
-        h("p", { class: "dataline mono rise", style: "--i:4", text: t("hero.data_line", { latest_month: CMA.monthLong(R.nominal_latest.month), check_date: checkDate }) })),
-      plaque), h("div", { class: "wrap" }, CMA.drivers("hero")));
-    if (window.CMA_PHOTO) { hero.classList.add("has-photo"); hero.style.setProperty("--photo", 'url("' + window.CMA_PHOTO + '")'); }
-    root.appendChild(hero);
+    var plaque = h("aside", { class: "plaque smoke lens tilt", "data-frost": "22", "aria-label": t("hero.plaque_aria") },
+      h("div", { class: "kicker", text: t("hero.plaque_label", { month: CMA.monthLong(R.nominal_latest.month) }) }),
+      h("div", { class: "big num" }, CMA.usd0(R.nominal_latest.value), h("small", { text: t("hero.plaque_unit") })),
+      h("div", { class: "pl-row" }, h("span", { text: t("hero.cert_nominal") }), h("span", { text: t("hero.cert_nominal_v", { n: CMA.n0(R.series_months.value) }) })),
+      h("div", { class: "pl-row" }, h("span", { text: t("hero.cert_12m") }), h("span", { text: t("hero.cert_12m_v", { pct: CMA.n0(U.copper_12m_change_pct.value), month: CMA.monthShort(U.copper_12m_ago_month.value + "-01"), price: CMA.usd0(U.copper_12m_ago_usd_t.value) }) })),
+      h("div", { class: "pl-row" }, h("span", { text: t("hero.cert_real") }), h("span", { text: t("hero.cert_real_v", { pct: CMA.n0(realRec.belowPct), month: CMA.monthLong(realRec.month) }) })));
+    var opener = h("section", { class: "opener", id: "top" },
+      h("div", { class: "op-text smoke" },
+        h("div", { class: "kicker", text: t("hero.eyebrow") }),
+        h("h1", {}, h("em", { text: t("hero.title_em") }), t("hero.title_rest")),
+        h("p", { text: t("hero.lead", { years: Math.floor(R.series_months.value / 12), change: CMA.n0(U.copper_12m_change_pct.value), chapters: window.CMA_STRINGS.hero.number_words[CMA.CHAPTER_COUNT] }) }),
+        h("a", { href: "#summary", text: t("hero.summary_link") })),
+      plaque);
+    root.appendChild(opener);
     if (CMA.glass) { CMA.glass.init(root); }
-    setTimeout(function () { CMA.spark.fire(sparkSvg); }, 1050);
 
-    var wrap = h("div", { class: "wrap" });
+    var wrap = h("div", { class: "story-wrap" });
     root.appendChild(wrap);
     var resetBtn = h("button", { class: "btn secondary small", type: "button", id: "g-reset", text: t("story.reset"), hidden: true, onclick: function () {
       CMA.store.clear(["g1", "g2"]); CMA.pages.story(root);
     } });
-    wrap.appendChild(resetBtn);
+    var drvSheet = h("section", { class: "sheet glass", "aria-labelledby": "h-drv" }, h("h2", { id: "h-drv", class: "drv-head", text: t("drivers.title") }), CMA.drivers());
+    wrap.appendChild(drvSheet);
+    drvSheet.appendChild(resetBtn);
     function refreshReset() { resetBtn.hidden = CMA.store.get("g1") === null && CMA.store.get("g2") === null; }
 
-    // ---- chapter shells: an index column and a body, with the chapter's question as its heading
+    // ---- chapter shells: a light glass sheet; the chapter label ("Chapter 1 of 8") sits above the chapter's question
     var bodies = {};
     CHAPTERS.forEach(function (c) {
-      var idx = h("div", { class: "index" }, t("story." + c.label), c.numeral ? h("b", { text: c.numeral }) : null, h("span", { class: "of-total", text: t("story.of_total", { n: CMA.CHAPTER_COUNT }) }));
-      var body = h("div", { class: "story-body" }, h("h2", { id: c.id + "-title", tabindex: "-1", text: t("pages." + c.page + ".title") }));
-      wrap.appendChild(h("section", { class: "story chapter" + (c.wide ? " wide" : ""), id: c.id, "aria-labelledby": c.id + "-title" }, idx, body));
+      var label = h("div", { class: "ch" }, t("story." + c.label) + " ", h("b", { text: c.numeral }), " " + t("story.of_total", { n: CMA.CHAPTER_COUNT }));
+      var body = h("div", { class: "story-body" }, label, h("h2", { id: c.id + "-title", tabindex: "-1", text: t("pages." + c.page + ".title") }));
+      wrap.appendChild(h("section", { class: "sheet glass chapter", id: c.id, "aria-labelledby": c.id + "-title" }, body));
       bodies[c.id] = body;
     });
 
@@ -90,6 +81,7 @@
       reveal2.hidden = false;
       skip2.hidden = true;
       CMA.chapters.record(reveal2, { choice: choice });
+      CMA.syncBridges();
     }
     bodies.record.appendChild(h("p", { class: "hint", text: t("story.guess2.hint") }));
     bodies.record.appendChild(h("fieldset", { class: "opts" }, h("legend", { text: t("story.guess2.legend") }), radios));
@@ -158,7 +150,7 @@
       renderResult1();
       reveal1.hidden = false;
       skip1.hidden = true;
-      if (!shown1) { shown1 = true; CMA.chapters.dollar(rest1); }
+      if (!shown1) { shown1 = true; CMA.chapters.dollar(rest1); CMA.syncBridges(); }
     }
     function setLocked(v) {
       locked = v;
@@ -194,18 +186,18 @@
     CMA.chapters.aluminium(bodies.aluminium);
     CMA.chapters.summary(bodies.summary);
     refreshReset();
+    CMA.syncBridges();
 
-    // ---- one Sources line at the foot, with every source used on the page
-    CMA.sources.render(wrap);
+    // ---- one Sources line at the foot, with every source used on the page, on a light sheet
+    var srcWrap = h("section", { class: "sheet glass slim", "aria-label": t("foot.sources") });
+    wrap.appendChild(srcWrap);
+    CMA.sources.render(srcWrap);
 
-    // ---- the closing section: the verdict on a glass panel over the copper plate (the photo is mirrored). Plain ink when the photo is not there.
-    var closing = h("section", { class: "endpiece", "aria-labelledby": "endpiece-title" },
-      h("div", { class: "wrap endpiece-wrap" },
-        h("div", { class: "endpiece-panel glass lens" },
-          h("h2", { id: "endpiece-title", class: "endpiece-title", text: t("pages.summary.title") }),
-          h("p", { class: "endpiece-verdict", text: CMA.verdictText }),
-          h("p", { class: "endpiece-links" }, h("a", { href: "#dashboard", text: t("nav.dashboard") }), h("a", { href: "#quality", text: t("summary.appendix_link") })))));
-    if (window.CMA_PHOTO) { closing.classList.add("has-photo"); closing.style.setProperty("--photo", 'url("' + window.CMA_PHOTO + '")'); }
-    root.appendChild(closing);
+    // ---- the closing panel: smoked glass, two short sentences (not the chapter 8 paragraph again) and the two links
+    var cv = CMA.closingVars;
+    root.appendChild(h("section", { class: "closing smoke lens", "data-frost": "22", "aria-labelledby": "h-close" },
+      h("div", {}, h("div", { class: "kicker", id: "h-close", text: t("story.close_title") }), h("p", { text: t("story.close_text", { peak_above: cv.peak_above, peak_month: cv.peak_month }) })),
+      h("nav", { "aria-label": t("story.close_nav") }, h("a", { href: "#dashboard", text: t("story.close_dash") }), h("a", { href: "#quality", text: t("summary.appendix_link") }))));
+    if (CMA.glass) { CMA.glass.init(root); }
   };
 })();

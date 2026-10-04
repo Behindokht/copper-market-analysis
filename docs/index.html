@@ -9,26 +9,27 @@
 </head>
 <body>
 <a class="skip" href="#main">Skip to the content</a>
-<header class="nav rise" style="--i:0">
-  <div class="nav-bar glass lens">
+<div class="bg" id="bg" aria-hidden="true"></div>
+<div class="app">
+<header class="top glass lens" id="topbar" data-view="dashboard" data-frost="22">
+  <div class="top-in">
     <a class="brand" href="#dashboard" id="brand"></a>
-    <nav class="main" id="nav" aria-label="Views"></nav>
+    <nav class="views" id="nav" aria-label="Views"></nav>
+    <a class="status" id="status" href="#quality" hidden></a>
   </div>
-  <div class="subnav glass lens" id="subnav-wrap" hidden>
-    <nav class="main sub" id="subnav" aria-label="Chapters"></nav>
-  </div>
+  <nav class="chap" id="subnav" aria-label="Chapters" hidden></nav>
 </header>
 <main id="main" tabindex="-1">
-  <section class="page no-hero" id="dashboard" aria-labelledby="dashboard-title"></section>
+  <section class="page" id="dashboard" aria-labelledby="dashboard-title"></section>
   <section class="page" id="story" hidden></section>
-  <section class="page no-hero" id="quality" aria-labelledby="quality-title" hidden></section>
-  <section class="page no-hero" id="method" aria-labelledby="method-title" hidden></section>
+  <section class="page" id="quality" aria-labelledby="quality-title" hidden></section>
+  <section class="page" id="method" aria-labelledby="method-title" hidden></section>
 </main>
-<footer class="foot" id="footer"></footer>
+<footer class="foot smoke" id="footer"></footer>
+</div>
 <div class="sr" id="live" aria-live="polite"></div>
 <noscript><div class="wrap"><p>This site draws its charts with JavaScript. The numbers behind every chart are in the repository.</p></div></noscript>
 <script src="js/strings.en.js"></script>
-<script src="js/photo.js"></script>
 <script src="data/story.js"></script>
 <script src="data/chapters.js"></script>
 <script src="data/quality.js"></script>
