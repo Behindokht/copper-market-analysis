@@ -213,9 +213,9 @@
       h("details", { class: "tableview" }, h("summary", { text: T("mr_table") }), h("div", { class: "tablewrap" }, h("table", {}, mrHead, mrBody))),
       CMA.chip(["supply.refined"])));
 
-    box.appendChild(h("aside", { class: "note", "aria-labelledby": "sup-ns" },
-      h("h3", { id: "sup-ns", text: T("notshow.title") }), h("ul", {}, window.CMA_STRINGS.supply.notshow.items.map(function (x) { return h("li", { text: x }); }))));
-    box.appendChild(CMA.fold(T("details_lead"), [h("div", { class: "tablewrap tall" }, h("table", {}, head, body))]));
+    var lim = CMA.limits(window.CMA_STRINGS.supply.notshow.items, T("notshow.title"));
+    box.appendChild(lim.short);
+    box.appendChild(CMA.fold(T("details_lead"), [lim.full, h("div", { class: "tablewrap tall" }, h("table", {}, head, body))]));
     CMA.sources.add(window.CMA_STRINGS.supply.sources.names, T("sources.attribution"));
     CMA.bridge(box, T("bridge"));
   };

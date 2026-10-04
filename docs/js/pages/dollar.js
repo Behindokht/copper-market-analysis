@@ -100,50 +100,16 @@
 
     // ---- what this page does not show
     var nsItems = window.CMA_STRINGS.dollar.notshow.items.map(function (s) { return CMA.fill(s, { me_end: CMA.f2(meEnd["pearson r"]), me_avg: CMA.f2(meAvg["pearson r"]) }); });
-    wrap.appendChild(h("aside", { class: "note", "aria-labelledby": "dollar-ns" },
-      h("h3", { id: "dollar-ns", text: T("notshow.title") }), h("ul", {}, nsItems.map(function (s) { return h("li", { text: s }); }))));
+    var lim = CMA.limits(nsItems, T("notshow.title"));
+    wrap.appendChild(lim.short);
 
     // =============================== the details, closed by default
-    var fold = [];
+    var fold = [lim.full];
     fold.push(h("p", { class: "small", text: T("measured", vars) }));
     fold.push(h("details", { class: "tableview" }, h("summary", { text: T("sc_table") }), h("div", { class: "tablewrap" }, h("table", {},
       h("thead", {}, h("tr", {}, ["sc_col_month", "sc_col_dollar", "sc_col_copper", "sc_col_dir"].map(function (k) { return h("th", { scope: "col", text: T(k) }); }))),
       h("tbody", {}, SC.map(function (r) { return h("tr", {}, h("td", { text: r.month.slice(0, 7) }), h("td", { text: CMA.s1(r.dollar_pct) }), h("td", { text: CMA.s1(r.copper_pct) }), h("td", { text: T("sc_dir_" + r.direction) })); }))))));
 
-    // ---- the level chart, kept in the fold: both lines end higher, so it is not the chart that answers the question
-    var card = h("div", { class: "card chart-card" });
-    card.appendChild(h("h3", { class: "qtitle", text: T("level_title") }));
-    card.appendChild(h("p", { class: "hint", text: T("level_hint") }));
-    card.appendChild(h("div", { class: "key" },
-      h("span", { style: "color:var(--copper)" }, h("span", { class: "sw" }), h("span", { style: "color:var(--ink)", text: T("label_copper") })),
-      h("span", { style: "color:var(--verdigris)" }, h("span", { class: "sw dash" }), h("span", { style: "color:var(--ink)", text: T("label_dollar") }))));
-    var host = h("div", { class: "chart-host" });
-    card.appendChild(host);
-    var N = SER.length, cu = SER.map(function (r) { return r.copper_indexed; }), dol = SER.map(function (r) { return r.dollar_indexed; });
-    var marks = [
-      { series: "copper", i: N - 1, lines: [CMA.monthLong(SER[N - 1].month), T("m_cu", { value: CMA.n0(cu[N - 1]) })], dx: -14, dy: -34, anchor: "end" },
-      { series: "dollar", i: N - 1, lines: [CMA.monthLong(SER[N - 1].month), T("m_dol", { value: CMA.n0(dol[N - 1]) })], dx: -14, dy: 46, anchor: "end" }
-    ];
-    card.appendChild(h("p", { class: "small muted", style: "margin-top:10px", text: T("main_note", { base_month: baseMonth }) }));
-    card.appendChild(h("ol", { class: "marklist" }, marks.map(function (m) { return h("li", { text: m.lines[0] + ": " + m.lines[1] }); })));
-    var xTicks = [{ i: 0, label: String(SER[0].month.slice(0, 4)) }];
-    SER.forEach(function (r, i) { var y = +r.month.slice(0, 4); if (r.month.slice(5, 7) === "01" && y % 5 === 0 && i > 12) { xTicks.push({ i: i, label: String(y) }); } });
-    var top = Math.ceil(Math.max.apply(null, cu.concat(dol)) / 50) * 50;
-    var yTicks = []; for (var yv = 50; yv <= top; yv += 50) { yTicks.push(yv); }
-    CMA.lineChart(host, {
-      n: N, yMin: 50, yMax: top, yTicks: yTicks, yFormat: CMA.n0, yLabel: T("main_y", { base_month: baseMonth }), xTicks: xTicks, marginRight: 24,
-      series: [
-        { id: "copper", color: "--copper", values: cu, label: { text: T("label_copper"), short: T("label_copper_short") } },
-        { id: "dollar", color: "--verdigris", dash: "6 4", values: dol, label: { text: T("label_dollar"), short: T("label_dollar_short") } }
-      ],
-      marks: marks,
-      tip: function (i) {
-        var r = SER[i];
-        return { title: CMA.monthLong(r.month), lines: [T("tip_cu", { value: CMA.n0(r.copper_indexed), usd: CMA.usd0(r.copper_usd_t) }), T("tip_dol", { value: CMA.n0(r.dollar_indexed) })] };
-      },
-      aria: T("main_aria", { from: CMA.monthLong(SER[0].month), to: CMA.monthLong(SER[N - 1].month), base_month: baseMonth })
-    });
-    fold.push(card);
 
     // the 36-month correlation chart
     var rcard = h("div", { class: "card chart-card" });

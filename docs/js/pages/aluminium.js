@@ -66,10 +66,13 @@
     var list = stmt.slice(at + " copper in ".length);
     box.appendChild(h("section", { "aria-labelledby": "al-repl" }, h("h3", { id: "al-repl", text: T("replaces_title") }),
       h("p", { text: T("replaces", { list: list.charAt(0).toUpperCase() + list.slice(1) }) }), h("p", { class: "small muted", text: T("replaces_src") })));
-    box.appendChild(h("section", { "aria-labelledby": "al-holds" }, h("h3", { id: "al-holds", text: T("holds_title") }), h("p", { text: T("holds", vars) })));
+    box.appendChild(h("section", { "aria-labelledby": "al-wins" }, h("h3", { id: "al-wins", text: T("wins_title") }), h("p", { text: T("wins") })));
+    box.appendChild(h("section", { "aria-labelledby": "al-holds" }, h("h3", { id: "al-holds", text: T("holds_title") }),
+      h("ul", { class: "holds" }, window.CMA_STRINGS.aluminium.holds_lines.map(function (x) { return h("li", { text: CMA.fill(x, vars) }); }))));
+    box.appendChild(h("p", { class: "closing", text: T("closing") }));
 
-    box.appendChild(h("aside", { class: "note", "aria-labelledby": "al-ns" },
-      h("h3", { id: "al-ns", text: T("notshow.title") }), h("ul", {}, window.CMA_STRINGS.aluminium.notshow.items.map(function (x) { return h("li", { text: x }); }))));
+    var lim = CMA.limits(window.CMA_STRINGS.aluminium.notshow.items, T("notshow.title"));
+    box.appendChild(lim.short);
 
     // ---- the working, behind the fold
     var rowsW = [
@@ -80,7 +83,7 @@
     ];
     var wt = h("table", {}, h("thead", {}, h("tr", {}, h("th", { scope: "col", text: T("w_what") }), h("th", { scope: "col", text: T("w_value") }))),
       h("tbody", {}, rowsW.map(function (r) { return h("tr", {}, h("td", { text: T(r[0], r[2]) }), h("td", { class: "num", text: r[1] })); })));
-    box.appendChild(CMA.fold(T("working_lead"), [h("div", { class: "tablewrap" }, wt), h("p", { class: "small muted", text: T("w_note") })]));
+    box.appendChild(CMA.fold(T("working_lead"), [lim.full, h("div", { class: "tablewrap" }, wt), h("p", { class: "small muted", text: T("w_note") })]));
 
     CMA.sources.add(window.CMA_STRINGS.aluminium.sources.names, T("sources.attribution"));
     CMA.bridge(box, T("bridge"));

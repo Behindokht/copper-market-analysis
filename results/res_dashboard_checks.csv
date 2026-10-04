@@ -164,7 +164,7 @@ check_no,table_name,description,status,detail,run_date
 163,res_dollar_correlations,the dollar chapter scatter has the same months as the correlation with the broad dollar index,PASS,"247 points, 247 months",2026-10-04
 164,res_cu_al_threshold_table,every rule has both horizons and an adjusted p-value between 0 and 1,PASS,"34 rows, 17 rules, 1 below 0.05 after adjustment",2026-10-04
 165,res_demand_sensitivity,the reference total is the EV transition plus the data-centre extra over the 2024 build,PASS,1189150.0 t = 926650.0 + 262500.0,2026-10-04
-166,res_dashboard_checks,the list of checks shown on the site has no failed check,PASS,"134 passed, 6 warnings, 0 failed",2026-10-04
+166,res_dashboard_checks,the list of checks shown on the site has no failed check,PASS,"151 passed, 7 warnings, 0 failed",2026-10-04
 167,copper_end_use,"the six end-use shares add up to 100 percent (one scope, one year)",PASS,6 sectors add up to 100 percent,2026-10-04
 168,physical_constants,"copper and aluminium both have a conductivity and a density, and annealed copper is 100 percent IACS by definition",PASS,"2 densities, 2 conductivities",2026-10-04
 169,copper_context_facts,"facts F01 to F07 are present, the percentages are between 0 and 100 and each has a source",PASS,7 facts,2026-10-04
@@ -220,4 +220,4 @@ check_no,table_name,description,status,detail,run_date
 219,stg_lme_copper_daily,every source_id exists in sources register,PASS,details withheld: the LME data is commercial and is never published,2026-10-04
 220,stg_usgs_copper,every source_id exists in sources register,PASS,ok,2026-10-04
 221,stg_wb_prices_monthly,every source_id exists in sources register,PASS,ok,2026-10-04
-222,sources,sources in the register that no table uses yet,INFO,none,2026-10-04
+222,sources,sources in the register that no table uses yet,INFO,"['S33', 'S34']",2026-10-04

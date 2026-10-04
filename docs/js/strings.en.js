@@ -10,7 +10,7 @@ window.CMA_STRINGS = {
  "nav": {
   "uses": "Uses",
   "record": "Record",
-  "just": "Not only copper",
+  "just": "Other metals",
   "dollar": "Dollar",
   "supply": "Supply",
   "demand": "Demand",
@@ -48,7 +48,8 @@ window.CMA_STRINGS = {
    "Eight",
    "Nine",
    "Ten"
-  ]
+  ],
+  "summary_link": "In a hurry? Read the 1-minute summary"
  },
  "pages": {
   "uses": {
@@ -175,7 +176,8 @@ window.CMA_STRINGS = {
     "S19": "BLS note on the missing October 2025 CPI"
    },
    "attribution": "Copper prices: adapted from World Bank Commodity Price Data (CC BY 4.0). US inflation: U.S. Bureau of Labor Statistics, Consumer Price Index for All Urban Consumers, retrieved from FRED, Federal Reserve Bank of St. Louis. Dollar index and 10-year yield: Board of Governors of the Federal Reserve System (US), retrieved from FRED. Full credits and licences are in the footer."
-  }
+  },
+  "of_total": "of {n}"
  },
  "dollar": {
   "intro": "This chapter compares monthly changes in the copper price with monthly changes in the US dollar. A higher dollar number means a stronger dollar.",
@@ -203,21 +205,8 @@ window.CMA_STRINGS = {
   "sc_dir_opposite": "opposite",
   "sc_dir_same": "same",
   "sc_dir_unchanged": "no change",
-  "level_title": "The two prices as levels",
-  "level_hint": "This chart shows levels, not monthly changes. Both lines end higher, which is why the scatter above is the chart that answers the question.",
   "bridge": "The dollar goes with about a third of copper's monthly moves. The rest has to come from the metal itself: who digs it up, and who uses it.",
   "main_title": "Do copper and the dollar move in opposite directions?",
-  "main_y": "Index, {base_month} = 100",
-  "label_copper": "Copper price",
-  "label_copper_short": "Copper",
-  "label_dollar": "Broad dollar index",
-  "label_dollar_short": "Dollar",
-  "m_cu": "{value}, latest",
-  "m_dol": "{value}, latest",
-  "main_note": "Both lines start at 100 in {base_month}. A higher dollar line means a stronger dollar. This chart shows levels. The figures below use monthly changes.",
-  "tip_cu": "Copper: {value} (about {usd} a tonne)",
-  "tip_dol": "Broad dollar index: {value}",
-  "main_aria": "Line chart of copper and the broad dollar index from {from} to {to}, both set to 100 in {base_month}. Focus the chart and use the arrow keys to move along it.",
   "details_lead": "The exact figures, ranges and methods behind the page.",
   "measured": "The dollar is measured two ways: a broad dollar index (from {index_from}) and euros per dollar (from {euro_from}). For both, a higher number means a stronger dollar.",
   "finding_1": "Since {index_from}, copper and the broad dollar index moved in opposite directions in {opposite_share}% of months. When the dollar index rose one percent, copper was on average {beta}% lower, with wide variation from month to month. The dollar is linked to about {share}% of copper's monthly moves. The other {rest}% goes with other things.",
@@ -394,44 +383,44 @@ window.CMA_STRINGS = {
   }
  },
  "demand": {
-  "intro": "This chapter adds up the copper that electric cars and data centres might need each year in 2030, with 2035 beside it. It is a scenario built from stated assumptions. Results are shown in thousand tonnes (kt) and as a share of today's world mine output, {mine} million tonnes (USGS estimate for 2025).",
-  "answer": "In the reference case, electric cars and data centres need extra copper equivalent to {tot_pct}% of today's mine output in 2030. Other assumptions give {r1_lo}% to {r1_hi}%.",
+  "intro": "This chapter adds up the copper that electric cars and data centres might need each year in 2030, with 2035 beside it. It is a scenario built from stated assumptions. Results are shown in thousand tonnes and as a share of today's world mine output, {mine} million tonnes (USGS estimate for 2025).",
+  "answer": "In the middle case, electric cars and data centres need extra copper equivalent to {tot_pct}% of today's mine output in 2030. Other assumptions give {r1_lo}% to {r1_hi}%.",
   "scale": "For scale: {pct}% of today's mine output is about {mt} million tonnes a year, roughly what Russia mines in a year.",
-  "main_title": "How much extra copper, in the reference case?",
+  "main_title": "How much extra copper, in the middle case?",
   "main_hint": "Each bar adds the two effects, each against its own starting point: the EV transition against 2025 and the data-centre build against the 2024 build.",
   "seg_ev": "EV transition",
   "seg_dc": "Data centres, extra over the 2024 build",
   "bar_label": "In {year}",
-  "bar_total": "{kt} kt in total, equivalent to {pct}% of today's mine output",
-  "seg_value": "{kt} kt",
+  "bar_total": "{thousand tonnes} thousand tonnes in total, equivalent to {pct}% of today's mine output",
+  "seg_value": "{thousand tonnes} thousand tonnes",
   "range_line": "Changing one assumption at a time gives {lo}% to {hi}% for 2030.",
   "main_aria": "Stacked bars for {y1} and {y2}. {y1}: {t1}. {y2}: {t2}.",
   "more_title": "Change the assumptions, see the gross data-centre copper and the open issues",
   "bridge": "Both new uses run on electricity, and electricity is copper's main job. When copper costs this much, why not carry the current with aluminium instead?",
   "explorer_open": "Change the assumptions",
   "details_lead": "The sensitivity chart, the copper inputs and the known limits.",
-  "finding_3": "The reference case is a convenience choice, not the most likely case. It uses the IEA Current Policies Scenario for cars and the IEA Base Case for data centres. It uses the middle copper figures, a straight line to 2030 for car sales and an even yearly data-centre build.",
-  "finding_4": "For 2035, the same reference case gives an electric-car figure equivalent to {ev35_pct}% of today's mine output. The IEA data-centre values for 2035 are exploratory.",
+  "finding_3": "The middle case is a convenience choice, not the most likely case. It uses the IEA Current Policies Scenario for cars and the IEA Base Case for data centres. It uses the middle copper figures, a straight line to 2030 for car sales and an even yearly data-centre build.",
+  "finding_4": "For 2035, the same middle case gives an electric-car figure equivalent to {ev35_pct}% of today's mine output. The IEA data-centre values for 2035 are exploratory.",
   "warn": "A scenario, not a forecast and not investment advice.",
   "ranges_title": "How wide is the range of totals for 2030?",
   "ranges_hint": "Each total is the two effects together, on their own baselines: the EV transition against 2025 plus the data-centre extra over the 2024 build.",
-  "range_ref": "Reference case",
+  "range_ref": "Middle case",
   "range_one": "Changing one assumption at a time",
   "range_all": "Every assumption at its extreme at once",
   "range_all_note": "Not a plausible case. Every assumption sits at its extreme at the same time.",
-  "range_value": "{lo}% to {hi}% of today's mine output ({lo_kt} to {hi_kt} kt)",
-  "range_ref_value": "{pct}% of today's mine output ({kt} kt)",
+  "range_value": "{lo}% to {hi}% of today's mine output ({lo_kt} to {hi_kt} thousand tonnes)",
+  "range_ref_value": "{pct}% of today's mine output ({thousand tonnes} thousand tonnes)",
   "range_axis": "Share of today's mine output (percent)",
   "range_cases": "Based on {n} cases tried",
   "range_ends": "Show what sits at each end",
   "range_low_end": "Low end: {detail}",
   "range_high_end": "High end: {detail}",
-  "range_aria": "Range chart. Reference case {ref}. One at a time: {one_lo} to {one_hi}. All extremes at once: {all_lo} to {all_hi}. Percent of today's mine output.",
+  "range_aria": "Range chart. Middle case {ref}. One at a time: {one_lo} to {one_hi}. All extremes at once: {all_lo} to {all_hi}. Percent of today's mine output.",
   "explorer_title": "Change the assumptions",
-  "explorer_hint": "Start from the reference case. Change any setting and both panels update. The 2030 car path setting only changes the 2030 panel.",
-  "state_ref": "Showing the reference case. It is a convenience choice, not the most likely case.",
+  "explorer_hint": "Start from the middle case. Change any setting and both panels update. The 2030 car path setting only changes the 2030 panel.",
+  "state_ref": "Showing the middle case. It is a convenience choice, not the most likely case.",
   "state_custom": "Showing your own settings.",
-  "reset": "Back to the reference case",
+  "reset": "Back to the middle case",
   "group_ev": "Electric cars",
   "group_dc": "Data centres",
   "sel_scen": "IEA scenario for electric cars",
@@ -486,9 +475,9 @@ window.CMA_STRINGS = {
   "row_mkt_sub": "Not an electric-car effect. Worked out from rounded IEA sales and shares. Not added to the total.",
   "row_total": "The two effects together, on their own baselines",
   "row_total_sub": "EV transition plus the data-centre extra. It adds two figures with different baselines: 2025 for cars, 2024 for data centres.",
-  "value": "{kt} kt, equivalent to {pct}% of today's mine output",
-  "value_band": "{kt} kt, equivalent to {pct}% of today's mine output. Rounding in the IEA data allows {lo} to {hi} kt.",
-  "value_slow": "{kt} kt. The yearly build is slower than in 2024. This is a slower build, not negative demand.",
+  "value": "{thousand tonnes} thousand tonnes, equivalent to {pct}% of today's mine output",
+  "value_band": "{thousand tonnes} thousand tonnes, equivalent to {pct}% of today's mine output. Rounding in the IEA data allows {lo} to {hi} thousand tonnes.",
+  "value_slow": "{thousand tonnes} thousand tonnes. The yearly build is slower than in 2024. This is a slower build, not negative demand.",
   "panel_aria": "Bars for {year}: {rows}",
   "basis_title": "Does it matter which capacity the copper per MW refers to?",
   "basis_open": "Open issue K01",
@@ -501,14 +490,14 @@ window.CMA_STRINGS = {
   "basis_result_extra": "The extra over the 2024 build is {pct}% lower.",
   "basis_result_none": "The extra over the 2024 build is not compared here, because it is negative or zero on one basis.",
   "sens_title": "What moves the 2030 total most?",
-  "sens_hint": "Each bar shows how far the total moves from the reference case when one assumption runs across its range. All other settings stay at the reference case. The biggest bar is first.",
-  "sens_zero": "Reference case",
+  "sens_hint": "Each bar shows how far the total moves from the middle case when one assumption runs across its range. All other settings stay at the middle case. The biggest bar is first.",
+  "sens_zero": "Middle case",
   "sens_note_round": "Rounding in the IEA car-sales data only changes car-market growth, which is not in the total. It is not shown here.",
   "sens_note_hybrid": "The hybrid bar is a bounding case, not a data-based test. The IEA data cannot split hybrids from other non-EV cars.",
-  "sens_value": "{value} kt",
-  "sens_tiny": "under 1 kt",
+  "sens_value": "{value} thousand tonnes",
+  "sens_tiny": "under 1 thousand tonnes",
   "sens_key": "Green bars lower the total. Copper-coloured bars raise it.",
-  "sens_aria": "{label}: from {lo} kt to {hi} kt compared with the reference case.",
+  "sens_aria": "{label}: from {lo} thousand tonnes to {hi} thousand tonnes compared with the middle case.",
   "issues_title": "Open issues",
   "issue_open": "Open",
   "issue_k01": "Which capacity does the copper per MW refer to? The two readings give results that differ, so both are shown. S14, the original S&P Global report, did not settle it either.",
@@ -676,9 +665,9 @@ window.CMA_STRINGS = {
   "mr_aria_item": "{name}: mine {mine}, refinery {ref}",
   "mr_table": "Show the shares as a table",
   "mr_col_country": "Country",
-  "mr_col_mine": "Mine output (kt)",
+  "mr_col_mine": "Mine output (thousand tonnes)",
   "mr_col_mine_share": "Share of world mine output",
-  "mr_col_ref": "Refinery output (kt)",
+  "mr_col_ref": "Refinery output (thousand tonnes)",
   "mr_col_ref_share": "Share of world refinery output",
   "pair_note": "{a} + {b}: {share}% of world output",
   "intro": "On the map, the area of each circle shows the size of a country's mine output. The list beside it gives the exact figures.",
@@ -690,23 +679,23 @@ window.CMA_STRINGS = {
   "size_note_reserves": "Circle area is proportional to reserves.",
   "list_title_output": "Top 10 by mine output",
   "list_title_reserves": "Top 10 by reserves",
-  "list_value_output": "{kt} kt, {share}% of the world",
-  "list_value_reserves": "{kt} kt, {share}% of the world",
+  "list_value_output": "{thousand tonnes} thousand tonnes, {share}% of the world",
+  "list_value_reserves": "{thousand tonnes} thousand tonnes, {share}% of the world",
   "life": "About {n} years at today's rate",
   "life_note": "Reserve life is reserves divided by one year of mine output. It is a simple ratio, not a forecast of when a country runs out.",
-  "tip_output": "Mine output, {year} estimate: {kt} kt ({share}% of the world)",
-  "tip_reserves": "Reserves: {kt} kt ({share}% of the world)",
+  "tip_output": "Mine output, {year} estimate: {thousand tonnes} thousand tonnes ({share}% of the world)",
+  "tip_reserves": "Reserves: {thousand tonnes} thousand tonnes ({share}% of the world)",
   "tip_life": "Reserve life: about {n} years at today's rate. A simple ratio, not a forecast.",
-  "other_note": "USGS also gives {kt} kt ({share}%) of output for other countries. It cannot be placed on the map.",
-  "other_note_reserves": "USGS also gives {kt} kt ({share}%) of reserves for other countries. It cannot be placed on the map.",
+  "other_note": "USGS also gives {thousand tonnes} thousand tonnes ({share}%) of output for other countries. It cannot be placed on the map.",
+  "other_note_reserves": "USGS also gives {thousand tonnes} thousand tonnes ({share}%) of reserves for other countries. It cannot be placed on the map.",
   "estimate_note": "Output for {year} is a USGS estimate.",
   "map_aria": "World map with a circle on each of {n} countries, sized by {measure}.",
   "text_alt": "Map in words: {list}. The list next to the map and the table below give the exact figures.",
   "table_summary": "Show all countries as a table",
   "col_country": "Country",
-  "col_output": "Output, {year} estimate (kt)",
+  "col_output": "Output, {year} estimate (thousand tonnes)",
   "col_output_share": "Share of world output",
-  "col_reserves": "Reserves (kt)",
+  "col_reserves": "Reserves (thousand tonnes)",
   "col_reserves_share": "Share of world reserves",
   "col_life": "Reserve life (years)",
   "world_row": "World total",
@@ -732,7 +721,7 @@ window.CMA_STRINGS = {
   "bridge": "Supply is concentrated twice: where copper is mined and where it is refined. On the demand side, which new uses could need much more of it?"
  },
  "summary": {
-  "verdict": "Less special than it looks, in one way. In today's money copper is below {peak_month}, and gold and tin are at or near records too. More special in others. Supply is concentrated twice, in a few mining countries and in Chinese refineries. And aluminium has been the cheaper way to carry electricity for almost 18 years, yet most copper still becomes wire.",
+  "verdict": "Less special than it looks, in one way. As quoted, copper is at a record, but so {is_are} {others}. In today's money, copper is still {peak_above}% below {peak_month}. More special in others. Supply is concentrated twice, in a few mining countries and in Chinese refineries. And aluminium has been the cheaper metal for carrying electricity for almost 18 years, yet most copper still becomes wire, because space, strength and safe joints still favour copper.",
   "list_title": "In one sentence per chapter",
   "s_uses": "Most copper becomes wire, and China uses more than half of it.",
   "guess_title": "Your guesses",
@@ -804,11 +793,8 @@ window.CMA_STRINGS = {
  },
  "drivers": {
   "title": "What moves the price of copper",
-  "tag_tested": "Tested",
-  "tag_shown": "Shown",
-  "tag_scenario": "Scenario",
-  "tag_computed": "Computed",
-  "tag_context": "Context",
+  "tag_tested": "Tested here",
+  "tag_shown": "Shown here",
   "tag_not_covered": "Not covered",
   "items": [
    {
@@ -823,28 +809,27 @@ window.CMA_STRINGS = {
    },
    {
     "name": "New demand from cars and data centres",
-    "tag": "scenario",
+    "tag": "shown",
     "line": "Built from stated assumptions. Chapter {n_demand}."
    },
    {
     "name": "Cheaper substitutes",
-    "tag": "computed",
+    "tag": "shown",
     "line": "When aluminium does the job for less. Chapter {n_aluminium}."
    },
    {
     "name": "China's demand",
-    "tag": "context",
+    "tag": "shown",
     "line": "China uses {china}% of the world's refined copper. Chapter {n_uses}."
    },
    {
     "name": "Recycling",
-    "tag": "context",
+    "tag": "shown",
     "line": "About a third of copper use comes from recycled copper. Chapter {n_uses}."
    },
    {
-    "name": "Warehouse stocks, interest rates, investor money",
     "tag": "not_covered",
-    "line": "No licence-free data here. The 10-year US yield barely changed the dollar result."
+    "line": "Warehouse stocks, interest rates and investor money: no licence-free data here."
    }
   ]
  },
@@ -861,10 +846,6 @@ window.CMA_STRINGS = {
    "Other": "Other"
   },
   "bar_aria": "{name}: {pct} percent",
-  "tile_wire": "of copper is first made into wire",
-  "tile_china": "of the world's refined copper is used in China",
-  "tile_recycled": "of copper use comes from recycled copper",
-  "tile_third": "About 1/3",
   "scale_line": "Mines produced {mined} million tonnes in {year}. The world used {used} million tonnes of refined copper. Recycling fills much of the gap.",
   "notshow": {
    "title": "What this chapter does not show",
@@ -880,13 +861,14 @@ window.CMA_STRINGS = {
    },
    "attribution": "Copper end use, shares by country and recycling: International Copper Study Group, The World Copper Factbook 2025. Cited, not republished."
   },
-  "bridge": "Something used this widely is priced every day. In {month} that price set a record. Is it really one?"
+  "bridge": "Something used this widely is priced every day. In {month} that price set a record. Is it really one?",
+  "facts_line": "{wire}% of copper is first made into wire, China uses {china}% of the world's refined copper, and about a third of copper use comes from recycled copper."
  },
  "aluminium": {
   "answer": "On metal cost alone, aluminium wins easily. For the same electrical job, the aluminium costs about a ninth of the copper today, and aluminium has been the cheaper conductor metal every month since {since}. Yet most copper still becomes wire.",
   "chart_title": "How much more does copper cost than aluminium?",
   "chart_hint": "The line is the copper price divided by the aluminium price, month by month. Both are World Bank monthly averages in US dollars.",
-  "band": "Above this line, aluminium is the cheaper way to carry electricity",
+  "band": "Above this line, aluminium is the cheaper metal for carrying electricity",
   "ctx_label": "Copper-to-aluminium ratio",
   "ctx_label_short": "Ratio",
   "m_latest": "{value}, latest",
@@ -910,7 +892,6 @@ window.CMA_STRINGS = {
   "replaces": "{list}.",
   "replaces_src": "Source: USGS Mineral Commodity Summaries 2026, copper, the section on substitutes.",
   "holds_title": "Why copper holds on",
-  "holds": "Space: the aluminium wire is about {wider}% wider. Where space is tight, as in motors, transformers and electronics, the smaller copper wire wins.",
   "working_title": "Show the working",
   "working_lead": "The numbers behind the line at about two, and the run of months above it.",
   "w_what": "Step",
@@ -932,23 +913,35 @@ window.CMA_STRINGS = {
     "Metal cost only. Making, insulating and installing the cable are not included, and a wider aluminium cable needs more insulation.",
     "It does not measure how much switching actually happens.",
     "The ratio uses monthly average prices; inflation cancels in a ratio of two prices in the same currency.",
-    "Other reasons buyers stay with copper, such as connections and safety rules, are not covered here."
+    "The fire figure is for older US home wiring."
    ]
   },
   "sources": {
    "names": {
     "S02": "World Bank commodity prices (copper and aluminium)",
     "S32": "NBS Circular 31, Copper Wire Tables (conductivity and density)",
-    "S06": "USGS Mineral Commodity Summaries 2026, copper (substitutes)"
+    "S06": "USGS Mineral Commodity Summaries 2026, copper (substitutes)",
+    "S33": "US Consumer Product Safety Commission, Repairing Aluminum Wiring (Publication 516, June 2011)",
+    "S34": "Nexans, Aluminium versus copper (cable maker web page)"
    },
-   "attribution": "Copper and aluminium prices: adapted from World Bank Commodity Price Data (CC BY 4.0). Conductivity and density: US National Bureau of Standards, Copper Wire Tables, Circular 31. Substitutes: US Geological Survey. The ratio, the break-even and the run above it are my own calculations."
+   "attribution": "Copper and aluminium prices: adapted from World Bank Commodity Price Data (CC BY 4.0). Conductivity and density: US National Bureau of Standards, Copper Wire Tables, Circular 31. Substitutes: US Geological Survey. Fire-hazard figure: US Consumer Product Safety Commission. Strength, corrosion and weight: Nexans, a cable maker. The ratio, the break-even and the run above it are my own calculations."
   },
-  "bridge": "That is the last chapter. Here is what the whole story adds up to, and what it cannot tell you."
+  "bridge": "That is the last chapter. Here is what the whole story adds up to, and what it cannot tell you.",
+  "holds_lines": [
+   "Space: the aluminium wire is about {wider}% wider. Where space is tight, as in motor windings and electronics, the smaller copper wire wins.",
+   "Safe joints: aluminium connections loosen and overheat more easily. US homes wired with aluminium before 1972 were 55 times more likely to have a connection reach fire-hazard conditions, says the US Consumer Product Safety Commission.",
+   "Strength: copper's tensile strength is 2.8 times aluminium's and its fatigue limit 1.6 times, so thin wires survive bending and vibration better (Nexans).",
+   "Corrosion: the oxide layer on aluminium harms its contacts more, so it needs special connectors (Nexans)."
+  ],
+  "wins_title": "Where aluminium already wins",
+  "wins": "Weight. For the same job, aluminium weighs about half as much. That is why it is preferred for high-power lines, cars and aircraft (Nexans).",
+  "closing": "So the price says where aluminium wins on paper. Weight, space, strength and safe joints decide where it wins in practice."
  },
  "foot": {
   "details": "Show the details",
   "sources": "Sources",
-  "not_advice": "Not a forecast, not investment advice."
+  "not_advice": "Not a forecast, not investment advice.",
+  "limits": "Limits"
  },
  "footer": {
   "name": "Behindokht Alipour",
@@ -972,7 +965,7 @@ window.CMA_STRINGS = {
    "US inflation (CPIAUCSL): U.S. Bureau of Labor Statistics, Consumer Price Index for All Urban Consumers: All Items in U.S. City Average, retrieved from FRED, Federal Reserve Bank of St. Louis. Public domain, citation requested.",
    "Dollar index (DTWEXBGS), euro exchange rate (EXUSEU) and 10-year yield (GS10): Board of Governors of the Federal Reserve System (US), retrieved from FRED, Federal Reserve Bank of St. Louis. Public domain, citation requested.",
    "World outline for the map: Made with Natural Earth (public domain), redistributed by world-atlas (ISC licence). Mine output and reserves: US Geological Survey. Chart events are dated from the sources linked in the list under the chart.",
-   "No LME price data is shown or published on this site. Charts, text and code are my own work."
+   "No LME price data is shown or published on this site."
   ]
  }
 };

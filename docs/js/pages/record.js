@@ -107,8 +107,9 @@
 
     box.appendChild(h("p", { class: "small muted", text: t("story.guess2.note_2011") }));
     var nsItems = window.CMA_STRINGS.story.notshow.items.map(function (s) { return CMA.fill(s, { series_start: seriesStart }); });
-    box.appendChild(h("aside", { class: "note", "aria-labelledby": "rec-ns" },
-      h("h3", { id: "rec-ns", text: t("story.notshow.title") }), h("ul", {}, nsItems.map(function (s) { return h("li", { text: s }); }))));
+    var lim = CMA.limits(nsItems, t("story.notshow.title"));
+    box.appendChild(lim.short);
+    box.appendChild(CMA.fold(null, [lim.full]));
     CMA.bridge(box, t("record.bridge"));
   };
 })();

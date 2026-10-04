@@ -259,8 +259,8 @@
         }))))));
 
     // =============================== what this does not show, sources, next
-    var nsEl = (h("aside", { class: "note", "aria-labelledby": "dm-ns" },
-      h("h3", { id: "dm-ns", text: T("notshow.title") }), h("ul", {}, window.CMA_STRINGS.demand.notshow.items.map(function (x) { return h("li", { text: x }); }))));
+    var lim = CMA.limits(window.CMA_STRINGS.demand.notshow.items, T("notshow.title"));
+    var nsEl = lim.full;
     // the page in its final order: answer, the bars, the ranges, findings, capacity basis, open issues, limits, details, foot
     // ---- the main view: one chart, the reference case in 2030 and 2035, the two effects stacked, then the range for 2030
     if (ref30.dcExtra < 0 || ref35.dcExtra < 0) { throw new Error("the main chart expects a positive data-centre extra in the reference case"); }
@@ -293,6 +293,7 @@
       wrap.appendChild(h("p", { class: "finding" }, T("scale", { pct: pct(ref30.total), mt: CMA.n1(SCALE.total_2030_kt.value / 1000) }) + " ", CMA.chip(["demand.scale"])));
     }
     // everything else sits one click deeper
+    wrap.appendChild(lim.short);
     wrap.appendChild(CMA.fold(T("more_title"), [xcard, rcard, findingsEl, basisHost, issues, nsEl, sensEl, limitsEl, inputsEl]));
     CMA.sources.add(window.CMA_STRINGS.demand.sources.names, T("sources.attribution"));
     CMA.bridge(wrap, T("bridge"));

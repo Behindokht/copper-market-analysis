@@ -12,7 +12,7 @@
     return h("section", { class: "drivers", "aria-labelledby": idPrefix + "-drivers" },
       h("h3", { id: idPrefix + "-drivers", text: CMA.t("drivers.title") }),
       h("ul", {}, items.map(function (it) {
-        return h("li", {}, h("span", { class: "dtag " + it.tag.replace("_", "-"), text: CMA.t("drivers.tag_" + it.tag) }), h("b", { text: it.name }), h("p", { text: CMA.fill(it.line, vars) }));
+        return h("li", {}, h("span", { class: "dtag " + it.tag.replace("_", "-"), text: CMA.t("drivers.tag_" + it.tag) }), it.name ? h("b", { text: it.name }) : null, h("p", { text: CMA.fill(it.line, vars) }));
       })));
   };
 })();

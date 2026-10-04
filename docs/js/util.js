@@ -159,6 +159,14 @@
     });
     return CMA.h("details", { class: "chipx" }, CMA.h("summary", { "aria-label": CMA.t("story.chip_label"), text: srcs.join(" ") }), panel);
   };
+  // "Limits": a mono label over a hairline and the first two limits as plain sentences. The full list goes in the chapter's fold (limits.full).
+  CMA.limits = function (items, fullTitle) {
+    var h = CMA.h;
+    return {
+      short: h("div", { class: "limits" }, h("p", { class: "mono limits-label", text: CMA.t("foot.limits") }), items.slice(0, 2).map(function (x) { return h("p", { class: "limit", text: x }); })),
+      full: h("section", { class: "limits-full" }, h("h3", { text: fullTitle }), h("ul", {}, items.map(function (x) { return h("li", { text: x }); })))
+    };
+  };
   CMA.bridge = function (box, text) { box.appendChild(CMA.h("p", { class: "bridge", text: text })); };
   CMA.pages = CMA.pages || {};
 })();

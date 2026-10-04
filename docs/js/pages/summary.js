@@ -19,15 +19,15 @@
     var corr = CMA.rows(D.dollar.correlations).filter(function (r) { return r[Object.keys(r)[0]].indexOf("Copper vs broad dollar index") === 0; })[0];
 
     // the sentences must hold
-    var nearGold = rec.gold.latest_pct_of_nominal_peak >= 85, tinRecord = rec.tin.at_nominal_record;
+    var J = CMA.justFacts();
     var topNames = places[0].display_name + " and " + places[1].display_name;
-    if (R.nominal_record.month !== R.nominal_latest.month || R.real_months_above_latest.value < 1 || E.eur_latest_is_record.value !== 1 || !tinRecord || !nearGold ||
+    if (R.nominal_record.month !== R.nominal_latest.month || R.real_months_above_latest.value < 1 || E.eur_latest_is_record.value !== 1 ||
       !(corr["pearson r"] < 0) || th.filter(function (r) { return r.p_holm < 0.05; }).length > th.length / 4 ||
       topNames !== "Chile and DR Congo" || C.run_months.value / 12 < 17.5 || C.run_months.value / 12 >= 18) { throw new Error("a summary sentence no longer matches the data"); }
 
-    var vars = { peak_month: CMA.monthLong(CMA.realRecord().month), top2_share: CMA.n0(top2), demand_pct: CMA.n0(ref.headline_total_pct_of_mine), china_ref: CMA.n0(china.refinery_share_pct),
+    var vars = { peak_month: CMA.monthLong(CMA.realRecord().month), peak_above: CMA.n0(CMA.realRecord().belowPct), others: J.othersText, is_are: J.isAre, top2_share: CMA.n0(top2), demand_pct: CMA.n0(ref.headline_total_pct_of_mine), china_ref: CMA.n0(china.refinery_share_pct),
       since: CMA.monthLong(String(C.first_month_of_run.value) + "-01") };
-    box.appendChild(h("p", { class: "answer", text: T("verdict", vars) }));
+    box.appendChild(h("p", { class: "answer summary-verdict", text: T("verdict", vars) }));
 
     var items = [["s_uses", "uses", ["uses.end_use", "uses.facts"]], ["s_record", "record", ["story.record_facts", "chapters.euro"]], ["s_just", "just-copper", ["chapters.records"]],
       ["s_dollar", "dollar", ["story.guess_dollar", "dollar.correlations"]], ["s_supply", "supply", ["supply.countries", "supply.refined"]], ["s_demand", "demand", ["demand.sensitivity"]],

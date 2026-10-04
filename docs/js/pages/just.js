@@ -3,15 +3,20 @@
   var CMA = window.CMA, t = CMA.t, h = CMA.h;
   var T = function (key, vars) { return t("just." + key, vars); };
 
-  CMA.chapters.just = function (box) {
+  // the facts of this chapter, read once: chapter 3 and the summary verdict use the same list of other metals at a record as quoted
+  CMA.justFacts = function () {
     var rows = CMA.rows(window.CMA_DATA.chapters.records).sort(function (a, b) { return b.latest_pct_of_real_peak - a.latest_pct_of_real_peak; });
     var by = {};
     rows.forEach(function (r) { by[r.commodity] = r; });
     var names = window.CMA_STRINGS.just.names;
-
     // the answer sentence is built from the data, and the page stops if the data no longer supports it
     var others = rows.filter(function (r) { return r.at_nominal_record && r.commodity !== "copper"; }).map(function (r) { return names[r.commodity].toLowerCase(); });
     if (!by.copper.at_nominal_record || !others.length || rows.some(function (r) { return r.at_real_record; })) { throw new Error("the interlude answer no longer matches the data"); }
+    return { rows: rows, by: by, names: names, others: others, othersText: others.join(" and "), isAre: others.length === 1 ? "is" : "are" };
+  };
+
+  CMA.chapters.just = function (box) {
+    var J = CMA.justFacts(), rows = J.rows, by = J.by, names = J.names, others = J.others;
     var gold = by.gold, goldMonth = gold.nominal_peak_month + "-01";
     var monthsSince = (+gold.latest_month.slice(0, 4) - +gold.nominal_peak_month.slice(0, 4)) * 12 + (+gold.latest_month.slice(5, 7) - +gold.nominal_peak_month.slice(5, 7));
     if (gold.at_nominal_record || monthsSince > 12) { throw new Error("the gold record is no longer recent"); }
@@ -46,9 +51,9 @@
         h("td", { text: usd(r, r.real_peak) + " (" + CMA.monthShort(r.real_peak_month + "-01") + ")" }), h("td", { text: usd(r, r.latest_real) }),
         h("td", { text: CMA.n1(r.latest_pct_of_real_peak) + "%" }));
     }));
-    box.appendChild(h("aside", { class: "note", "aria-labelledby": "just-ns" },
-      h("h3", { id: "just-ns", text: T("notshow.title") }), h("ul", {}, window.CMA_STRINGS.just.notshow.items.map(function (x) { return h("li", { text: x }); }))));
-    box.appendChild(CMA.fold(T("details_lead"), [notesEl, h("div", { class: "tablewrap" }, h("table", {}, head, body)), h("p", { class: "small muted", text: T("unit_note") })]));
+    var lim = CMA.limits(window.CMA_STRINGS.just.notshow.items, T("notshow.title"));
+    box.appendChild(lim.short);
+    box.appendChild(CMA.fold(T("details_lead"), [lim.full, notesEl, h("div", { class: "tablewrap" }, h("table", {}, head, body)), h("p", { class: "small muted", text: T("unit_note") })]));
     CMA.sources.add({ S02: window.CMA_STRINGS.story.sources.names.S02, S04: window.CMA_STRINGS.story.sources.names.S04, S27: T("sources.names.S27") }, null);
     CMA.bridge(box, T("bridge"));
   };

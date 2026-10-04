@@ -46,6 +46,7 @@
         h("p", { class: "eyebrow rise", style: "--i:1", text: t("hero.eyebrow") }),
         h("h1", { class: "rise", style: "--i:2" }, h("em", { text: t("hero.title_em") }), h("span", { class: "spark-anchor" }, sparkSvg), t("hero.title_rest")),
         h("p", { class: "lede rise", style: "--i:3", text: t("hero.lead", { years: Math.floor(R.series_months.value / 12), change: CMA.n0(U.copper_12m_change_pct.value), chapters: window.CMA_STRINGS.hero.number_words[CMA.CHAPTER_COUNT] }) }),
+        h("p", { class: "hurry rise", style: "--i:3" }, h("a", { href: "#summary", text: t("hero.summary_link") })),
         h("ul", { class: "facts rise", style: "--i:4" },
           h("li", {}, h("b", { class: "num", text: CMA.n0(R.series_months.value) }), h("span", { class: "mono", text: t("hero.fact_months", { year: R.series_months.month.slice(0, 4) }) })),
           h("li", {}, h("b", { class: "num", text: CMA.n0(nChecks) }), h("span", { class: "mono", text: t("hero.fact_checks") })))),
@@ -66,7 +67,7 @@
     // ---- chapter shells: an index column and a body, with the chapter's question as its heading
     var bodies = {};
     CHAPTERS.forEach(function (c) {
-      var idx = h("div", { class: "index" }, t("story." + c.label), c.numeral ? h("b", { text: c.numeral }) : null);
+      var idx = h("div", { class: "index" }, t("story." + c.label), c.numeral ? h("b", { text: c.numeral }) : null, h("span", { class: "of-total", text: t("story.of_total", { n: CMA.CHAPTER_COUNT }) }));
       var body = h("div", { class: "story-body" }, h("h2", { id: c.id + "-title", tabindex: "-1", text: t("pages." + c.page + ".title") }));
       wrap.appendChild(h("section", { class: "story chapter" + (c.wide ? " wide" : ""), id: c.id, "aria-labelledby": c.id + "-title" }, idx, body));
       bodies[c.id] = body;

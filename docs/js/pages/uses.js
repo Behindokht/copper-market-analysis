@@ -25,15 +25,12 @@
       h("h3", { class: "qtitle", text: T("chart_title") }), list,
       h("p", { class: "small muted", text: T("caption", { year: year }) }), CMA.chip(["uses.end_use"])));
 
-    box.appendChild(h("div", { class: "usetiles" },
-      h("div", { class: "usetile" }, h("b", { class: "num", text: CMA.n0(F.F06.value) + "%" }), h("span", { text: T("tile_wire") })),
-      h("div", { class: "usetile" }, h("b", { class: "num", text: CMA.n0(F.F01.value) + "%" }), h("span", { text: T("tile_china") })),
-      h("div", { class: "usetile" }, h("b", { text: T("tile_third") }), h("span", { text: T("tile_recycled") }))));
+    box.appendChild(h("p", {}, T("facts_line", { wire: CMA.n0(F.F06.value), china: CMA.n0(F.F01.value) }) + " ", CMA.chip(["uses.facts"])));
     box.appendChild(h("p", { class: "small" }, T("scale_line", { mined: CMA.n0(F.F05.value), used: CMA.n1(F.F04.value), year: F.F05.year }) + " ", CMA.chip(["uses.facts"])));
 
-    box.appendChild(h("aside", { class: "note", "aria-labelledby": "uses-ns" },
-      h("h3", { id: "uses-ns", text: T("notshow.title") }),
-      h("ul", {}, window.CMA_STRINGS.uses.notshow.items.map(function (x) { return h("li", { text: CMA.fill(x, { year: year }) }); }))));
+    var lim = CMA.limits(window.CMA_STRINGS.uses.notshow.items.map(function (x) { return CMA.fill(x, { year: year }); }), T("notshow.title"));
+    box.appendChild(lim.short);
+    box.appendChild(CMA.fold(null, [lim.full]));
 
     var R = {};
     CMA.rows(window.CMA_DATA.story.record_facts).forEach(function (r) { R[r.fact_id] = r; });

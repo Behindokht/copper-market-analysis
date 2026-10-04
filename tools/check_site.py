@@ -127,7 +127,7 @@ for k, v in keys.items():
 BANNED = ["utilize", "utilise", "leverage", "furthermore", "moreover", "notably", "robust", "delve", "underscore", "paramount", "plethora",
           "facilitate", "elucidate", "endeavor", "endeavour", "commence", "subsequently", "nevertheless", "consequently", "albeit",
           "whilst", "comprehensive", "holistic", "seamless", "myriad", "intricate", "pivotal", "landscape"]
-EXEMPT_LENGTH = ("aluminium.answer", "footer.credits", "story.sources.attribution", "dollar.sources.attribution", "ratio.sources.attribution", "demand.sources.attribution")
+EXEMPT_LENGTH = ("aluminium.answer", "summary.verdict", "uses.facts_line", "aluminium.holds_lines", "footer.credits", "story.sources.attribution", "dollar.sources.attribution", "ratio.sources.attribution", "demand.sources.attribution")
 for p in text_files:
     if p.name.startswith("OFL-"):
         continue
