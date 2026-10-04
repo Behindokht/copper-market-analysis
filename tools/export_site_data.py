@@ -35,6 +35,10 @@ PAGES = {
         "euro": "res_euro_record",
         "events": "res_events",
     },
+    "dash": {
+        "series": "res_dash_series",
+        "kpis": "res_dash_kpis",
+    },
     "uses": {
         "end_use": "res_uses_end_use",
         "facts": "res_context_facts",

@@ -659,6 +659,65 @@
     "S02"
    ],
    "note": "end-use shares, context facts and the 12-month price change"
+  },
+  "results/res_dash_series.csv": {
+   "sources": [
+    "S02",
+    "S04",
+    "S16",
+    "S17"
+   ],
+   "note": "monthly dashboard table, 800 months: World Bank copper, aluminium, gold, tin and Brent (CC BY 4.0; credit 'adapted from World Bank Commodity Price Data'), FRED CPI, euro rate and dollar index (public domain), and values derived from them; never LME",
+   "large_ok": true
+  },
+  "results/res_dash_kpis.csv": {
+   "sources": [
+    "S02",
+    "S04",
+    "S16",
+    "S17"
+   ],
+   "note": "latest-month figures for the dashboard band"
+  },
+  "results/res_dash_changes.csv": {
+   "sources": [
+    "S02",
+    "S04",
+    "S16",
+    "S17"
+   ],
+   "note": "period changes by currency and prices, computed in Python: the reference the browser result is compared with"
+  },
+  "results/res_dash_figure_checks.csv": {
+   "sources": [
+    "S02",
+    "S04",
+    "S16",
+    "S17"
+   ],
+   "note": "every latest-month dashboard figure with the result of its independent check",
+   "large_ok": true
+  },
+  "notebooks/07_dashboard.ipynb": {
+   "sources": [
+    "S02",
+    "S04",
+    "S16",
+    "S17"
+   ],
+   "note": "outputs show derived dashboard figures and checks; no LME values"
+  },
+  "docs/data/dash.js": {
+   "sources": [
+    "S02",
+    "S04",
+    "S16",
+    "S17"
+   ],
+   "note": "the dashboard's monthly table (World Bank, CC BY 4.0, and FRED) and latest-month figures",
+   "large_datasets": [
+    "series"
+   ]
   }
  }
 }

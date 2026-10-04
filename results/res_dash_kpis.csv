@@ -1,0 +1,16 @@
+fact_id,value,unit,note
+latest_month,2026-08,month,last month of the World Bank copper series
+copper_usd_t,14326.0,USD per tonne,World Bank monthly average as quoted
+copper_eur_t,12356.3912,EUR per tonne,dollar price divided by the FRED euro rate
+months_total,800,months,months in the copper series
+eur_months_total,332,months,months in the euro copper series (euros start in 1999)
+eur_is_record,1.0,1 = yes,latest month is the highest in euros
+copper_is_nominal_record,1.0,1 = yes,latest month is the highest as quoted
+real_share_of_record_pct,68.01803101692482,percent,latest real price over the highest real price
+real_peak_month,1974-04,month,month of the highest real price
+ratio_latest,4.4066,ratio,copper price over aluminium price
+breakeven_ratio,2.0084814814814815,ratio,from NBS Circular 31 constants
+dxy_latest,118.8512,index,"broad dollar index, monthly average"
+dxy_first_month,2006-01,month,the dollar index starts here
+eur_first_month,1999-01,month,euro prices start here
+cpi_base_month,2026-08,month,the real series use this month's prices

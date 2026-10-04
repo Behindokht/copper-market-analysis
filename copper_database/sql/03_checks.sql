@@ -1116,3 +1116,27 @@ SELECT 'res_story_figure_checks', 'every figure computed for the story brief rep
        CASE WHEN SUM(status = 'PASS') = COUNT(*) THEN 'PASS' ELSE 'FAIL' END,
        SUM(status = 'PASS') || ' of ' || COUNT(*) || ' figures pass'
 FROM res_story_figure_checks;
+
+-- check: the dashboard series equals the monthly panel for the months both cover requires=res_dash_series
+SELECT 'res_dash_series', 'dashboard copper (dollars and euros) equals the monthly panel in every month since 1999',
+       CASE WHEN COUNT(*) > 300 AND SUM(ABS(d.cu_usd - p.copper_usd_t_avg) < 0.001) = COUNT(*) AND SUM(ABS(d.cu_eur - p.copper_eur_t_avg) < 0.01) = COUNT(*) THEN 'PASS' ELSE 'FAIL' END,
+       SUM(ABS(d.cu_usd - p.copper_usd_t_avg) < 0.001) || ' of ' || COUNT(*) || ' months match'
+FROM res_dash_series d JOIN mart_monthly_panel p ON substr(p.month, 1, 7) = d.month;
+
+-- check: the dashboard ratio equals the ratio mart in every month requires=res_dash_series
+SELECT 'res_dash_series', 'dashboard copper-to-aluminium ratio equals the ratio mart in every month, and the series has one row per month',
+       CASE WHEN COUNT(*) = (SELECT COUNT(*) FROM mart_cu_al_ratio) AND SUM(ABS(d.ratio - m.cu_al_ratio) < 0.0001) = COUNT(*) THEN 'PASS' ELSE 'FAIL' END,
+       COUNT(*) || ' months'
+FROM res_dash_series d JOIN mart_cu_al_ratio m ON substr(m.month, 1, 7) = d.month;
+
+-- check: the real series is empty only where US CPI is missing requires=res_dash_series
+SELECT 'res_dash_series', 'the real copper value is empty in exactly the months with no US CPI value (October 2025) and nowhere else',
+       CASE WHEN SUM(cu_real IS NULL) = 1 AND MAX(CASE WHEN cu_real IS NULL THEN month END) = '2025-10' THEN 'PASS' ELSE 'FAIL' END,
+       SUM(cu_real IS NULL) || ' empty month(s)'
+FROM res_dash_series;
+
+-- check: the dashboard figures requires=res_dash_figure_checks
+SELECT 'res_dash_figure_checks', 'every latest-month figure on the dashboard reproduces from an independent source table',
+       CASE WHEN SUM(status = 'PASS') = COUNT(*) THEN 'PASS' ELSE 'FAIL' END,
+       SUM(status = 'PASS') || ' of ' || COUNT(*) || ' figures pass'
+FROM res_dash_figure_checks;

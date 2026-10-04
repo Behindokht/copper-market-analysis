@@ -14,7 +14,7 @@ check_no,table_name,description,status,detail,run_date
 13,raw_fred_gs10,rows loaded as-is / blank values kept as blank,INFO,881 rows; 0 blank values; 1953-04-01 to 2026-08-01,2026-10-04
 14,raw_usgs_commodities,file used / lines loaded as-is,INFO,MCS2026_Commodities_Data.csv; 8886 lines; 127 commodities,2026-10-04
 15,raw_iea_annex_cells,file used / non-empty cells loaded as-is,INFO,details withheld: raw IEA data is not redistributed,2026-10-04
-16,res_ tables,result tables reloaded from results/ (written by the notebooks),INFO,"['res_aluminium_case', 'res_context_facts', 'res_copper_eur_variance_split', 'res_copper_eur_vs_usd_cumulative', 'res_cu_al_episodes', 'res_cu_al_scenario_today', 'res_cu_al_slopes', 'res_cu_al_threshold_table', 'res_dashboard_checks', 'res_dashboard_known_issues', 'res_dashboard_pipeline', 'res_dashboard_sources', 'res_demand_assumptions', 'res_demand_context', 'res_demand_dc_capacity', 'res_demand_dc_cases', 'res_demand_dc_paths', 'res_demand_ev_cases', 'res_demand_ev_paths', 'res_demand_headline', 'res_demand_ranges', 'res_demand_scale', 'res_demand_sensitivity', 'res_dollar_correlations', 'res_dollar_cpi_sensitivity', 'res_dollar_lead_lag', 'res_dollar_month_end_check', 'res_dollar_regressions', 'res_dollar_rolling_correlation_36m', 'res_dollar_scatter', 'res_dollar_scatter_fit', 'res_dollar_series', 'res_dollar_stability_by_period', 'res_euro_record', 'res_event_record_checks', 'res_events', 'res_interlude_records', 'res_ratio_facts', 'res_ratio_series', 'res_refined_vs_mined', 'res_story_copper_record_facts', 'res_story_copper_series', 'res_story_figure_checks', 'res_story_guess_dollar', 'res_supply_countries', 'res_uses_end_use', 'res_uses_facts']",2026-10-04
+16,res_ tables,result tables reloaded from results/ (written by the notebooks),INFO,"['res_aluminium_case', 'res_context_facts', 'res_copper_eur_variance_split', 'res_copper_eur_vs_usd_cumulative', 'res_cu_al_episodes', 'res_cu_al_scenario_today', 'res_cu_al_slopes', 'res_cu_al_threshold_table', 'res_dash_changes', 'res_dash_figure_checks', 'res_dash_kpis', 'res_dash_series', 'res_dashboard_checks', 'res_dashboard_known_issues', 'res_dashboard_pipeline', 'res_dashboard_sources', 'res_demand_assumptions', 'res_demand_context', 'res_demand_dc_capacity', 'res_demand_dc_cases', 'res_demand_dc_paths', 'res_demand_ev_cases', 'res_demand_ev_paths', 'res_demand_headline', 'res_demand_ranges', 'res_demand_scale', 'res_demand_sensitivity', 'res_dollar_correlations', 'res_dollar_cpi_sensitivity', 'res_dollar_lead_lag', 'res_dollar_month_end_check', 'res_dollar_regressions', 'res_dollar_rolling_correlation_36m', 'res_dollar_scatter', 'res_dollar_scatter_fit', 'res_dollar_series', 'res_dollar_stability_by_period', 'res_euro_record', 'res_event_record_checks', 'res_events', 'res_interlude_records', 'res_ratio_facts', 'res_ratio_series', 'res_refined_vs_mined', 'res_story_copper_record_facts', 'res_story_copper_series', 'res_story_figure_checks', 'res_story_guess_dollar', 'res_supply_countries', 'res_uses_end_use', 'res_uses_facts']",2026-10-04
 17,stg_lme_copper_daily vs stg_wb_prices_monthly,LME monthly average cash price vs World Bank copper,PASS,331 overlapping months; correlation 1.0000; mean gap 0.09%; max gap 0.74%,2026-10-04
 18,stg_fred_monthly vs stg_wb_prices_monthly,FRED (IMF) aluminium vs World Bank aluminium,PASS,415 overlapping months; mean gap 0.12%; max gap 0.97%,2026-10-04
 19,usgs_mine_production_country,MCS 2025 2023: countries add up to world total (2% tolerance for USGS rounding),PASS,"sum 22,558 vs total 22,600 (0.19% apart)",2026-10-04
@@ -164,7 +164,7 @@ check_no,table_name,description,status,detail,run_date
 163,res_dollar_correlations,the dollar chapter scatter has the same months as the correlation with the broad dollar index,PASS,"247 points, 247 months",2026-10-04
 164,res_cu_al_threshold_table,every rule has both horizons and an adjusted p-value between 0 and 1,PASS,"34 rows, 17 rules, 1 below 0.05 after adjustment",2026-10-04
 165,res_demand_sensitivity,the reference total is the EV transition plus the data-centre extra over the 2024 build,PASS,1189150.0 t = 926650.0 + 262500.0,2026-10-04
-166,res_dashboard_checks,the list of checks shown on the site has no failed check,PASS,"151 passed, 7 warnings, 0 failed",2026-10-04
+166,res_dashboard_checks,the list of checks shown on the site has no failed check,PASS,"155 passed, 7 warnings, 0 failed",2026-10-04
 167,copper_end_use,"the six end-use shares add up to 100 percent (one scope, one year)",PASS,6 sectors add up to 100 percent,2026-10-04
 168,physical_constants,"copper and aluminium both have a conductivity and a density, and annealed copper is 100 percent IACS by definition",PASS,"2 densities, 2 conductivities",2026-10-04
 169,copper_context_facts,"facts F01 to F07 are present, the percentages are between 0 and 100 and each has a source",PASS,7 facts,2026-10-04
@@ -177,47 +177,51 @@ check_no,table_name,description,status,detail,run_date
 176,res_aluminium_case,"no month after the last month below the break-even is at or below it, and that last month is the one named",PASS,last month at or below the break-even: 2008-11,2026-10-04
 177,res_demand_scale,"the 2030 reference total in the scale sentence equals the sensitivity table, and Russia equals the USGS figure",PASS,1189.0 kt against Russia 1300.0 kt,2026-10-04
 178,res_story_figure_checks,every figure computed for the story brief reproduces its expected value,PASS,56 of 56 figures pass,2026-10-04
-179,raw_lme_copper_daily,every source_id exists in sources register,PASS,details withheld: the LME data is commercial and is never published,2026-10-04
-180,raw_wb_prices_monthly,every source_id exists in sources register,PASS,ok,2026-10-04
-181,raw_fred_palumusdm,every source_id exists in sources register,PASS,ok,2026-10-04
-182,raw_fred_cpiaucsl,every source_id exists in sources register,PASS,ok,2026-10-04
-183,raw_fred_exuseu,every source_id exists in sources register,PASS,ok,2026-10-04
-184,raw_fred_dtwexbgs,every source_id exists in sources register,PASS,ok,2026-10-04
-185,raw_fred_gs10,every source_id exists in sources register,PASS,ok,2026-10-04
-186,raw_ev_data,every source_id exists in sources register,PASS,details withheld: raw IEA data is not redistributed,2026-10-04
-187,raw_usgs_commodities,every source_id exists in sources register,PASS,ok,2026-10-04
-188,raw_iea_annex_cells,every source_id exists in sources register,PASS,details withheld: raw IEA data is not redistributed,2026-10-04
-189,company_production,every source_id exists in sources register,PASS,ok,2026-10-04
-190,copper_context_facts,every source_id exists in sources register,PASS,ok,2026-10-04
-191,copper_end_use,every source_id exists in sources register,PASS,ok,2026-10-04
-192,copper_intensity_vehicle,every source_id exists in sources register,PASS,ok,2026-10-04
-193,datacentre_copper_assumptions,every source_id exists in sources register,PASS,ok,2026-10-04
-194,datacentre_electricity_iea,every source_id exists in sources register,PASS,details withheld: raw IEA data is not redistributed,2026-10-04
-195,datacentre_growth_by_region,every source_id exists in sources register,PASS,details withheld: raw IEA data is not redistributed,2026-10-04
-196,events,every source_id exists in sources register,PASS,ok,2026-10-04
-197,known_issues,every source_id exists in sources register,PASS,ok,2026-10-04
-198,mine_production,every source_id exists in sources register,PASS,ok,2026-10-04
-199,physical_constants,every source_id exists in sources register,PASS,ok,2026-10-04
-200,scenario_assumptions,every source_id exists in sources register,PASS,ok,2026-10-04
-201,usgs_country_iso,every source_id exists in sources register,PASS,ok,2026-10-04
-202,usgs_mine_production_country,every source_id exists in sources register,PASS,ok,2026-10-04
-203,res_context_facts,every source_id exists in sources register,PASS,ok,2026-10-04
-204,res_dashboard_known_issues,every source_id exists in sources register,PASS,ok,2026-10-04
-205,res_dashboard_sources,every source_id exists in sources register,PASS,ok,2026-10-04
-206,res_demand_assumptions,every source_id exists in sources register,PASS,ok,2026-10-04
-207,res_demand_context,every source_id exists in sources register,PASS,ok,2026-10-04
-208,res_events,every source_id exists in sources register,PASS,ok,2026-10-04
-209,res_uses_end_use,every source_id exists in sources register,PASS,ok,2026-10-04
-210,mart_demand_assumptions,every source_id exists in sources register,PASS,ok,2026-10-04
-211,mart_demand_context,every source_id exists in sources register,PASS,ok,2026-10-04
-212,mart_scenario_inputs,every source_id exists in sources register,PASS,ok,2026-10-04
-213,stg_datacentre_annex_regional,every source_id exists in sources register,PASS,details withheld: raw IEA data is not redistributed,2026-10-04
-214,stg_datacentre_annex_world,every source_id exists in sources register,PASS,details withheld: raw IEA data is not redistributed,2026-10-04
-215,stg_datacentre_capacity_scenarios,every source_id exists in sources register,PASS,details withheld: raw IEA data is not redistributed,2026-10-04
-216,stg_ev_data,every source_id exists in sources register,PASS,details withheld: raw IEA data is not redistributed,2026-10-04
-217,stg_fred_dtwexbgs_daily,every source_id exists in sources register,PASS,ok,2026-10-04
-218,stg_fred_monthly,every source_id exists in sources register,PASS,ok,2026-10-04
-219,stg_lme_copper_daily,every source_id exists in sources register,PASS,details withheld: the LME data is commercial and is never published,2026-10-04
-220,stg_usgs_copper,every source_id exists in sources register,PASS,ok,2026-10-04
-221,stg_wb_prices_monthly,every source_id exists in sources register,PASS,ok,2026-10-04
-222,sources,sources in the register that no table uses yet,INFO,none,2026-10-04
+179,res_dash_series,dashboard copper (dollars and euros) equals the monthly panel in every month since 1999,PASS,332 of 332 months match,2026-10-04
+180,res_dash_series,"dashboard copper-to-aluminium ratio equals the ratio mart in every month, and the series has one row per month",PASS,800 months,2026-10-04
+181,res_dash_series,the real copper value is empty in exactly the months with no US CPI value (October 2025) and nowhere else,PASS,1 empty month(s),2026-10-04
+182,res_dash_figure_checks,every latest-month figure on the dashboard reproduces from an independent source table,PASS,16 of 16 figures pass,2026-10-04
+183,raw_lme_copper_daily,every source_id exists in sources register,PASS,details withheld: the LME data is commercial and is never published,2026-10-04
+184,raw_wb_prices_monthly,every source_id exists in sources register,PASS,ok,2026-10-04
+185,raw_fred_palumusdm,every source_id exists in sources register,PASS,ok,2026-10-04
+186,raw_fred_cpiaucsl,every source_id exists in sources register,PASS,ok,2026-10-04
+187,raw_fred_exuseu,every source_id exists in sources register,PASS,ok,2026-10-04
+188,raw_fred_dtwexbgs,every source_id exists in sources register,PASS,ok,2026-10-04
+189,raw_fred_gs10,every source_id exists in sources register,PASS,ok,2026-10-04
+190,raw_ev_data,every source_id exists in sources register,PASS,details withheld: raw IEA data is not redistributed,2026-10-04
+191,raw_usgs_commodities,every source_id exists in sources register,PASS,ok,2026-10-04
+192,raw_iea_annex_cells,every source_id exists in sources register,PASS,details withheld: raw IEA data is not redistributed,2026-10-04
+193,company_production,every source_id exists in sources register,PASS,ok,2026-10-04
+194,copper_context_facts,every source_id exists in sources register,PASS,ok,2026-10-04
+195,copper_end_use,every source_id exists in sources register,PASS,ok,2026-10-04
+196,copper_intensity_vehicle,every source_id exists in sources register,PASS,ok,2026-10-04
+197,datacentre_copper_assumptions,every source_id exists in sources register,PASS,ok,2026-10-04
+198,datacentre_electricity_iea,every source_id exists in sources register,PASS,details withheld: raw IEA data is not redistributed,2026-10-04
+199,datacentre_growth_by_region,every source_id exists in sources register,PASS,details withheld: raw IEA data is not redistributed,2026-10-04
+200,events,every source_id exists in sources register,PASS,ok,2026-10-04
+201,known_issues,every source_id exists in sources register,PASS,ok,2026-10-04
+202,mine_production,every source_id exists in sources register,PASS,ok,2026-10-04
+203,physical_constants,every source_id exists in sources register,PASS,ok,2026-10-04
+204,scenario_assumptions,every source_id exists in sources register,PASS,ok,2026-10-04
+205,usgs_country_iso,every source_id exists in sources register,PASS,ok,2026-10-04
+206,usgs_mine_production_country,every source_id exists in sources register,PASS,ok,2026-10-04
+207,res_context_facts,every source_id exists in sources register,PASS,ok,2026-10-04
+208,res_dashboard_known_issues,every source_id exists in sources register,PASS,ok,2026-10-04
+209,res_dashboard_sources,every source_id exists in sources register,PASS,ok,2026-10-04
+210,res_demand_assumptions,every source_id exists in sources register,PASS,ok,2026-10-04
+211,res_demand_context,every source_id exists in sources register,PASS,ok,2026-10-04
+212,res_events,every source_id exists in sources register,PASS,ok,2026-10-04
+213,res_uses_end_use,every source_id exists in sources register,PASS,ok,2026-10-04
+214,mart_demand_assumptions,every source_id exists in sources register,PASS,ok,2026-10-04
+215,mart_demand_context,every source_id exists in sources register,PASS,ok,2026-10-04
+216,mart_scenario_inputs,every source_id exists in sources register,PASS,ok,2026-10-04
+217,stg_datacentre_annex_regional,every source_id exists in sources register,PASS,details withheld: raw IEA data is not redistributed,2026-10-04
+218,stg_datacentre_annex_world,every source_id exists in sources register,PASS,details withheld: raw IEA data is not redistributed,2026-10-04
+219,stg_datacentre_capacity_scenarios,every source_id exists in sources register,PASS,details withheld: raw IEA data is not redistributed,2026-10-04
+220,stg_ev_data,every source_id exists in sources register,PASS,details withheld: raw IEA data is not redistributed,2026-10-04
+221,stg_fred_dtwexbgs_daily,every source_id exists in sources register,PASS,ok,2026-10-04
+222,stg_fred_monthly,every source_id exists in sources register,PASS,ok,2026-10-04
+223,stg_lme_copper_daily,every source_id exists in sources register,PASS,details withheld: the LME data is commercial and is never published,2026-10-04
+224,stg_usgs_copper,every source_id exists in sources register,PASS,ok,2026-10-04
+225,stg_wb_prices_monthly,every source_id exists in sources register,PASS,ok,2026-10-04
+226,sources,sources in the register that no table uses yet,INFO,none,2026-10-04

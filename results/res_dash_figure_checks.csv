@@ -1,0 +1,17 @@
+figure_id,figure,expected_from_source_table,computed_here,tolerance,unit,status
+D01,"copper price, latest month (USD per tonne)",14326.0,14326.0,0.0,USD/t,PASS
+D02,"copper price, latest month (EUR per tonne), against the staged panel",12356.3912,12356.3912,0.5,EUR/t,PASS
+D03,months in the copper series,800.0,800.0,0.0,months,PASS
+D15,"latest month is the highest in euros, against the euro result table of the story",1.0,1.0,0.0,1 = yes,PASS
+D16,"months in the euro series: January 1999 to the latest month, counted from the calendar",332.0,332.0,0.0,months,PASS
+D04,latest month is the highest as quoted,1.0,1.0,0.0,1 = yes,PASS
+D05,"latest real price as a share of the real record (percent), against the story record facts",68.018,68.018,0.05,percent,PASS
+D06,"month of the real record, against the story record facts",1974-04,1974-04,0.0,,PASS
+D07,"copper-to-aluminium ratio, latest month, against the result table of the aluminium chapter",4.4066,4.4066,0.0005,ratio,PASS
+D08,"dollar index, latest month, against the staged panel",118.8512,118.8512,0.0001,index,PASS
+D09,the real series is the nominal series in latest-month money (latest real = latest nominal),14326.0,14326.0,0.001,USD/t,PASS
+D10,US CPI has no value for October 2025: the real value stays empty,True,True,0.0,,PASS
+D11,"real copper series against the story's real copper series (largest difference, USD per tonne; the story rounds to whole dollars)",0.0,0.05,1.0,USD/t,PASS
+D12,"copper change over one year as quoted in USD, by hand from two months",48.1489,48.1489,0.001,percent,PASS
+D13,the one-year change in the opener of the story (result table of the uses chapter),48.15,48.1489,0.01,percent,PASS
+D14,euro window for 'all' starts in 1999,1999-01,1999-01,0.0,,PASS
