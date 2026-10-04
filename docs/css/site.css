@@ -69,23 +69,34 @@ a:hover { color: var(--ink); }
 .rise { animation: rise 640ms var(--ease) both; animation-delay: calc(var(--i, 0) * 90ms); }
 @keyframes rise { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
 
-/* ---------- smoked glass: the nav bar and the opener plaque, nowhere else ---------- */
+/* ---------- smoked glass: the nav bars, the sticky filter bar, the opener plaque and the closing panel, nowhere else ----------
+   The tint decides the contrast, not the backdrop: tools/glass_contrast.py measures every version over the brightest point behind it. */
+:root { --tint-bar: .9; --tint-plaque: .86; --tint-panel: .86; }
 .glass {
-  background: rgba(27, 20, 16, .5);
-  -webkit-backdrop-filter: blur(16px) saturate(1.3);
-  backdrop-filter: blur(16px) saturate(1.3);
+  --tint: var(--tint-bar);
+  position: relative; isolation: isolate;
+  background: rgba(27, 20, 16, var(--tint));
+  -webkit-backdrop-filter: blur(3px) saturate(1.4);
+  backdrop-filter: blur(3px) saturate(1.4);
   border: 1px solid rgba(255, 238, 220, .2);
   border-radius: 10px;
   box-shadow: inset 1px 1px 0 rgba(255, 244, 232, .38), inset -1px -1px 0 rgba(255, 244, 232, .08), 0 30px 44px -30px rgba(0, 0, 0, .85);
   color: var(--ivory);
 }
-@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) { .glass { background: rgba(27, 20, 16, .9); } }
-@media (prefers-reduced-transparency: reduce) { .glass { background: var(--ink-2); -webkit-backdrop-filter: none; backdrop-filter: none; } }
+.plaque.glass { --tint: var(--tint-plaque); }
+.endpiece-panel.glass { --tint: var(--tint-panel); }
+/* a soft highlight that follows the pointer: only while the pointer is over the glass, never on its own */
+.glass::before { content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; z-index: -1; opacity: 0; transition: opacity 200ms ease;
+  background: radial-gradient(circle 240px at var(--mx, 50%) var(--my, 50%), rgba(255, 244, 232, .06), rgba(255, 244, 232, 0) 70%); }
+.glass.hot::before { opacity: 1; }
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) { .glass { background: var(--ink-2); } }
+@media (prefers-reduced-transparency: reduce) { .glass { background: var(--ink-2) !important; -webkit-backdrop-filter: none !important; backdrop-filter: none !important; } .glass::before { display: none; } }
+@media (hover: none), (pointer: coarse), (prefers-reduced-motion: reduce) { .glass::before { display: none; } }
 .glass :focus-visible, footer.foot :focus-visible, .hero :focus-visible { outline-color: var(--copper-bright); }
 
 /* ---------- nav ---------- */
 .nav { position: fixed; top: 0; left: 0; right: 0; z-index: 20; padding: calc(env(safe-area-inset-top, 0px) + 12px) 16px 0; pointer-events: none; }
-.nav-bar { pointer-events: auto; max-width: 1120px; margin-inline: auto; display: flex; align-items: center; gap: var(--s4); padding: 10px 10px 10px 18px; background: rgba(27, 20, 16, .86); }
+.nav-bar { pointer-events: auto; max-width: 1120px; margin-inline: auto; display: flex; align-items: center; gap: var(--s4); padding: 10px 10px 10px 18px; }
 .brand { font-family: var(--display); font-size: 1.15rem; font-style: italic; color: var(--copper-bright); text-decoration: none; white-space: nowrap; font-variation-settings: "opsz" 24; }
 .brand:hover { color: var(--copper-bright); }
 .brand span { font-family: var(--mono); font-style: normal; font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--ivory-dim); margin-left: 10px; }
@@ -96,7 +107,7 @@ nav.main a:hover { color: var(--ivory); background: rgba(255, 244, 232, .08); }
 nav.main a[aria-current] { color: var(--ivory); box-shadow: inset 0 -1px 0 var(--copper-bright); border-radius: 0; }
 
 /* ---------- opener (Story page) ---------- */
-.hero { position: relative; color: var(--ivory); background-color: var(--ink); background-size: cover; background-position: 62% 38%; padding-block: 148px var(--s7); }
+.hero { position: relative; color: var(--ivory); background-color: var(--ink); background-size: cover; background-position: 62% 38%; padding-block: calc(var(--navh, 96px) + 44px) var(--s7); }
 .hero.has-photo { background-image: linear-gradient(90deg, rgba(27, 20, 16, .94) 0%, rgba(27, 20, 16, .82) 42%, rgba(27, 20, 16, .38) 100%), var(--photo); }
 .hero-grid { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 4fr); gap: var(--s6); align-items: end; }
 .hero .eyebrow { color: var(--ivory-dim); margin: 0 0 var(--s4); }
@@ -488,7 +499,7 @@ footer.foot .fine { font-size: .85rem; margin-top: 18px; }
 
 [hidden] { display: none !important; }
 @media (max-width: 880px) {
-  .hero { padding-block: 128px var(--s6); }
+  .hero { padding-block: calc(var(--navh, 96px) + 28px) var(--s6); }
   .hero-grid { grid-template-columns: minmax(0, 1fr); gap: var(--s5); }
   .plaque { max-width: 420px; }
   .story, .more { grid-template-columns: minmax(0, 1fr); gap: var(--s3); }
@@ -569,10 +580,10 @@ footer.foot .fine { font-size: .85rem; margin-top: 18px; }
 .closing { font: italic 400 1.25rem/1.5 var(--display); max-width: 36em; margin: var(--s4) 0; }
 
 /* ---------- dashboard (landing page) ---------- */
-.subnav { pointer-events: auto; max-width: 1120px; margin: 6px auto 0; padding: 4px 10px; background: rgba(27, 20, 16, .86); }
+.subnav { pointer-events: auto; max-width: 1120px; margin: 6px auto 0; padding: 4px 10px; }
 .subnav nav.main { margin-left: 0; justify-content: flex-start; }
 .dash { padding-top: 8px; }
-.dashbar { position: sticky; top: var(--filtertop, 72px); z-index: 15; margin: 0 0 var(--s4); padding: 10px 14px 10px; background: rgba(27, 20, 16, .88); }
+.dashbar { position: sticky; top: var(--filtertop, 72px); z-index: 15; margin: 0 0 var(--s4); padding: 10px 14px 10px; }
 .dbar-row { display: flex; flex-wrap: wrap; gap: 10px 28px; align-items: end; }
 .dgroup { display: grid; gap: 4px; }
 .dlab { font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--ivory-dim); }
@@ -667,3 +678,13 @@ footer.foot .fine { font-size: .85rem; margin-top: 18px; }
 .dmr .mrbars { gap: 2px; }
 .dmr .mrkey { margin-top: 6px; }
 .dmr .mrrow { grid-template-columns: minmax(0, 1fr); gap: 2px; }
+
+/* the closing section of the story: dark, the verdict on glass, the photo mirrored when it exists */
+.endpiece { position: relative; overflow: hidden; background-color: var(--ink); color: var(--ivory); padding-block: var(--s7); }
+.endpiece.has-photo::before { content: ""; position: absolute; inset: 0; background-image: linear-gradient(270deg, rgba(27, 20, 16, .55) 0%, rgba(27, 20, 16, .15) 100%), var(--photo); background-size: cover; background-position: 38% 38%; transform: scaleX(-1); }
+.endpiece-wrap { position: relative; display: flex; justify-content: flex-start; }
+.endpiece-panel { max-width: 46rem; padding: var(--s5) var(--s5) var(--s4); }
+.endpiece-title { font: 400 1rem var(--sans); letter-spacing: .08em; text-transform: uppercase; color: var(--ivory-dim); margin: 0 0 var(--s3); }
+.endpiece-verdict { margin: 0; font: 400 clamp(1.4rem, 2.6vw, 1.9rem)/1.4 var(--display); font-variation-settings: "opsz" 36; color: var(--ivory); }
+.endpiece-links { display: flex; gap: var(--s4); margin: var(--s4) 0 0; }
+.endpiece-links a { color: var(--copper-bright); font-weight: 500; }

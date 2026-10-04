@@ -71,7 +71,7 @@
     curView = name === "method" ? "method" : name;
     ["dashboard", "story", "quality", "method"].forEach(function (v) { document.getElementById(v).hidden = name !== v; });
     document.getElementById("subnav-wrap").hidden = name !== "story";
-    if (!built[name]) { built[name] = true; CMA.pages[name](document.getElementById(name)); }
+    if (!built[name]) { built[name] = true; CMA.pages[name](document.getElementById(name)); if (CMA.glass) { CMA.glass.init(document.getElementById(name)); } }
     navOffset();
   }
 
@@ -133,6 +133,7 @@
 
   buildHeader();
   buildFooter();
+  if (CMA.glass) { CMA.glass.init(document); }
   navOffset();
   window.addEventListener("resize", navOffset);
   window.addEventListener("hashchange", function () { show(location.hash.slice(1), true); });

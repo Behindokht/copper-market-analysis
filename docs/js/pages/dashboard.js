@@ -284,7 +284,7 @@
     ui.noteEuro = h("span", { class: "dnote", id: "note-euro" }); ui.noteReal = h("span", { class: "dnote", id: "note-real" });
     ui.readout = h("p", { class: "dreadout idle", id: "dreadout", "aria-live": "off" });
     gV.btns.real.setAttribute("aria-describedby", "note-real");
-    var bar = h("div", { class: "dashbar glass", role: "region", "aria-label": T("filter_aria") },
+    var bar = h("div", { class: "dashbar glass lens", role: "region", "aria-label": T("filter_aria") },
       h("div", { class: "dbar-row" }, gP.el, gC.el, gV.el), h("p", { class: "dnotes" }, ui.noteEuro, ui.noteReal), ui.readout);
     wrap.appendChild(bar);
 

@@ -6,6 +6,10 @@
 - **IBM Plex Sans** (text and chart labels, 400, 500 and 600), Copyright 2019 IBM Corp. All rights reserved, <https://github.com/IBM/plex>. Licensed under the SIL Open Font License 1.1 (`docs/fonts/OFL-IBM-Plex-Sans.txt`). Used unmodified, in Latin subsets.
 - **IBM Plex Mono** (eyebrows, axis ticks and units, 400 and 500), Copyright 2017 IBM Corp. All rights reserved, <https://github.com/IBM/plex>. Licensed under the SIL Open Font License 1.1 (`docs/fonts/OFL-IBM-Plex-Mono.txt`). Used unmodified, in Latin subsets.
 
+## Code ideas
+
+- **Liquid glass.** The glass on the nav bars, the filter bar, the opener plaque and the closing panel (`docs/js/glass.js`) follows the idea of **liquid-glass-react** by rdev, <https://github.com/rdev/liquid-glass-react>, MIT licence: a rim lens made with an SVG displacement map, a colour split at the rim, light frost and a highlight that follows the pointer. It is rebuilt in plain JavaScript and SVG; no code from the library is included and React is not used. MIT licence text: Copyright (c) rdev, permission is granted to use, copy, modify and distribute the software, provided the copyright notice and permission notice are included in copies of the software itself.
+
 The opener photo (`docs/img/copper-plate.jpg`) is not part of the repository until its licence is confirmed; without it the opener is plain ink.
 
 Nothing is loaded from the web when the site runs.
@@ -17,6 +21,7 @@ Nothing is loaded from the web when the site runs.
 | Copper prices (monthly, nominal, from 1960) | World Bank Commodity Price Data (The Pink Sheet) | Open data, CC BY 4.0 as the World Bank's default licence for datasets it produces (<https://datacatalog.worldbank.org/public-licenses>). Credit: *adapted from World Bank Commodity Price Data*. Changes made: deflated with US CPI, rebased or turned into monthly changes, as described on each page. The licence line for the Pink Sheet itself is still to be confirmed (see `copper_database/collected/sources.csv`, S02) |
 | US inflation (CPIAUCSL) | U.S. Bureau of Labor Statistics, Consumer Price Index for All Urban Consumers: All Items in U.S. City Average, retrieved from FRED, Federal Reserve Bank of St. Louis | Public domain, citation requested |
 | Broad dollar index (DTWEXBGS), euro exchange rate (EXUSEU), 10-year yield (GS10) | Board of Governors of the Federal Reserve System (US), retrieved from FRED, Federal Reserve Bank of St. Louis | Public domain, citation requested |
+| Gold, tin, aluminium and Brent oil prices on the Dashboard | World Bank Commodity Price Data (The Pink Sheet) | Same licence and credit line as the copper prices (CC BY 4.0; the Pink Sheet licence line is still to be confirmed). Gold and tin are also shown in the story |
 | Missing October 2025 US CPI | U.S. Bureau of Labor Statistics, 2025 federal government shutdown impact on the CPI (FAQ) | Public domain (US government work) |
 
 | Mine output and reserves by country | US Geological Survey, Mineral Commodity Summaries 2026, copper | US government work; generally public domain (see `sources.csv`, S06) |

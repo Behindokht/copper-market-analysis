@@ -28,7 +28,8 @@
     var vars = { peak_month: CMA.monthLong(CMA.realRecord().month), peak_above: CMA.n0(CMA.realRecord().belowPct), others: J.othersText, is_are: J.isAre, top2_share: CMA.n0(top2), demand_pct: CMA.n0(ref.headline_total_pct_of_mine), china_ref: CMA.n0(china.refinery_share_pct),
       since: CMA.monthLong(String(C.first_month_of_run.value) + "-01") };
     function checkCount(status) { return CMA.rows(D.quality.checks).filter(function (r) { return r.status === status; }).length; }
-    box.appendChild(h("p", { class: "answer summary-verdict", text: T("verdict", vars) }));
+    CMA.verdictText = T("verdict", vars);                // the closing section of the story shows the same sentence
+    box.appendChild(h("p", { class: "answer summary-verdict", text: CMA.verdictText }));
 
     var items = [["s_uses", "uses", ["uses.end_use", "uses.facts"]], ["s_record", "record", ["story.record_facts", "chapters.euro"]], ["s_just", "just-copper", ["chapters.records"]],
       ["s_dollar", "dollar", ["story.guess_dollar", "dollar.correlations"]], ["s_supply", "supply", ["supply.countries", "supply.refined"]], ["s_demand", "demand", ["demand.sensitivity"]],

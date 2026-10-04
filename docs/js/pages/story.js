@@ -34,7 +34,7 @@
     var nChecks = CMA.rows(window.CMA_DATA.quality.checks).filter(function (r) { return r.status === "PASS"; }).length;
     var sparkSvg = CMA.svg("svg", { class: "spark spark-title", viewBox: "-40 -40 80 80", "aria-hidden": "true" });
     CMA.spark.build(sparkSvg);
-    var plaque = h("aside", { class: "plaque glass lens rise", style: "--i:5", "aria-label": t("hero.plaque_aria") },
+    var plaque = h("aside", { class: "plaque glass lens tilt rise", style: "--i:5", "aria-label": t("hero.plaque_aria") },
       h("p", { class: "mono", text: t("hero.plaque_label", { month: CMA.monthLong(R.nominal_latest.month) }) }),
       h("p", { class: "price num" }, CMA.usd0(R.nominal_latest.value), h("small", { text: t("hero.plaque_unit") }), CMA.chip(["story.record_facts"])),
       h("p", { class: "unit", text: t("hero.plaque_line") }),
@@ -197,5 +197,15 @@
 
     // ---- one Sources line at the foot, with every source used on the page
     CMA.sources.render(wrap);
+
+    // ---- the closing section: the verdict on a glass panel over the copper plate (the photo is mirrored). Plain ink when the photo is not there.
+    var closing = h("section", { class: "endpiece", "aria-labelledby": "endpiece-title" },
+      h("div", { class: "wrap endpiece-wrap" },
+        h("div", { class: "endpiece-panel glass lens" },
+          h("h2", { id: "endpiece-title", class: "endpiece-title", text: t("pages.summary.title") }),
+          h("p", { class: "endpiece-verdict", text: CMA.verdictText }),
+          h("p", { class: "endpiece-links" }, h("a", { href: "#dashboard", text: t("nav.dashboard") }), h("a", { href: "#quality", text: t("summary.appendix_link") })))));
+    if (window.CMA_PHOTO) { closing.classList.add("has-photo"); closing.style.setProperty("--photo", 'url("' + window.CMA_PHOTO + '")'); }
+    root.appendChild(closing);
   };
 })();
