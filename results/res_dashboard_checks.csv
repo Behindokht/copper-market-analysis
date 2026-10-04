@@ -165,7 +165,7 @@ check_no,table_name,description,status,detail,run_date
 164,res_dollar_correlations,the dollar chapter scatter has the same months as the correlation with the broad dollar index,PASS,"247 points, 247 months",2026-10-04
 165,res_cu_al_threshold_table,every rule has both horizons and an adjusted p-value between 0 and 1,PASS,"34 rows, 17 rules, 1 below 0.05 after adjustment",2026-10-04
 166,res_demand_sensitivity,the reference total is the EV transition plus the data-centre extra over the 2024 build,PASS,1189150.0 t = 926650.0 + 262500.0,2026-10-04
-167,res_dashboard_checks,the list of checks shown on the site has no failed check,PASS,"155 passed, 7 warnings, 0 failed",2026-10-04
+167,res_dashboard_checks,the list of checks shown on the site has no failed check,PASS,"155 passed, 8 warnings, 0 failed",2026-10-04
 168,copper_end_use,"the six end-use shares add up to 100 percent (one scope, one year)",PASS,6 sectors add up to 100 percent,2026-10-04
 169,physical_constants,"copper and aluminium both have a conductivity and a density, and annealed copper is 100 percent IACS by definition",PASS,"2 densities, 2 conductivities",2026-10-04
 170,copper_context_facts,"facts F01 to F07 are present, the percentages are between 0 and 100 and each has a source",PASS,7 facts,2026-10-04
@@ -181,7 +181,7 @@ check_no,table_name,description,status,detail,run_date
 180,res_dash_series,dashboard copper (dollars and euros) equals the monthly panel in every month since 1999,PASS,332 of 332 months match,2026-10-04
 181,res_dash_series,"dashboard copper-to-aluminium ratio equals the ratio mart in every month, and the series has one row per month",PASS,800 months,2026-10-04
 182,res_dash_series,the real copper value is empty in exactly the months with no US CPI value (October 2025) and nowhere else,PASS,1 empty month(s),2026-10-04
-183,res_dash_figure_checks,every latest-month figure on the dashboard reproduces from an independent source table,PASS,21 of 21 figures pass,2026-10-04
+183,res_dash_figure_checks,every latest-month figure on the dashboard reproduces from an independent source table,PASS,24 of 24 figures pass,2026-10-04
 184,raw_lme_copper_daily,every source_id exists in sources register,PASS,details withheld: the LME data is commercial and is never published,2026-10-04
 185,raw_wb_prices_monthly,every source_id exists in sources register,PASS,ok,2026-10-04
 186,raw_fred_palumusdm,every source_id exists in sources register,PASS,ok,2026-10-04

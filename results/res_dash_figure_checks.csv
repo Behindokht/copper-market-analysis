@@ -4,6 +4,9 @@ D02,"copper price, latest month (EUR per tonne), against the staged panel",12356
 D03,months in the copper series,800.0,800.0,0.0,months,PASS
 D15,"latest month is the highest in euros, against the euro result table of the story",1.0,1.0,0.0,1 = yes,PASS
 D16,"months in the euro series: January 1999 to the latest month, counted from the calendar",332.0,332.0,0.0,months,PASS
+D22,"place of the latest real price among all months (rank), against the story record facts (months above it, plus one)",37.0,37.0,0.0,rank,PASS
+D23,"the one-year change of the dollar index, by hand from two months",-1.4303,-1.4303,0.001,percent,PASS
+D24,months with a real price are all months but one (October 2025),799.0,799.0,0.0,months,PASS
 D04,latest month is the highest as quoted,1.0,1.0,0.0,1 = yes,PASS
 D05,"latest real price as a share of the real record (percent), against the story record facts",68.018,68.018,0.05,percent,PASS
 D06,"month of the real record, against the story record facts",1974-04,1974-04,0.0,,PASS

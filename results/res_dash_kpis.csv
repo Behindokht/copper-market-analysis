@@ -14,3 +14,7 @@ dxy_latest,118.8512,index,"broad dollar index, monthly average"
 dxy_first_month,2006-01,month,the dollar index starts here
 eur_first_month,1999-01,month,euro prices start here
 cpi_base_month,2026-08,month,the real series use this month's prices
+copper_12m_change_pct,48.148914167528446,percent,"latest month against the same month a year earlier, as quoted in dollars"
+dxy_12m_change_pct,-1.4303035932583419,percent,"dollar index, latest month against the same month a year earlier"
+real_rank_latest,37.0,rank,place of the latest real price among all months with a real price (1 = highest)
+real_months_valid,799.0,months,months with a real price (October 2025 has no US CPI)
