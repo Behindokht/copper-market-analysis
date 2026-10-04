@@ -18,18 +18,23 @@ with sync_playwright() as p:
     pg = b.new_page(viewport={"width": 1280, "height": 900}, reduced_motion="reduce")
     errs = []
     pg.on("pageerror", lambda e: errs.append("script error: " + str(e)))
-    for view in ("story", "quality", "method"):
+    for view in ("dashboard", "dashboard?p=1y&c=eur&v=nominal&e=1", "dashboard?p=all&c=usd&v=real", "story", "quality", "method"):
+        base = view.split("?")[0]
         pg.goto(url + "#" + view)
-        pg.wait_for_selector("#story .hero" if view == "story" else "#" + view + " .wrap", timeout=15000)
+        pg.wait_for_selector("#story .hero" if base == "story" else ("#dashboard .dgrid" if base == "dashboard" else "#" + base + " .wrap"), timeout=15000)
         pg.wait_for_timeout(500)
-        if view == "story":
+        if base == "dashboard":
+            box = pg.locator("#dashboard .dchart svg").first.bounding_box()
+            pg.mouse.move(box["x"] + box["width"] * 0.6, box["y"] + box["height"] * 0.5)
+            pg.wait_for_timeout(300)
+        if base == "story":
             for btn in pg.locator("button.linkbtn").all():
                 try:
                     btn.click(timeout=2000)
                 except Exception:
                     pass
             pg.wait_for_timeout(500)
-        text = pg.evaluate("document.getElementById('%s').textContent" % view)
+        text = pg.evaluate("document.getElementById('%s').textContent" % base)
         total += len(text)
         for rx, name in BAD:
             for m in rx.finditer(text):

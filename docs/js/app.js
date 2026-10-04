@@ -1,18 +1,22 @@
-/* App shell: navigation, footer, and two views: the story (one long page with chapter anchors) and the data-quality appendix.
-   The nav jumps to chapters and marks the one the reader is in. */
+/* App shell: navigation, footer and the views: the dashboard (the landing page), the story (one long page with chapter anchors), the data-quality appendix and
+   the method page. The top bar switches views; a second bar with the chapter links shows only inside the story. */
 (function () {
   var CMA = window.CMA, t = CMA.t, h = CMA.h;
-  var NAV = [["uses", "uses"], ["record", "record"], ["just-copper", "just"], ["dollar", "dollar"], ["supply", "supply"], ["demand", "demand"], ["aluminium", "aluminium"], ["summary", "summary"], ["quality", "quality"]];
-  var LEGACY = { ratio: "aluminium", story: "record" };      // old page links still land in the right place
-  var built = {}, spy = null, current = null;
+  var TOP = [["dashboard", "dashboard"], ["story", "story"], ["quality", "quality"]];
+  var NAV = [["uses", "uses"], ["record", "record"], ["just-copper", "just"], ["dollar", "dollar"], ["supply", "supply"], ["demand", "demand"], ["aluminium", "aluminium"], ["summary", "summary"]];
+  var LEGACY = { ratio: "aluminium" };      // old page links still land in the right place
+  var built = {}, spy = null, current = null, curView = "dashboard";
 
   function buildHeader() {
     var brand = document.getElementById("brand");
     brand.appendChild(document.createTextNode(t("site.brand")));
     brand.appendChild(h("span", { text: t("site.brand_sub") }));
     var nav = document.getElementById("nav");
-    nav.setAttribute("aria-label", t("nav.chapters_aria"));
-    NAV.forEach(function (n) { nav.appendChild(h("a", { href: "#" + n[0], "data-target": n[0], text: t("nav." + n[1]) })); });
+    nav.setAttribute("aria-label", t("nav.main_aria"));
+    TOP.forEach(function (n) { nav.appendChild(h("a", { href: "#" + n[0], "data-target": n[0], text: t("nav." + n[1]) })); });
+    var sub = document.getElementById("subnav");
+    sub.setAttribute("aria-label", t("nav.chapters_aria"));
+    NAV.forEach(function (n) { sub.appendChild(h("a", { href: "#" + n[0], "data-target": n[0], text: t("nav." + n[1]) })); });
   }
 
   function buildFooter() {
@@ -34,14 +38,14 @@
 
   function mark(target) {
     Array.prototype.forEach.call(document.querySelectorAll("#nav a"), function (a) {
-      if (a.getAttribute("data-target") === target) { a.setAttribute("aria-current", target === "quality" ? "page" : "location"); } else { a.removeAttribute("aria-current"); }
+      if (a.getAttribute("data-target") === curView) { a.setAttribute("aria-current", "page"); } else { a.removeAttribute("aria-current"); }
+    });
+    Array.prototype.forEach.call(document.querySelectorAll("#subnav a"), function (a) {
+      if (curView === "story" && a.getAttribute("data-target") === target) { a.setAttribute("aria-current", "location"); } else { a.removeAttribute("aria-current"); }
     });
     current = target;
-    var active = document.querySelector('#nav a[aria-current]');
-    if (active && active.scrollIntoView && document.getElementById("nav").scrollWidth > document.getElementById("nav").clientWidth) {
-      var nav = document.getElementById("nav");
-      nav.scrollLeft = active.offsetLeft - nav.clientWidth / 2 + active.clientWidth / 2;
-    }
+    var active = document.querySelector("#subnav a[aria-current]"), sub = document.getElementById("subnav");
+    if (active && sub.scrollWidth > sub.clientWidth) { sub.scrollLeft = active.offsetLeft - sub.clientWidth / 2 + active.clientWidth / 2; }
   }
 
   // which chapter is the reader in: the last one whose top has passed a line a little below the nav bar
@@ -64,15 +68,27 @@
   }
 
   function view(name) {
-    document.getElementById("story").hidden = name !== "story";
-    document.getElementById("quality").hidden = name !== "quality";
-    document.getElementById("method").hidden = name !== "method";
+    curView = name === "method" ? "method" : name;
+    ["dashboard", "story", "quality", "method"].forEach(function (v) { document.getElementById(v).hidden = name !== v; });
+    document.getElementById("subnav-wrap").hidden = name !== "story";
     if (!built[name]) { built[name] = true; CMA.pages[name](document.getElementById(name)); }
+    navOffset();
   }
 
-  // the hash is a chapter anchor, "quality", or an older page name
+  // the hash is a view, a chapter anchor of the story, or an older page name; the dashboard keeps its filters after a "?"
   function show(hash, moveFocus) {
-    var id = LEGACY[hash] && hash !== "story" ? LEGACY[hash] : hash;
+    var q = hash.indexOf("?"), base = q < 0 ? hash : hash.slice(0, q), qs = q < 0 ? "" : hash.slice(q + 1);
+    if (base === "") { base = "dashboard"; }
+    var id = LEGACY[base] || base;
+    if (id === "dashboard") {
+      if (!built.dashboard) { CMA.dash.initialState(qs); } else { CMA.dash.apply(qs); }
+      view("dashboard");
+      mark(null);
+      document.title = t("nav.dashboard") + " | " + t("site.title");
+      window.scrollTo(0, 0);
+      if (moveFocus) { var hd0 = document.getElementById("dashboard-title"); if (hd0) { hd0.focus({ preventScroll: true }); } }
+      return;
+    }
     if (id === "method") {
       view("method");
       mark(null);
@@ -99,14 +115,20 @@
       if (moveFocus) { var hd = document.getElementById(id + "-title"); if (hd) { hd.focus({ preventScroll: true }); } }
     } else {
       window.scrollTo(0, 0);
+      mark(null);
       if (spy) { spy(); }
     }
   }
 
   // anchors land below the floating nav: its height plus 16 px, measured, not guessed
   function navOffset() {
-    var bar = document.querySelector(".nav-bar");
-    if (bar) { document.documentElement.style.setProperty("--navh", Math.ceil(bar.getBoundingClientRect().bottom + 16) + "px"); }
+    var bar = document.querySelector(".nav-bar"), sub = document.getElementById("subnav-wrap");
+    if (bar) {
+      var bottom = bar.getBoundingClientRect().bottom;
+      document.documentElement.style.setProperty("--filtertop", Math.ceil(bottom + 8) + "px");
+      if (sub && !sub.hidden) { bottom = Math.max(bottom, sub.getBoundingClientRect().bottom); }
+      document.documentElement.style.setProperty("--navh", Math.ceil(bottom + 16) + "px");
+    }
   }
 
   buildHeader();

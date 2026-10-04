@@ -11,12 +11,16 @@
 <a class="skip" href="#main">Skip to the content</a>
 <header class="nav rise" style="--i:0">
   <div class="nav-bar glass">
-    <a class="brand" href="#story" id="brand"></a>
-    <nav class="main" id="nav" aria-label="Pages"></nav>
+    <a class="brand" href="#dashboard" id="brand"></a>
+    <nav class="main" id="nav" aria-label="Views"></nav>
+  </div>
+  <div class="subnav glass" id="subnav-wrap" hidden>
+    <nav class="main sub" id="subnav" aria-label="Chapters"></nav>
   </div>
 </header>
 <main id="main" tabindex="-1">
-  <section class="page" id="story"></section>
+  <section class="page no-hero" id="dashboard" aria-labelledby="dashboard-title"></section>
+  <section class="page" id="story" hidden></section>
   <section class="page no-hero" id="quality" aria-labelledby="quality-title" hidden></section>
   <section class="page no-hero" id="method" aria-labelledby="method-title" hidden></section>
 </main>
@@ -30,6 +34,7 @@
 <script src="data/quality.js"></script>
 <script src="data/dollar.js"></script>
 <script src="data/ratio.js"></script>
+<script src="data/dash.js"></script>
 <script src="data/uses.js"></script>
 <script src="data/supply.js"></script>
 <script src="data/map.js"></script>
@@ -38,6 +43,7 @@
 <script src="js/util.js"></script>
 <script src="js/glass.js"></script>
 <script src="js/charts.js"></script>
+<script src="js/dashchart.js"></script>
 <script src="js/pages/drivers.js"></script>
 <script src="js/pages/uses.js"></script>
 <script src="js/pages/record.js"></script>
@@ -48,6 +54,7 @@
 <script src="js/pages/supply.js"></script>
 <script src="js/pages/demand.js"></script>
 <script src="js/pages/summary.js"></script>
+<script src="js/pages/dashboard.js"></script>
 <script src="js/pages/story.js"></script>
 <script src="js/pages/quality.js"></script>
 <script src="js/pages/method.js"></script>

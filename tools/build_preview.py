@@ -15,9 +15,9 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 DOCS = ROOT / "docs"
-SCRIPTS = ["js/strings.en.js", "js/photo.js", "data/story.js", "data/chapters.js", "data/quality.js", "data/dollar.js", "data/ratio.js", "data/uses.js", "data/supply.js", "data/map.js", "data/demand.js", "data/provenance.js",
-           "js/util.js", "js/glass.js", "js/charts.js", "js/pages/drivers.js", "js/pages/uses.js", "js/pages/record.js", "js/pages/just.js", "js/pages/dollar.js", "js/pages/ratio.js", "js/pages/aluminium.js", "js/pages/supply.js",
-           "js/pages/demand.js", "js/pages/summary.js", "js/pages/story.js", "js/pages/quality.js", "js/pages/method.js", "js/app.js"]
+SCRIPTS = ["js/strings.en.js", "js/photo.js", "data/story.js", "data/chapters.js", "data/quality.js", "data/dollar.js", "data/ratio.js", "data/dash.js", "data/uses.js", "data/supply.js", "data/map.js", "data/demand.js", "data/provenance.js",
+           "js/util.js", "js/glass.js", "js/charts.js", "js/dashchart.js", "js/pages/drivers.js", "js/pages/uses.js", "js/pages/record.js", "js/pages/just.js", "js/pages/dollar.js", "js/pages/ratio.js", "js/pages/aluminium.js", "js/pages/supply.js",
+           "js/pages/demand.js", "js/pages/summary.js", "js/pages/dashboard.js", "js/pages/story.js", "js/pages/quality.js", "js/pages/method.js", "js/app.js"]
 
 
 def esc(js):
