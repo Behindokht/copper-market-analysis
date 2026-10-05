@@ -126,7 +126,7 @@ add("## Not investment advice")
 add("")
 add("Historical results are not forecasts and not investment advice. A link between two series in a sample is not proof that one moves the other. The demand figures are scenarios.")
 add("")
-add("No licence has been chosen for the code yet, so others may not reuse it until one is added. Fonts are SIL Open Font License, see `CREDITS.md`.")
+add("The code and my own text are under the MIT licence (`LICENSE`). The data is not: it stays under the terms of its original sources, listed above and in `copper_database/collected/sources.csv`. Fonts are SIL Open Font License, see `CREDITS.md`.")
 text = "\n".join(L) + "\n"
 assert "—" not in text and "–" not in text
 assert len(L) < 150, len(L)
