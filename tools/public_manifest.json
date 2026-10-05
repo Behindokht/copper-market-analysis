@@ -108,9 +108,10 @@
     "S15",
     "S20"
    ],
-   "note": "assumption register: IEA headline values (EV sales, capacity), USGS output, copper per car (S11) and per MW (S13)",
-   "iea_figures": true,
-   "secondary_article_figures": true
+   "note": "assumption register: IEA headline values (EV sales, capacity), USGS output, copper per car (S11) and per MW (S13); derived from IEA data that is not redistributed (the raw files are not in the repository)",
+   "iea_figures": false,
+   "secondary_article_figures": true,
+   "iea_results_only": true
   },
   "results/res_demand_context.csv": {
    "sources": [
@@ -118,9 +119,10 @@
     "S13",
     "S15"
    ],
-   "note": "USGS mine and refinery output; S13 reported figures; model figure built from an IEA capacity number",
-   "iea_figures": true,
-   "secondary_article_figures": true
+   "note": "USGS mine and refinery output; S13 reported figures; model figure built from an IEA capacity number; derived from IEA data that is not redistributed (the raw files are not in the repository)",
+   "iea_figures": false,
+   "secondary_article_figures": true,
+   "iea_results_only": true
   },
   "results/res_demand_headline.csv": {
    "sources": [
@@ -131,8 +133,9 @@
     "S15",
     "S20"
    ],
-   "note": "scenario results derived from IEA EV sales and capacity",
-   "iea_figures": true
+   "note": "scenario results derived from IEA EV sales and capacity; derived from IEA data that is not redistributed (the raw files are not in the repository)",
+   "iea_figures": false,
+   "iea_results_only": true
   },
   "results/res_demand_sensitivity.csv": {
    "sources": [
@@ -143,8 +146,9 @@
     "S15",
     "S20"
    ],
-   "note": "sensitivity results derived from IEA scenarios",
-   "iea_figures": true
+   "note": "sensitivity results derived from IEA scenarios; derived from IEA data that is not redistributed (the raw files are not in the repository)",
+   "iea_figures": false,
+   "iea_results_only": true
   },
   "copper_database/collected/copper_intensity_vehicle.csv": {
    "sources": [
@@ -164,15 +168,17 @@
    "sources": [
     "S12"
    ],
-   "note": "IEA report-page figures (data-centre electricity)",
-   "iea_figures": true
+   "note": "IEA report-page figures (data-centre electricity); CC BY 4.0 figures from an IEA report page, attributed in README.md and on the site (adapted, not endorsed by the IEA)",
+   "iea_figures": true,
+   "iea_cc_by": true
   },
   "copper_database/collected/datacentre_growth_by_region.csv": {
    "sources": [
     "S12"
    ],
-   "note": "IEA report-page figures (growth by region)",
-   "iea_figures": true
+   "note": "IEA report-page figures (growth by region); CC BY 4.0 figures from an IEA report page, attributed in README.md and on the site (adapted, not endorsed by the IEA)",
+   "iea_figures": true,
+   "iea_cc_by": true
   },
   "copper_database/collected/usgs_mine_production_country.csv": {
    "sources": [
@@ -193,16 +199,18 @@
     "S11",
     "S13"
    ],
-   "note": "known issues; K01 states IT-vs-total differences computed from the IEA annex",
-   "iea_figures": true
+   "note": "known issues; K01 states IT-vs-total differences computed from the IEA annex; derived from IEA data that is not redistributed (the raw files are not in the repository)",
+   "iea_figures": false,
+   "iea_results_only": true
   },
   "copper_database/collected/scenario_assumptions.csv": {
    "sources": [
     "S20",
     "S15"
    ],
-   "note": "project assumptions; the base-year build (14 GW, 9.25 GW) is computed from IEA capacity numbers",
-   "iea_figures": true
+   "note": "project assumptions; the base-year build (14 GW, 9.25 GW) is computed from IEA capacity numbers; derived from IEA data that is not redistributed (the raw files are not in the repository)",
+   "iea_figures": false,
+   "iea_results_only": true
   },
   "copper_database/baselines/fred_monthly_python.csv": {
    "sources": [
@@ -253,9 +261,10 @@
     "S20",
     "S21"
    ],
-   "note": "outputs show IEA headline figures, scenario results and copper per car and per MW",
-   "iea_figures": true,
-   "secondary_article_figures": true
+   "note": "outputs cleared (they printed IEA volumes); run the notebook locally to see them",
+   "iea_figures": false,
+   "secondary_article_figures": true,
+   "iea_results_only": true
   },
   "results/res_story_guess_dollar.csv": {
    "sources": [
@@ -286,9 +295,10 @@
     "S11",
     "S20"
    ],
-   "note": "972 EV cases derived from IEA EV sales and shares (grid for the interactive selectors)",
-   "iea_figures": true,
-   "large_ok": true
+   "note": "972 EV cases derived from IEA EV sales and shares (grid for the interactive selectors); derived from IEA data that is not redistributed (the raw files are not in the repository)",
+   "iea_figures": false,
+   "large_ok": true,
+   "iea_results_only": true
   },
   "results/res_demand_dc_cases.csv": {
    "sources": [
@@ -296,10 +306,11 @@
     "S15",
     "S20"
    ],
-   "note": "256 data-centre cases derived from IEA capacity (grid for the selectors)",
-   "iea_figures": true,
+   "note": "256 data-centre cases derived from IEA capacity (grid for the selectors); derived from IEA data that is not redistributed (the raw files are not in the repository)",
+   "iea_figures": false,
    "secondary_article_figures": true,
-   "large_ok": true
+   "large_ok": true,
+   "iea_results_only": true
   },
   "results/res_demand_ranges.csv": {
    "sources": [
@@ -309,17 +320,19 @@
     "S13",
     "S20"
    ],
-   "note": "the one-at-a-time range and the all-assumptions-at-an-extreme range, derived from IEA scenarios",
-   "iea_figures": true
+   "note": "the one-at-a-time range and the all-assumptions-at-an-extreme range, derived from IEA scenarios; derived from IEA data that is not redistributed (the raw files are not in the repository)",
+   "iea_figures": false,
+   "iea_results_only": true
   },
   "results/res_dashboard_checks.csv": {
    "sources": [
     "all"
    ],
-   "note": "the data checks; details that mention LME are withheld except the LME-versus-World-Bank agreement; some details quote IEA headline numbers",
-   "iea_figures": true,
+   "note": "the data checks; details that mention LME are withheld except the LME-versus-World-Bank agreement; some details quote IEA headline numbers; derived from IEA data that is not redistributed (the raw files are not in the repository)",
+   "iea_figures": false,
    "lme_statistics_only": true,
-   "large_ok": true
+   "large_ok": true,
+   "iea_results_only": true
   },
   "results/res_dashboard_sources.csv": {
    "sources": [
@@ -334,8 +347,9 @@
     "S11",
     "S13"
    ],
-   "note": "the known issues register; K01 quotes IEA-derived percentages",
-   "iea_figures": true
+   "note": "the known issues register; K01 quotes IEA-derived percentages; derived from IEA data that is not redistributed (the raw files are not in the repository)",
+   "iea_figures": false,
+   "iea_results_only": true
   },
   "results/res_dashboard_pipeline.csv": {
    "sources": [
@@ -351,8 +365,9 @@
     "S15",
     "S17"
    ],
-   "note": "outputs show derived counts and the demand ranges (IEA-derived percentages); no LME values",
-   "iea_figures": true
+   "note": "outputs cleared (they printed IEA volumes); run the notebook locally to see them",
+   "iea_figures": false,
+   "iea_results_only": true
   },
   "docs/data/story.js": {
    "sources": [
@@ -402,25 +417,27 @@
     "S15",
     "S20"
    ],
-   "note": "scenario results and case grids derived from IEA EV sales and capacity; copper per car and per MW from secondary articles",
-   "iea_figures": true,
+   "note": "scenario results and case grids derived from IEA EV sales and capacity; copper per car and per MW from secondary articles; derived from IEA data that is not redistributed (the raw files are not in the repository)",
+   "iea_figures": false,
    "secondary_article_figures": true,
    "large_datasets": [
     "ev_cases",
     "dc_cases"
-   ]
+   ],
+   "iea_results_only": true
   },
   "docs/data/quality.js": {
    "sources": [
     "all"
    ],
-   "note": "data checks (LME details withheld, IEA headline numbers in some details), the sources register and known issues",
-   "iea_figures": true,
+   "note": "data checks (LME details withheld, IEA headline numbers in some details), the sources register and known issues; derived from IEA data that is not redistributed (the raw files are not in the repository)",
+   "iea_figures": false,
    "iea_quotes": true,
    "lme_statistics_only": true,
    "large_datasets": [
     "checks"
-   ]
+   ],
+   "iea_results_only": true
   },
   "results/res_ratio_series.csv": {
    "sources": [

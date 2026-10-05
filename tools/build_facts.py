@@ -16,6 +16,8 @@ from collections import Counter
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(ROOT / "tools"))
+import iea_notice as IEA
 R = ROOT / "results"
 rows = lambda p: list(csv.DictReader(open(p, encoding="utf-8")))
 facts = lambda name, key="fact_id": {r[key]: r for r in rows(R / name)}
@@ -100,7 +102,7 @@ add("Largest mining country", f"{top['display_name']}, {float(top['mine_share_pc
 uf = facts("res_uses_end_use.csv", "sector") if False else None
 hd = [r for r in rows(R / "res_demand_headline.csv") if r["component_id"] == "ev_transition" and r["year"] == "2030"]
 lo = min(float(r["mid_pct_of_mine"]) for r in hd); hi = max(float(r["mid_pct_of_mine"]) for r in hd)
-add("EV transition, extra copper in 2030", f"equivalent to {lo:.1f}% to {hi:.1f}% of today's mine output (a scenario from IEA EV sales, interpolated, not a forecast)", "results/res_demand_headline.csv, component_id ev_transition, year 2030, column mid_pct_of_mine (min and max over scenarios and paths)")
+add("EV transition, extra copper in 2030", f"equivalent to {lo:.1f}% to {hi:.1f}% of today's mine output (a scenario from IEA EV sales, interpolated, not a forecast)", "results/res_demand_headline.csv, component_id ev_transition, year 2030, column mid_pct_of_mine (min and max over scenarios and paths). My calculation from the IEA EV data explorer, which is not redistributed; see IEA material below")
 
 # ------------------------------------------------------------------ method parameters, checked against the code of the site
 nb1 = json.load(open(ROOT / "notebooks" / "01_copper_vs_dollar.ipynb", encoding="utf-8"))
@@ -159,6 +161,10 @@ md_lines = ["# Facts sheet", "",
             "| Fact | Value | Produced by |", "|---|---|---|"]
 for t_, v_, p_ in table:
     md_lines.append(f"| {t_} | {v_} | {p_} |")
+md_lines += ["", "## IEA material", "",
+             "Figures and wording from IEA reports are used under CC BY 4.0 and adapted. " + " ".join(IEA.ATTRIBUTION), "",
+             IEA.ADAPTED + " " + IEA.NO_ENDORSEMENT + f" IEA notice for CC-licensed content: {IEA.NOTICE_URL}", "",
+             IEA.RAW_NOT_REDISTRIBUTED + " The demand figure above is derived from that data (tonnes and percentages only, inputs not published).", ""]
 md_lines += ["", "## Tools actually used", "", "Read from the import statements in `tools/`, `copper_database/build_db.py` and the notebooks, with the versions installed in the project `.venv`.", ""]
 md_lines += [f"- {t_}" for t_ in tools]
 md_lines += ["", js_note + ". Fonts are self-hosted (Newsreader, Atkinson Hyperlegible Next and Mono, SIL Open Font License).", "",

@@ -611,6 +611,9 @@ window.CMA_STRINGS = {
   "src_notes": "Notes",
   "src_link": "Open the source",
   "src_lme": "Licensed data: no LME series is published on this site.",
+  "src_iea": "Raw IEA files are not redistributed. The electric-car sales and shares come from the IEA Global EV Data Explorer and the data-centre capacity from the data annex to Energy and AI. Neither is under the IEA's CC BY 4.0 licence, so they are not in this repository. Download them from the sources listed below.",
+  "src_iea_cc": "Figures and wording taken from IEA reports: IEA 2025, Energy and AI, https://www.iea.org/reports/energy-and-ai, License: CC BY 4.0. IEA 2026, Global EV Outlook 2026, https://www.iea.org/reports/global-ev-outlook-2026, License: CC BY 4.0. This is a work derived by Behindokht Alipour from IEA material and Behindokht Alipour is solely liable and responsible for this derived work. The derived work is not endorsed by the IEA or its Member countries in any manner.",
+  "src_iea_link": "IEA notice for CC-licensed content",
   "checks_title": "Every check",
   "checks_hint": "Details that quote licensed LME data are withheld.",
   "filter_legend": "Show",
@@ -1030,6 +1033,8 @@ window.CMA_STRINGS = {
    "US inflation (CPIAUCSL): U.S. Bureau of Labor Statistics, Consumer Price Index for All Urban Consumers: All Items in U.S. City Average, retrieved from FRED, Federal Reserve Bank of St. Louis. Public domain, citation requested.",
    "Dollar index (DTWEXBGS), euro exchange rate (EXUSEU) and 10-year yield (GS10): Board of Governors of the Federal Reserve System (US), retrieved from FRED, Federal Reserve Bank of St. Louis. Public domain, citation requested.",
    "World outline for the map: Made with Natural Earth (public domain), redistributed by world-atlas (ISC licence). Mine output and reserves: US Geological Survey. Chart events are dated from the sources linked in the list under the chart.",
+   "IEA material: IEA 2025, Energy and AI, https://www.iea.org/reports/energy-and-ai, License: CC BY 4.0. IEA 2026, Global EV Outlook 2026, https://www.iea.org/reports/global-ev-outlook-2026, License: CC BY 4.0. This is a work derived by Behindokht Alipour from IEA material and Behindokht Alipour is solely liable and responsible for this derived work. The derived work is not endorsed by the IEA or its Member countries in any manner. IEA notice for CC-licensed content: https://www.iea.org/terms/creative-commons-cc-licenses",
+   "Raw IEA files are not redistributed. The electric-car sales and shares come from the IEA Global EV Data Explorer and the data-centre capacity from the data annex to Energy and AI. Neither is under the IEA's CC BY 4.0 licence, so they are not in this repository. Download them from the sources listed below.",
    "No LME price data is shown or published on this site."
   ],
   "slim_left": "Behindokht Alipour · Copper market analysis, a portfolio project",

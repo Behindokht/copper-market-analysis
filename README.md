@@ -72,12 +72,23 @@ Notebooks 01 to 03 run the same way. The month-end robustness result needs LME d
 - USGS Mineral Commodity Summaries: US government work (S06)
 - ICSG World Copper Factbook: cited, not republished (S31)
 - NBS Circular 31 (wire tables): US government work (S32)
-- IEA Global EV Outlook and Energy and AI data: IEA terms, which I have not confirmed yet (S05)
+- IEA: report text and figures are CC BY 4.0 (attributed below). The EV data explorer and the data annex are not, and are not redistributed (S05)
 - Natural Earth and world-atlas for the map: public domain and ISC (S29)
 - LME copper daily: commercial, never published; only derived statistics are (S01)
 - Background photo: licence not confirmed, kept out of the repository (S35)
 
 Published series use the World Bank copper price, never the LME series. The full register, with a reliability rating for each source, is `copper_database/collected/sources.csv` and the appendix of the site.
+
+## IEA material
+
+Figures and wording from IEA reports are used under CC BY 4.0 and adapted: the Energy and AI report page (data-centre electricity) and the Global EV Outlook 2026 report text (scenario descriptions).
+
+- IEA 2025, Energy and AI, https://www.iea.org/reports/energy-and-ai, License: CC BY 4.0.
+- IEA 2026, Global EV Outlook 2026, https://www.iea.org/reports/global-ev-outlook-2026, License: CC BY 4.0.
+
+This is a work derived by Behindokht Alipour from IEA material and Behindokht Alipour is solely liable and responsible for this derived work. The derived work is not endorsed by the IEA or its Member countries in any manner. See the [IEA notice for CC-licensed content](https://www.iea.org/terms/creative-commons-cc-licenses).
+
+Raw IEA files are not redistributed. The electric-car sales and shares come from the IEA Global EV Data Explorer and the data-centre capacity from the data annex to Energy and AI. Neither is under the IEA's CC BY 4.0 licence, so they are not in this repository. Download them from the sources listed in `copper_database/collected/sources.csv`. The demand results are my own calculation from that data: tonnes of copper and percentages of mine output, with the inputs left out.
 
 ## Known issues (open)
 

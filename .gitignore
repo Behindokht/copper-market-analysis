@@ -48,3 +48,8 @@ preview/
 # Briefs and proposed tables from the owner (working papers, not published)
 /briefs/
 /assets/
+
+# IEA data that is not under CC BY 4.0 is not redistributed (tools/scrub_iea_raw.py): the notebooks write these files on the owner's disk only
+/results/res_demand_ev_paths.csv
+/results/res_demand_dc_capacity.csv
+/results/res_demand_dc_paths.csv

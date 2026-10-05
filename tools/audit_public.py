@@ -347,12 +347,12 @@ def main():
     if not quiet:
         print(f"Audit of {len(files)} files that are {'staged' if staged else 'tracked or would be tracked'}"
               + ("" if staged else f", and {len(seen)} files in history") + ".\n")
-        print("Files with IEA-derived figures (confirm the IEA terms before the repo goes public):")
+        print("Files with IEA report figures under CC BY 4.0 (attribution and the no-endorsement note are in README.md and on the site):")
         for f in iea:
             print(f"   {f}   [{', '.join(mf[f].get('sources', []))}] {mf[f].get('note', '')}")
         ro = sorted(f for f in files if mf.get(f, {}).get("iea_results_only"))
         if ro:
-            print("\nFiles with results derived from IEA scenarios (tonnes and percentages only, after tools/trim_iea.py):")
+            print("\nFiles with results derived from IEA data that is not redistributed (tonnes, percentages, the 14 and 9.25 GW inputs, K01 percentages; the raw files are not in the repository):")
             for f in ro:
                 print(f"   {f}")
         print("\nFiles that only quote short IEA wording or describe IEA files (no IEA figures):")

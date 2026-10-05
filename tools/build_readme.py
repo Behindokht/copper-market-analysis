@@ -3,12 +3,15 @@
 Numbers come from results/*.csv, copper_database/collected/*.csv and the database (or the published quality table). The pictures are made by tools/build_images.py. Under 150 lines, no dashes as punctuation."""
 import csv
 import json
+import sys
 import re
 import sqlite3
 from collections import Counter
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(ROOT / "tools"))
+import iea_notice as IEA
 R = ROOT / "results"
 rd = lambda p: list(csv.DictReader(open(p, encoding="utf-8")))
 fa = lambda name: {r["fact_id"]: r["value"] for r in rd(R / name)}
@@ -32,7 +35,7 @@ months = int(float(rf["series_months"]))
 URL = "https://behindokht.github.io/copper-market-analysis/"
 LIC = {"S02": "World Bank Commodity Price Data (Pink Sheet), adapted: CC BY 4.0", "S16": "FRED: dollar index, euro rate, 10-year yield, US CPI, aluminium: public domain (citation requested), aluminium series under FRED and IMF terms",
        "S06": "USGS Mineral Commodity Summaries: US government work", "S31": "ICSG World Copper Factbook: cited, not republished", "S32": "NBS Circular 31 (wire tables): US government work",
-       "S05": "IEA Global EV Outlook and Energy and AI data: IEA terms, which I have not confirmed yet", "S29": "Natural Earth and world-atlas for the map: public domain and ISC",
+       "S05": "IEA: report text and figures are CC BY 4.0 (attributed below). The EV data explorer and the data annex are not, and are not redistributed", "S29": "Natural Earth and world-atlas for the map: public domain and ISC",
        "S01": "LME copper daily: commercial, never published; only derived statistics are", "S35": "Background photo: licence not confirmed, kept out of the repository"}
 L = []
 add = L.append
@@ -109,6 +112,17 @@ for sid in ("S02", "S16", "S06", "S31", "S32", "S05", "S29", "S01", "S35"):
     add(f"- {LIC[sid]} ({sid})")
 add("")
 add("Published series use the World Bank copper price, never the LME series. The full register, with a reliability rating for each source, is `copper_database/collected/sources.csv` and the appendix of the site.")
+add("")
+add("## IEA material")
+add("")
+add("Figures and wording from IEA reports are used under CC BY 4.0 and adapted: the Energy and AI report page (data-centre electricity) and the Global EV Outlook 2026 report text (scenario descriptions).")
+add("")
+for a_ in IEA.ATTRIBUTION:
+    add("- " + a_)
+add("")
+add(IEA.ADAPTED + " " + IEA.NO_ENDORSEMENT + f" See the [IEA notice for CC-licensed content]({IEA.NOTICE_URL}).")
+add("")
+add(IEA.RAW_NOT_REDISTRIBUTED.replace(" in copper_database/collected/sources.csv", " in `copper_database/collected/sources.csv`") + " The demand results are my own calculation from that data: tonnes of copper and percentages of mine output, with the inputs left out.")
 add("")
 add("## Known issues (open)")
 add("")

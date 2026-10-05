@@ -112,7 +112,7 @@ The `raw_fred_*` tables are the first of the new analysis path: raw as loaded, n
 |---|---|
 | LME downloads and `copper.db` and `csv/` | The LME series is commercial data. The database and the generated CSVs contain it |
 | Raw downloads (World Bank, FRED, IEA, USGS files) | Download them yourself from the `url` column of `collected/sources.csv` into the project root |
-| Migration proofs for LME and IEA (`baselines/`) | They summarise LME or IEA data (the LME licence is commercial; the IEA terms are not confirmed yet) |
+| Migration proofs for LME and IEA (`baselines/`) | They summarise LME or IEA data (the LME licence is commercial; the IEA data explorer and annex are not under CC BY 4.0) |
 | `company_production.csv`, `mine_production.csv` | Figures from secondary articles ("do not republish"); to be replaced with company annual reports |
 
 **To rebuild:** download the raw files, then run `python copper_database/build_db.py --raw .` (Python with pandas and openpyxl). The notebooks use the environment in `requirements.txt`. Without the LME files the build skips the LME steps and the checks that need them or the missing proofs; each skip is logged as INFO in `data_checks`, and the LME columns of the panel stay empty. This was tested on a copy containing only the public files plus the non-LME downloads: the build has no FAIL, all four notebooks run, and the analysis result files come out identical to the full run (only the two files that describe the build itself differ: the data checks, which has fewer rows without LME and the missing proofs, and the table counts per layer).
@@ -121,35 +121,37 @@ The `raw_fred_*` tables are the first of the new analysis path: raw as loaded, n
 
 **Checks before anything is committed or pushed.** `python tools/audit_public.py` is the full audit. It fails if a forbidden file is tracked or was ever committed, if an LME series column or a local path shows up in a published file, if a data file has no entry (sources and licence) in `tools/public_manifest.json`, or if a file flagged as IEA-derived is missing from the list below. To make it automatic, install the git pre-commit hook once per clone: `python tools/install_hook.py`. From then on every commit runs the audit on the staged files and is blocked if a forbidden file, an LME column or a local path is staged. (`git commit --no-verify` skips the hook, so run the full audit before every push.)
 
-## Files with IEA-derived figures (the IEA terms are not confirmed yet)
+## Files with IEA-derived figures (decision taken)
 
-These published files contain figures taken from or derived from IEA data. The repository stays private until the IEA terms and the World Bank licence line are confirmed. The audit keeps this list in step with `tools/public_manifest.json`.
+The IEA licenses its reports, text and standalone figures under CC BY 4.0. Its standalone datasets, data explorers and data annexes are not under that licence. The project sorts its IEA material that way:
 
-**If the IEA terms turn out to be restrictive:** run `python tools/trim_iea.py` (a dry run that changes nothing) and then `python tools/trim_iea.py --apply`. The step stops tracking and git-ignores the IEA volumes and report figures (electric-car sales and shares, data-centre capacity in GW, IEA page figures: `res_demand_ev_paths`, `res_demand_dc_capacity`, `res_demand_dc_paths`, `res_demand_headline`, and two collected IEA tables), drops the car-sales and gigawatt columns and the IEA input rows from three result files, withholds the detail text of the data checks on IEA tables, clears the saved outputs of notebook 03, and updates the manifest and this list. The files stay on your disk. What it leaves for you to decide is printed at the end: the base-year data-centre build in `scenario_assumptions.csv` (computed from IEA capacity), the K01 wording (percentages computed from the annex) and the IEA scenario names used as labels. The Demand page reads only tonnes, percentages and copper per car and per MW, so it works unchanged after the step.
+- **Under CC BY 4.0, kept and attributed** (report text and figures): the Energy and AI report page (data-centre electricity, regional growth) and the Global EV Outlook 2026 report text (scenario descriptions). The attribution, the note that the figures are adapted and the IEA does not endorse the work, and the link to the IEA notice for CC-licensed content are in `README.md`, the data quality appendix and the credits on the site.
+- **Not under CC BY 4.0, not redistributed**: the Global EV Data Explorer file and the Energy and AI data annex (S05, S15). The raw files, the volumes (car sales and shares, data-centre capacity in GW), the annex cell values in check details and the saved outputs of notebooks 03 and 04 are not in the repository or its history (`tools/scrub_iea_raw.py`, checked by `tools/verify_history.py`). Download the files from the `url` column of `collected/sources.csv` to rebuild: the notebooks then write the removed result files again, and they are git-ignored.
+- **Kept**: results computed by this project from that data (tonnes of copper and percentages of mine output), the base-year build inputs (14 GW and 9.25 GW) and the K01 percentages (IT versus total capacity).
 
-- `copper_database/collected/datacentre_electricity_iea.csv` (IEA report-page figures (data-centre electricity))
-- `copper_database/collected/datacentre_growth_by_region.csv` (IEA report-page figures (growth by region))
-- `copper_database/collected/known_issues.csv` (known issues; K01 states IT-vs-total differences computed from the IEA annex)
-- `copper_database/collected/scenario_assumptions.csv` (project assumptions; the base-year build (14 GW, 9.25 GW) is computed from IEA capacity numbers)
-- `docs/data/demand.js` (scenario results and case grids derived from IEA EV sales and capacity; copper per car and per MW from secondary articles)
-- `docs/data/quality.js` (data checks (LME details withheld, IEA headline numbers in some details), the sources register and known issues)
-- `notebooks/03_demand_scenario.ipynb` (outputs show IEA headline figures, scenario results and copper per car and per MW)
-- `notebooks/04_dashboard_exports.ipynb` (outputs show derived counts and the demand ranges (IEA-derived percentages); no LME values)
-- `notebooks/07_dashboard.ipynb` (outputs show derived dashboard figures and checks; no LME values)
-- `results/res_dashboard_checks.csv` (the data checks; details that mention LME are withheld except the LME-versus-World-Bank agreement; some details quote IEA headline numbers)
-- `results/res_dashboard_known_issues.csv` (the known issues register; K01 quotes IEA-derived percentages)
-- `results/res_demand_assumptions.csv` (assumption register: IEA headline values (EV sales, capacity), USGS output, copper per car (S11) and per MW (S13))
-- `results/res_demand_context.csv` (USGS mine and refinery output; S13 reported figures; model figure built from an IEA capacity number)
-- `results/res_demand_dc_capacity.csv` (IEA data-centre capacity by case, total and IT)
-- `results/res_demand_dc_cases.csv` (256 data-centre cases derived from IEA capacity (grid for the selectors))
-- `results/res_demand_dc_paths.csv` (data-centre capacity additions and build paths derived from IEA capacity)
-- `results/res_demand_ev_cases.csv` (972 EV cases derived from IEA EV sales and shares (grid for the interactive selectors))
-- `results/res_demand_ev_paths.csv` (IEA EV sales 2025 and 2035 and the interpolated 2030 paths)
-- `results/res_demand_headline.csv` (scenario results derived from IEA EV sales and capacity)
-- `results/res_demand_ranges.csv` (the one-at-a-time range and the all-assumptions-at-an-extreme range, derived from IEA scenarios)
-- `results/res_demand_sensitivity.csv` (sensitivity results derived from IEA scenarios)
+Files with IEA report figures under CC BY 4.0 (the audit keeps this list in step with `tools/public_manifest.json`):
 
-`copper_database/collected/sources.csv` only quotes short IEA wording and describes IEA files.
+- `copper_database/collected/datacentre_electricity_iea.csv` (IEA report-page figures (data-centre electricity); CC BY 4.0 figures from an IEA report page, attributed in README.md and on the site (adapted, not endorsed by the IEA))
+- `copper_database/collected/datacentre_growth_by_region.csv` (IEA report-page figures (growth by region); CC BY 4.0 figures from an IEA report page, attributed in README.md and on the site (adapted, not endorsed by the IEA))
+
+Files with results derived from IEA data that is not redistributed:
+
+- `copper_database/collected/known_issues.csv`
+- `copper_database/collected/scenario_assumptions.csv`
+- `docs/data/demand.js`
+- `docs/data/quality.js`
+- `notebooks/03_demand_scenario.ipynb`
+- `notebooks/04_dashboard_exports.ipynb`
+- `results/res_dashboard_checks.csv`
+- `results/res_dashboard_known_issues.csv`
+- `results/res_demand_assumptions.csv`
+- `results/res_demand_context.csv`
+- `results/res_demand_dc_cases.csv`
+- `results/res_demand_ev_cases.csv`
+- `results/res_demand_headline.csv`
+- `results/res_demand_ranges.csv`
+- `results/res_demand_scale.csv`
+- `results/res_demand_sensitivity.csv`
 
 ## The dashboard (`docs/`)
 

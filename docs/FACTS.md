@@ -13,7 +13,7 @@ Historical results are not forecasts and not investment advice. The demand figur
 | Database tables by layer | mart_ 14, raw_ 10, res_ 51, stg_ 9 | SQL: select name from sqlite_master where type='table', grouped by the prefix (raw_ loaded as is, stg_ staged in SQL, mart_ analysis tables, res_ results written back by the notebooks) |
 | SQL files | 5 files, 2,042 lines | copper_database/sql/*.sql (staging, marts, checks) |
 | Notebooks | 7 | notebooks/*.ipynb, committed with outputs |
-| Python tools and tests | 24 scripts in tools/ | tools/*.py (audit, site checks, browser tests, exports) |
+| Python tools and tests | 27 scripts in tools/ | tools/*.py (audit, site checks, browser tests, exports) |
 | Figure checks for the dashboard and the Story | 24 of 24 dashboard figures and 56 of 56 Story figures pass | results/res_dash_figure_checks.csv and results/res_story_figure_checks.csv, status column |
 | Copper price history | 800 months (66 years), 1960-01 to 2026-08 | results/res_story_copper_record_facts.csv, fact series_months; source S02 World Bank Pink Sheet monthly (CC BY 4.0, adapted) |
 | Euro price history | 332 months from 1999-01 | results/res_dash_kpis.csv, facts eur_months_total and eur_first_month; source S16 FRED EXUSEU |
@@ -35,9 +35,18 @@ Historical results are not forecasts and not investment advice. The demand figur
 | The ratio as a guide to price changes over 12 months | R squared 3.9% since 1970, HAC p 0.047: a weak guide | results/res_cu_al_slopes.csv, row horizon_m 12, period '1970-01 to latest', predictor 'log of the ratio' |
 | China's share of refining | 48.3% of world refined copper output | results/res_refined_vs_mined.csv, China row (USGS 2025 estimates, source S06) |
 | Largest mining country | Chile, 23.0% of world mine output | results/res_refined_vs_mined.csv (USGS 2025 estimates, source S06) |
-| EV transition, extra copper in 2030 | equivalent to 2.9% to 4.8% of today's mine output (a scenario from IEA EV sales, interpolated, not a forecast) | results/res_demand_headline.csv, component_id ev_transition, year 2030, column mid_pct_of_mine (min and max over scenarios and paths) |
+| EV transition, extra copper in 2030 | equivalent to 2.9% to 4.8% of today's mine output (a scenario from IEA EV sales, interpolated, not a forecast) | results/res_demand_headline.csv, component_id ev_transition, year 2030, column mid_pct_of_mine (min and max over scenarios and paths). My calculation from the IEA EV data explorer, which is not redistributed; see IEA material below |
 | Bootstrap | moving blocks of 6 months, 5,000 resamples, 95% interval | notebooks/01_copper_vs_dollar.ipynb, function block_boot_ci (checked against docs/js/case.js by this script) |
 | Newey-West (HAC) standard errors | 3 lags | notebooks/01_copper_vs_dollar.ipynb, cov_type='HAC' with maxlags |
+
+## IEA material
+
+Figures and wording from IEA reports are used under CC BY 4.0 and adapted. IEA 2025, Energy and AI, https://www.iea.org/reports/energy-and-ai, License: CC BY 4.0. IEA 2026, Global EV Outlook 2026, https://www.iea.org/reports/global-ev-outlook-2026, License: CC BY 4.0.
+
+This is a work derived by Behindokht Alipour from IEA material and Behindokht Alipour is solely liable and responsible for this derived work. The derived work is not endorsed by the IEA or its Member countries in any manner. IEA notice for CC-licensed content: https://www.iea.org/terms/creative-commons-cc-licenses
+
+Raw IEA files are not redistributed. The electric-car sales and shares come from the IEA Global EV Data Explorer and the data-centre capacity from the data annex to Energy and AI. Neither is under the IEA's CC BY 4.0 licence, so they are not in this repository. Download them from the sources listed in copper_database/collected/sources.csv. The demand figure above is derived from that data (tonnes and percentages only, inputs not published).
+
 
 ## Tools actually used
 
