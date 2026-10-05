@@ -20,8 +20,8 @@ for p in REMOVED:
 probes = set()          # nothing is typed in this file: every probe is read from the original checkout (a clone of the backup bundle at the commit before the scrub)
 for line in sh(orig, "git", "show", "HEAD:results/res_dashboard_checks.csv").splitlines()[1:]:
     cells = next(csv.reader([line]), [])
-    if len(cells) > 4 and re.match(r"^(raw_ev_data|stg_ev_data|raw_iea_annex_cells|stg_datacentre_|datacentre_electricity_iea|datacentre_growth_by_region)", cells[1]) and len(cells[4]) > 12 and "withheld" not in cells[4]:
-        probes.add(cells[4])         # the detail texts of the checks on the raw IEA tables
+    if len(cells) > 4 and re.match(r"^(raw_ev_data|stg_ev_data|raw_iea_annex_cells|stg_datacentre_|datacentre_electricity_iea|datacentre_growth_by_region)", cells[1]) and re.search(r"annex \d|page \d", cells[4]) and "withheld" not in cells[4]:
+        probes.add(cells[4])         # the detail texts that quote annex cell values (for example a page value against an annex value)
 for p in REMOVED:
     rows = sh(orig, "git", "show", f"HEAD:{p}").splitlines()[1:]
     probes.update(r for r in rows if len(r) > 25)
