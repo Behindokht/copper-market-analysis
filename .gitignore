@@ -53,3 +53,6 @@ preview/
 /results/res_demand_ev_paths.csv
 /results/res_demand_dc_capacity.csv
 /results/res_demand_dc_paths.csv
+
+# Working instructions for Claude Code: kept on my disk, not published
+/CLAUDE.md

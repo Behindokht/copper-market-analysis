@@ -107,6 +107,10 @@ Each one is also a warning in `data_checks`. The site shows them in the data qua
 
 `tools/check_site.py` (text, fonts, contrast, links), `tools/audit_public.py` (nothing private is published), `tools/dashboard_test.py`, `tools/parity_test.py` and `tools/round4_test.py` (browser tests in Chromium and WebKit), `tools/check_pages.py` (GitHub Pages readiness) and `tools/run_lighthouse.py`. `tools/build_facts.py` and `tools/build_readme.py` write the facts sheet and this file from the data.
 
+## How this was made
+
+I defined the questions, chose the methods, checked the data and wrote the interpretation. I used Claude Code to help write and test code.
+
 ## Not investment advice
 
 Historical results are not forecasts and not investment advice. A link between two series in a sample is not proof that one moves the other. The demand figures are scenarios.
