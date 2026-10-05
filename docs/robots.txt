@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://behindokht.github.io/copper-market-analysis/sitemap.xml
