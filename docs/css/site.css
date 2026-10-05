@@ -22,7 +22,7 @@
   --card: #FAF9F6;           /* chart and table cards: always solid */
   --track: #E7E3DA;          /* bar tracks and chips: a step between paper and the rules */
   --rule: #D9D4CA;           /* hairlines, card borders, grid lines */
-  --muted: #5E554D;          /* secondary text on paper */
+  --muted: #574E47;          /* secondary text on paper */
   --copper: #B25E2C;         /* data marks (main series), accents */
   --copper-text: #A85629;    /* copper-coloured text and labels on paper (the brief said #A9572A, which measures 4.48:1 on paper; this is 4.54:1) */
   --copper-bright: #E09A63;  /* accent on ink only: title word, nav underline, spark */
@@ -454,7 +454,9 @@ ul.stacks { list-style: none; margin: var(--s3) 0 0; padding: 0; }
    Text never sits on the photo. tools/glass_contrast.py checks every pair over the lightest and darkest 1 percent of the photo and reads the tokens below.
    ==================================================================================================================================================== */
 :root {
-  --bg-photo: url("../../assets/patina-background.webp");
+  /* the page background: a dark texture drawn in CSS (teal and copper glow over noise). A photo replaces it only on the owner's own disk (docs/js/bg.js, known issue K08); a public build never asks for it. */
+  --bg-texture: radial-gradient(70% 55% at 16% 10%, rgba(47, 110, 95, .62), rgba(47, 110, 95, 0) 70%), radial-gradient(55% 50% at 88% 84%, rgba(178, 94, 44, .38), rgba(178, 94, 44, 0) 70%), url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='480' height='480'%3E%3Cfilter id='n' x='0' y='0' width='100%25' height='100%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.012 .02' numOctaves='4' seed='7' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .55  0 0 0 0 .75  0 0 0 0 .68  0 0 0 .55 -.12'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"), linear-gradient(#16201e, #16201e);
+  --bg-photo: var(--bg-texture);
   --tex-shade: rgba(241, 239, 234, 0);
   --rad: 12px;
   /* clear glass */
@@ -465,7 +467,7 @@ ul.stacks { list-style: none; margin: var(--s3) 0 0; padding: 0; }
   --clear-sh: inset 0 1px 1px rgba(255, 255, 255, .95), inset 0 -1px 1px rgba(255, 255, 255, .35), inset 0 0 22px rgba(255, 255, 255, .22), 0 1px 2px rgba(8, 30, 26, .12), 0 12px 28px -14px rgba(8, 30, 26, .45);
   --clear-solid: rgba(250, 249, 246, .92);
   /* reading glass */
-  --read-fill: linear-gradient(160deg, rgba(252, 251, 248, .84), rgba(248, 247, 243, .76));
+  --read-fill: linear-gradient(160deg, rgba(252, 251, 248, .90), rgba(248, 247, 243, .84));
   --read-rim: linear-gradient(135deg, rgba(255, 255, 255, .95), rgba(255, 255, 255, .4) 30%, rgba(255, 255, 255, .1) 60%, rgba(255, 255, 255, .7));
   --read-bf: blur(30px) saturate(150%) brightness(1.1);
   --read-sh: inset 0 1px 1px rgba(255, 255, 255, .95), inset 0 0 26px rgba(255, 255, 255, .25), 0 1px 2px rgba(8, 30, 26, .10), 0 18px 40px -18px rgba(8, 30, 26, .45);
@@ -531,6 +533,7 @@ body:not(.has-bg) .bg { display: none; }
   .lens::before { display: none; }
 }
 @media (hover: none), (pointer: coarse), (prefers-reduced-motion: reduce) { .lens::before { display: none; } }
+body.no-photo .bg { background-size: cover; }
 body.no-photo { --smoke-fill: linear-gradient(160deg, rgba(26, 31, 30, .94), rgba(14, 18, 17, .9)); }
 
 /* one header for the whole site */
@@ -802,3 +805,19 @@ dialog.glass::after { display: none; }
    Round 4: type. These rules come last because the font shorthand resets font-variant-numeric: tabular figures stay on wherever numbers line up.
    ==================================================================================================================================================== */
 .num, table, svg text, output, .tabular, .bignum, .guess-value, .price, .facts b, .chart-tip, .meter .lab, .chip, .chip2, .verdict, .marklist, .status, .ro, .k-v, .fact b, .plaque .big, .pl-row, .sm-n small, .k-c { font-variant-numeric: lining-nums tabular-nums; }
+
+/* Round 5: chapter 7 chart, the series label and the latest-month call-out use the muted text token (at least 4.5:1 on reading glass in both themes) */
+#aluminium .chart .lbl, #aluminium .chart .callout { fill: var(--muted); }
+
+/* Round 5: the case-study page (case-study.html) */
+.cs { max-width: 860px; margin: 28px auto 0; padding: 44px 52px 40px; }
+.cs .ch { font: 600 12px/1 var(--sans); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.cs h1 { margin: 14px 0 6px; font: 400 clamp(32px, 4.2vw, 48px)/1.1 var(--display); font-variation-settings: "opsz" 60; letter-spacing: -.01em; text-wrap: balance; }
+.cs .byline { margin: 0 0 12px; color: var(--muted); font-size: 13.5px; }
+.cs h2 { margin: 30px 0 8px; padding-top: 14px; border-top: 1px solid var(--rule); font: 400 26px/1.2 var(--display); font-variation-settings: "opsz" 36; }
+.cs p, .cs li { font-size: 16px; line-height: 1.6; max-width: 64ch; }
+.cs ul { margin: 0; padding-left: 1.2em; }
+.cs li { margin: 8px 0; }
+.cs-links { margin-top: 28px; }
+.cs-note { margin-top: 16px; }
+@media (max-width: 900px) { .cs { padding: 28px 22px; } }

@@ -206,7 +206,7 @@
     box.appendChild(h("section", { class: "card chart-card mr", "aria-labelledby": "mr-title" },
       h("h3", { id: "mr-title", class: "qtitle", text: T("mr_title") }),
       h("p", { text: T("mr_above", { chile_mine: CMA.n0(byC.Chile.mine_share_pct), chile_ref: CMA.n0(byC.Chile.refinery_share_pct), china_mine: CMA.n0(byC["China"].mine_share_pct), china_ref: CMA.n0(byC["China"].refinery_share_pct) }) }),
-      h("ul", { class: "bars", style: "list-style:none;margin:10px 0 0;padding:0", role: "img", "aria-label": mrAria }, mrRows),
+      h("ul", { class: "bars", style: "list-style:none;margin:10px 0 0;padding:0", "aria-label": mrAria }, mrRows),
       h("p", { class: "mrkey" }, h("span", { class: "mine" }, h("i"), T("mr_mine")), h("span", { class: "ref" }, h("i"), T("mr_refinery")), h("span", { class: "muted", text: T("mr_axis") })),
       h("p", { text: T("mr_below", { ref_mt: CMA.n0(wref / 1000), mine_mt: CMA.n0(wmine / 1000), year: year }) }),
       h("p", { text: T("mr_conc", { n: CMA.CHAPTER_NO.record }) }),

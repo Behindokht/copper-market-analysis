@@ -22,7 +22,6 @@
     CMA.rows(window.CMA_DATA.dash.kpis).forEach(function (r) { K[r.fact_id] = r.value; });
     var count = function (x) { return checks.filter(function (r) { return r.status === x; }).length; };
     var vals = { month: CMA.monthShort(K.latest_month + "-01"), passed: count("PASS"), fail: count("FAIL"), warn: count("WARN") };
-    st.setAttribute("aria-label", t("dashboard.status_aria"));
     st.appendChild(h("span", { class: "dot", "aria-hidden": "true" }));
     var stText = h("span", {});
     st.appendChild(stText);
@@ -41,6 +40,7 @@
       h("span", { class: "foot-right" },
         h("span", { class: "foot-slot", id: "foot-slot" }),
         h("a", { href: "#method", text: f.method_label }),
+        h("a", { href: "case-study.html", text: f.case_label }),
         h("a", { href: f.repo_url, text: f.repo_label_short, rel: "noopener" }),
         h("a", { href: f.portfolio_url, text: f.portfolio_label_short, rel: "noopener" }),
         h("a", { href: "mailto:" + addr, text: f.email_link_short }),
@@ -141,19 +141,13 @@
   }
 
   // anchors land below the sticky header: its height plus 16 px, measured, not guessed
-  function navOffset() {
+  var navTick = 0;
+  function navOffset() { cancelAnimationFrame(navTick); navTick = requestAnimationFrame(measureNav); }
+  function measureNav() {
     var bar = document.getElementById("topbar");
     if (bar) { document.documentElement.style.setProperty("--navh", Math.ceil(bar.getBoundingClientRect().bottom + 16) + "px"); }
   }
 
-  // without the photo file the smoked plates would sit on plain paper: they get a denser tint (the photo is local only, known issue K08)
-  (function () {
-    var m = /url\(["']?([^"')]+)["']?\)/.exec(getComputedStyle(document.documentElement).getPropertyValue("--bg-photo") || "");
-    if (!m) { document.body.classList.add("no-photo"); return; }
-    var probe = new Image();
-    probe.onerror = function () { document.body.classList.add("no-photo"); };
-    probe.src = m[1];
-  })();
   // the header sticks flush to the top, so no text shows in a gap above it; it squares its top corners while it is stuck
   var stuckTick = 0;
   function stuck() {
@@ -170,8 +164,9 @@
   window.addEventListener("resize", navOffset);
   window.addEventListener("hashchange", function () { show(location.hash.slice(1), true); });
   show(location.hash.slice(1), false);
+  document.getElementById("footer").hidden = false;          // the footer waits until the page is built, so it does not jump down while the content appears
   // fonts change text heights after the first layout: land on the chapter again once they are in
   if (document.fonts && document.fonts.ready && location.hash.length > 1) {
-    document.fonts.ready.then(function () { navOffset(); var el = document.getElementById(location.hash.slice(1)); if (el && !document.getElementById("story").hidden) { el.scrollIntoView({ block: "start" }); } });
+    document.fonts.ready.then(function () { measureNav(); var el = document.getElementById(location.hash.slice(1)); if (el && !document.getElementById("story").hidden) { el.scrollIntoView({ block: "start" }); } });
   }
 })();

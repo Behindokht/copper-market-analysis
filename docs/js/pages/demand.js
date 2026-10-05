@@ -81,7 +81,7 @@
     var rcard = h("div", { class: "card chart-card", "aria-labelledby": "dm-ranges" },
       h("h3", { id: "dm-ranges", class: "qtitle", text: T("ranges_title") }),
       h("p", { class: "hint", text: T("ranges_hint") }),
-      h("ul", { class: "ranges", role: "img", "aria-label": T("range_aria", {
+      h("ul", { class: "ranges", "aria-label": T("range_aria", {
         ref: CMA.n1(refPct) + "%", one_lo: vars.r1_lo + "%", one_hi: vars.r1_hi + "%", all_lo: vars.r2_lo + "%", all_hi: vars.r2_hi + "%" }) },
         h("li", { class: "rrow" }, h("div", { class: "rname", text: T("range_ref") }),
           h("div", { class: "rtrack" }, h("span", { class: "rdot", style: "left:" + (refPct / axisMax * 100) + "%" })),
@@ -280,7 +280,7 @@
     var mainCard = h("div", { class: "card chart-card" },
       h("h3", { class: "qtitle", text: T("main_title") }),
       h("p", { class: "hint", text: T("main_hint") }),
-      h("ul", { class: "stacks", role: "img", "aria-label": T("main_aria", { y1: 2030, y2: 2035,
+      h("ul", { class: "stacks", "aria-label": T("main_aria", { y1: 2030, y2: 2035,
         t1: T("bar_total", { mt: kt(ref30.total), pct: pct(ref30.total) }), t2: T("bar_total", { mt: kt(ref35.total), pct: pct(ref35.total) }) }) },
         stack(2030, ref30), stack(2035, ref35)),
       h("p", { class: "finding", text: T("range_line", { lo: vars.r1_lo, hi: vars.r1_hi }) }),

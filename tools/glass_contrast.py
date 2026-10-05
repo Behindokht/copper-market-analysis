@@ -6,7 +6,7 @@ Tiers (docs/css/site.css, Round 4, after design_reference/glass-type-study.html)
   smoked glass  the dark reading glass of the opener, bridges, closing panel and footer, the same in both themes: ivory, ivory-2, bright copper.
 The model of one pixel behind text: the photo, blurred (the plate blurs it 14 or 30 px), then the plate's saturate and brightness, then (dark mode) the dark shade is already in the photo layer, then the rim gradient (white, its
 strongest stop is used: it lies under the translucent fill all over the plate), then the fill gradient (each end tested), then the specular highlight as soft-light white at its opacity, then a small white allowance for the inset glow.
-Every pair must reach 4.5:1; exit code 1 otherwise. A pair that fails is fixed by raising that tier's fill, never by darkening the text colour. Without the photo the table uses plain paper as the backdrop.
+Every pair must reach 4.5:1; exit code 1 otherwise. A pair that fails is fixed by raising that tier's fill, never by darkening the text colour. Without the photo the table uses the strongest points of the CSS texture as backdrops.
 --measure also loads the dashboard in Chromium and WebKit and prints the brightest and darkest background pixel in strips behind the real plates (the preview with the photo embedded)."""
 import re
 import sys
@@ -57,7 +57,7 @@ def token_block(start_marker):
     return css[i:css.index("\n}", i) if start_marker.startswith(":root {") else css.index("}", i)]
 
 
-root_block = token_block(":root {\n  --bg-photo")
+root_block = token_block(":root {\n  /* the page background")
 dark_block = css[css.index('@media (prefers-color-scheme: dark) {\n  :root:not([data-theme="light"]) body.has-bg {'):]
 dark_block = dark_block[:dark_block.index("\n}\n")]
 light_scope = css[css.index("body.has-bg { --copper-text:"):]
@@ -107,7 +107,7 @@ TIERS = {
 
 backdrops = {"light": {}, "dark": {}}
 photo = ROOT / "assets" / "patina-background.webp"
-note = "assets/patina-background.webp is not on this disk: plain paper is used as the backdrop"
+note = "assets/patina-background.webp is not on this disk: only the CSS texture rows are used"
 try:
     from PIL import Image, ImageFilter
     import numpy as np
@@ -134,7 +134,11 @@ if not backdrops["light"]:
         backdrops[mode]["pure black (bound)"] = (0, 0, 0) if mode == "light" else over(shade[1], shade[0], (0, 0, 0))
         backdrops[mode]["pure white (bound)"] = (255, 255, 255) if mode == "light" else over(shade[1], shade[0], (255, 255, 255))
 for mode in ("light", "dark"):
-    backdrops[mode]["no photo: plain paper"] = hexrgb(tok["paper"]) if mode == "light" else (22, 17, 14)
+    # the public build has no photo: its CSS texture (--bg-texture) is a dark base with a teal glow (strongest .62) and a copper glow (strongest .38); these are the lightest points of each
+    base = (22, 32, 30)
+    sh = (lambda c: over(shade[1], shade[0], c)) if mode == "dark" else (lambda c: c)
+    backdrops[mode]["no photo: texture, teal glow"] = sh(over(0.62, (47, 110, 95), base))
+    backdrops[mode]["no photo: texture, copper glow"] = sh(over(0.38, (178, 94, 44), base))
 card_dark = hexrgb("#1A1F1E")
 
 

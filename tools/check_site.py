@@ -38,7 +38,7 @@ for p in text_files:
 
 # 2. no outside loading
 EXTERNAL = [
-    (r"<link[^>]+href=[\"']https?:", "external stylesheet or link"), (r"<script[^>]+src=[\"']https?:", "external script"),
+    (r"<link(?![^>]*rel=[\"']canonical)[^>]+href=[\"']https?:", "external stylesheet or link"), (r"<script[^>]+src=[\"']https?:", "external script"),
     (r"url\(\s*[\"']?https?:", "external url() in CSS"), (r"@import", "@import"), (r"\bfetch\s*\(", "fetch()"), (r"XMLHttpRequest", "XMLHttpRequest"),
     (r"new\s+WebSocket", "WebSocket"), (r"sendBeacon", "sendBeacon"), (r"\bimport\s*\(", "dynamic import()"), (r"<iframe", "iframe"),
     (r"fonts\.(googleapis|gstatic)\.com", "Google Fonts"),

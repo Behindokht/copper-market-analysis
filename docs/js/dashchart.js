@@ -45,11 +45,13 @@
     host.classList.add("chart", "dchart");
     host.style.position = "relative";
 
-    function color(c) { return getComputedStyle(host).getPropertyValue(c).trim() || c; }       // read from the host, so the dark scope of the dashboard applies
+    var colorCache = {};
+    function color(c) { return colorCache[c] || (colorCache[c] = getComputedStyle(host).getPropertyValue(c).trim() || c); }       // read from the host, so the dark scope of the dashboard applies; read once per drawing
     function textW(s) { return 6.8 * String(s).length; }
 
     function draw(animate) {
       if (dead) { return; }
+      colorCache = {};
       var W = Math.max(260, Math.round(host.clientWidth || 400)), H = cfg.height || 260;
       lastW = W;
       var ml = 46, mr = cfg.marginRight || 16, mt = 14, mb = 26, pw = W - ml - mr, ph = H - mt - mb;
@@ -202,7 +204,7 @@
         if (spot == null) { return; }
         lastEx = cx;
         take(tx - w / 2, spot - 13, tx + w / 2, spot + 5);
-        var g = svg("g", { class: "evm", tabindex: "0", role: "button", "aria-label": e.tip.join(". ") });
+        var g = svg("g", { class: "evm", tabindex: "0", role: "button", "aria-label": e.label + ". " + e.tip.join(". ") });
         g.appendChild(svg("line", { x1: cx, x2: cx, y1: spot + 5, y2: cy - 4, stroke: color("--muted"), "stroke-width": 1 }));
         g.appendChild(svg("circle", { cx: cx, cy: cy, r: 3.4, fill: color("--halo"), stroke: color("--ink"), "stroke-width": 1.3 }));
         g.appendChild(svg("circle", { cx: cx, cy: cy, r: 11, fill: "transparent" }));

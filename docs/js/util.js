@@ -163,7 +163,7 @@
       if (!real.length) { panel.appendChild(CMA.h("p", { class: "muted", text: CMA.t("story.chip_none") })); }
       real.forEach(function (c) { panel.appendChild(CMA.h("p", { class: "small" }, CMA.t("story.chip_check", { no: c.no, description: c.description }) + " ", CMA.h("span", { class: "pill " + c.status.toLowerCase(), text: c.status }))); });
     });
-    return CMA.h("details", { class: "chipx", "data-src": srcs.map(function (sid) { return (window.CMA_STRINGS.story.src_short || {})[sid] || (reg[sid] && reg[sid].publisher) || sid; }).filter(function (x, i, a) { return a.indexOf(x) === i; }).join(", ") }, CMA.h("summary", { "aria-label": CMA.t("story.chip_label") + ": " + srcs.join(" "), text: CMA.t("story.chip_source") }), panel);
+    return CMA.h("details", { class: "chipx", "data-src": srcs.map(function (sid) { return (window.CMA_STRINGS.story.src_short || {})[sid] || (reg[sid] && reg[sid].publisher) || sid; }).filter(function (x, i, a) { return a.indexOf(x) === i; }).join(", ") }, CMA.h("summary", { "aria-label": CMA.t("story.chip_source") + ": " + CMA.t("story.chip_label").toLowerCase() + " " + srcs.join(" "), text: CMA.t("story.chip_source") }), panel);
   };
   // "Limits": a mono label over a hairline and the first two limits as plain sentences. The full list goes in the chapter's fold (limits.full).
   CMA.limits = function (items, fullTitle) {

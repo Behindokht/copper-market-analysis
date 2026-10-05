@@ -215,6 +215,18 @@ def run(engine):
                 open_view(pg, v, sel)
                 bad = pg.evaluate(SIZES_JS)
                 ok(not bad, tt + f"{v} text under 12 px: {bad[:8]}")
+            # the case study page: type, buttons, halos
+            pg.goto(url.replace("index.html", "case-study.html"))
+            pg.wait_for_selector("#case h1")
+            pg.wait_for_timeout(500)
+            bad = pg.evaluate(SIZES_JS)
+            ok(not bad, tt + f"case study text under 12 px: {bad[:6]}")
+            for x in pg.evaluate(BUTTONS_JS):
+                ok(x["ratio"] >= 4.5, tt + f"case study button {x['text']!r} has contrast {x['ratio']}")
+            ok(not pg.evaluate("document.documentElement.scrollWidth > window.innerWidth"), tt + "case study: sideways scroll")
+            words = len(pg.inner_text("#case").split())
+            ok(400 <= words <= 600, tt + f"the case study should be 400 to 600 words, it has {words}")
+            ok(pg.locator("#footer").is_visible() and pg.locator("#footer a[href='index.html#method']").count() == 1, tt + "the case study has the footer")
             # fonts and kickers
             open_view(pg, "dashboard", "#dashboard .grid")
             pg.evaluate("document.fonts.ready")
