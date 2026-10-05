@@ -1,0 +1,69 @@
+{
+ "lighthouse_version": "12.8.2",
+ "pages": {
+  "dashboard (desktop)": {
+   "performance": null,
+   "accessibility": 100,
+   "best-practices": 100,
+   "seo": 100,
+   "metrics": {
+    "first-contentful-paint": "0.8\u00a0s",
+    "largest-contentful-paint": null,
+    "total-blocking-time": null,
+    "cumulative-layout-shift": "0.044",
+    "speed-index": "4.7\u00a0s"
+   }
+  },
+  "dashboard (mobile)": {
+   "performance": null,
+   "accessibility": 100,
+   "best-practices": 100,
+   "seo": 100,
+   "metrics": {
+    "first-contentful-paint": "3.3\u00a0s",
+    "largest-contentful-paint": null,
+    "total-blocking-time": null,
+    "cumulative-layout-shift": "0.114",
+    "speed-index": "10.4\u00a0s"
+   }
+  },
+  "story (desktop)": {
+   "accessibility": 100,
+   "best-practices": 100,
+   "seo": 100,
+   "metrics": {}
+  },
+  "story (mobile)": {
+   "accessibility": 100,
+   "best-practices": 100,
+   "seo": 100,
+   "metrics": {}
+  },
+  "case study (desktop)": {
+   "performance": 89,
+   "accessibility": 100,
+   "best-practices": 100,
+   "seo": 100,
+   "metrics": {
+    "first-contentful-paint": "0.7\u00a0s",
+    "largest-contentful-paint": "0.9\u00a0s",
+    "total-blocking-time": "70\u00a0ms",
+    "cumulative-layout-shift": "0.004",
+    "speed-index": "4.8\u00a0s"
+   }
+  },
+  "case study (mobile)": {
+   "performance": 69,
+   "accessibility": 100,
+   "best-practices": 100,
+   "seo": 100,
+   "metrics": {
+    "first-contentful-paint": "3.1\u00a0s",
+    "largest-contentful-paint": "4.0\u00a0s",
+    "total-blocking-time": "150\u00a0ms",
+    "cumulative-layout-shift": "0.089",
+    "speed-index": "11.9\u00a0s"
+   }
+  }
+ }
+}

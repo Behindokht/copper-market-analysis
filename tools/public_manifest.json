@@ -718,6 +718,10 @@
    "large_datasets": [
     "series"
    ]
+  },
+  "results/lighthouse_summary.json": {
+   "sources": [],
+   "note": "Lighthouse scores and timings of the published pages (tools/run_lighthouse.py); no data from any source"
   }
  }
 }
