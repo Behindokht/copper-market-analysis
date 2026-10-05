@@ -1019,7 +1019,7 @@ window.CMA_STRINGS = {
   "advice": "Historical results are not forecasts and not investment advice."
  },
  "footer": {
-  "repo_url": "https://github.com/behindokht/copper-market-analysis",
+  "repo_url": "https://github.com/Behindokht/copper-market-analysis",
   "portfolio_url": "https://behindokht.github.io/art-portfolio-wall/",
   "method_label": "How I built this",
   "case_label": "Case study",
