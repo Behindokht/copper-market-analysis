@@ -133,6 +133,12 @@ for need in (".nojekyll", "404.html", "robots.txt", "img/share.png", "img/favico
     if not (DOCS / need).exists():
         problems.append(f"docs/{need} is missing")
 
+# the README and the site must not claim IEA permission (the owner has asked for it and has no reply yet; project release gate)
+CLAIM = re.compile(r"(IEA|Rights@iea\.org)[^.\n]{0,60}(has |have )?(granted|given|confirmed|approved|agreed)[^.\n]{0,40}(permission|approval)|with (the )?IEA'?s? (permission|approval)|(permission|approval) (from|of) the IEA (was|has been) (granted|given)", re.I)
+for f in [ROOT / "README.md", DOCS / "FACTS.md", DOCS / "js" / "strings.en.js"]:
+    if f.exists() and CLAIM.search(f.read_text(encoding="utf-8")):
+        problems.append(f"{f.name} claims IEA permission; the owner has not confirmed a reply (project release gate)")
+
 # 6: the IEA list
 iea_files = [p.relative_to(ROOT).as_posix() for p in files if re.search(r"iea", p.read_text(encoding="utf-8", errors="replace"), re.I) and p.suffix in (".js", ".md")]
 notes.append("files in docs/ that mention the IEA (their terms are not confirmed, the owner decides before anything is pushed): " + ", ".join(iea_files))
