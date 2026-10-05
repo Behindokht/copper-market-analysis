@@ -141,16 +141,24 @@ for f in [ROOT / "README.md", DOCS / "FACTS.md", DOCS / "js" / "strings.en.js"]:
 
 # 6: the IEA list
 iea_files = [p.relative_to(ROOT).as_posix() for p in files if re.search(r"iea", p.read_text(encoding="utf-8", errors="replace"), re.I) and p.suffix in (".js", ".md")]
-notes.append("files in docs/ that mention the IEA (their terms are not confirmed, the owner decides before anything is pushed): " + ", ".join(iea_files))
+notes.append("files in docs/ that mention the IEA (report figures under CC BY 4.0 are attributed, derived results are kept, raw non-CC data is not published, and no IEA permission is claimed until the owner confirms a reply): " + ", ".join(iea_files))
 
 if "--online" in sys.argv:
+    UA = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120 Safari/537.36", "Accept": "text/html,application/pdf,*/*"}
     for u in sorted(external):
-        try:
-            req = urllib.request.Request(u, method="HEAD", headers={"User-Agent": "Mozilla/5.0"})
-            code = urllib.request.urlopen(req, timeout=15).status
-        except Exception as e:
-            code = getattr(e, "code", str(e)[:40])
-        notes.append(f"external link {u[:90]}: {code}")
+        code = None
+        for method in ("HEAD", "GET"):             # some servers answer a HEAD request with 404 or 405 and a normal request with 200, so a failed HEAD is tried again as GET
+            try:
+                code = urllib.request.urlopen(urllib.request.Request(u, method=method, headers=UA), timeout=25).status
+                break
+            except Exception as e:
+                code = getattr(e, "code", "no answer: " + str(e)[:50])
+        label = {403: " (probably blocks scripts)", 406: " (probably blocks scripts)", 429: " (probably blocks scripts)"}.get(code, "")
+        if isinstance(code, str):
+            label = " (no answer from here: a timeout or a certificate check; try it in a browser)"
+        notes.append(f"external link {u[:90]}: {code}{label}")
+        if code in (404, 410):
+            problems.append(f"external link is gone: {u}")
 else:
     notes.append(f"{len(external)} external links found (run with --online to ask each one for its status)")
 
