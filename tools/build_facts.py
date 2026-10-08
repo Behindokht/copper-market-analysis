@@ -72,7 +72,7 @@ add("Euro price history", f"{f0(kp['eur_months_total']['value'])} months from {k
 add("Dollar index history", f"from {kp['dxy_first_month']['value']}", "results/res_dash_kpis.csv, fact dxy_first_month; source S17 FRED DTWEXBGS")
 
 # ------------------------------------------------------------------ headline findings
-add("Copper price, latest month", f"${f0(kp['copper_usd_t']['value'])} a tonne in {kp['latest_month']['value']}, the highest month as quoted since {first}", "results/res_story_copper_record_facts.csv, facts nominal_latest and nominal_record")
+add("Copper price, latest month", f"${f0(kp['copper_usd_t']['value'])} per metric ton in {kp['latest_month']['value']}, the highest month as quoted since {first}", "results/res_story_copper_record_facts.csv, facts nominal_latest and nominal_record")
 below = 100 - float(kp["real_share_of_record_pct"]["value"])
 add("Copper in today's money against its real record", f"{below:.0f}% below {kp['real_peak_month']['value']} (the latest month is {float(kp['real_share_of_record_pct']['value']):.0f}% of that record)", "results/res_dash_kpis.csv, facts real_share_of_record_pct and real_peak_month (US CPI deflator, a US-dollar view)")
 add("Rank of the latest month in today's money", f"{int(float(kp['real_rank_latest']['value']))} of {int(float(kp['real_months_valid']['value']))} months (October 2025 has no US CPI value)", "results/res_dash_kpis.csv, facts real_rank_latest and real_months_valid")

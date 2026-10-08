@@ -1,5 +1,5 @@
 """Round 4 checks (Playwright): the things that went wrong on screen and must not come back.
-   python tools/round4_test.py [--browser chromium|webkit|both] [--site docs]
+   python tools/round4_test.py [--browser chromium|webkit|firefox|all] [--site docs]
 1. Buttons: the text of every visible button and button-like link has at least 4.5:1 against its background, in light and dark (the filled ones used to show ivory on ivory).
 2. Legend: each coloured swatch is the colour of the series it names (supply: mining verdigris, refining copper) and its text matches the right series.
 3. Chart labels: no label sits on a chart line, a dot or another label (bounding boxes of SVG text against the paths and circles), on the dashboard, in its expanded views and in the Story.
@@ -135,7 +135,7 @@ def reveal_story(pg):
 
 def run(engine):
     with sync_playwright() as p:
-        b = p.chromium.launch(channel="chrome") if engine == "chromium" else p.webkit.launch()
+        b = (p.chromium.launch(channel="chrome") if engine == "chromium" else p.firefox.launch() if engine == "firefox" else p.webkit.launch())
         t = f"[{engine}] "
         errs = []
         for scheme in ("light", "dark"):
@@ -331,7 +331,7 @@ def run(engine):
         b.close()
 
 
-for eng in (["chromium", "webkit"] if browser == "both" else [browser]):
+for eng in (["chromium", "webkit", "firefox"] if browser in ("both", "all") else [browser]):
     run(eng)
 if problems:
     print(f"ROUND 4 TEST FAILED: {len(problems)} problem(s), {passed} checks passed")

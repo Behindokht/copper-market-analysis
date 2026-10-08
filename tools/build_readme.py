@@ -56,7 +56,7 @@ add("Who needs copper, who supplies it, and what does the price do when they col
 add("")
 add("## Three findings")
 add("")
-add(f"1. **Copper is at a record only as quoted.** {price} a tonne in {MONTH(kp['latest_month'])}, the highest of {months} months. In today's money it is still {below:.0f}% below {MONTH(peak)}.")
+add(f"1. **Copper is at a record only as quoted.** {price} per metric ton in {MONTH(kp['latest_month'])}, the highest of {months} months. In today's money it is still {below:.0f}% below {MONTH(peak)}.")
 add(f"2. **The dollar goes with about a third of copper's monthly moves.** The broad dollar index accounts for {float(g['r2_dollar_index']):.0f}% of them. In {int(float(g['opposite_months']))} of {int(float(g['months_total']))} months the two moved in opposite directions. The correlation is {float(cor['pearson r']):.2f} (95% bootstrap interval {float(cor['95% interval low']):.2f} to {float(cor['95% interval high']):.2f}). That is a link, not proof of a cause.")
 add(f"3. **Aluminium has been the cheaper conductor metal for {int(float(ac['run_months']))} months.** Copper costs {float(ac['ratio_latest']):.2f} times aluminium and the break-even is about {float(ac['breakeven_ratio']):.2f}. As a guide to later price changes the ratio is weak, and I say so.")
 add("")

@@ -1,7 +1,7 @@
 """Parity test: the browser's period changes and rebased values on the Dashboard must match the Python table results/res_dash_changes.csv (notebook 07).
 Twelve filter combinations are tested: four periods (1Y, 5Y, 20Y, All) by USD as quoted, EUR as quoted and USD in today's money.
 It also checks that the figures printed in the KPI band equal the Python latest-month figures (results/res_dash_kpis.csv) and that the data-health counts equal the checks file.
-  python tools/parity_test.py [--browser chromium|webkit|both] [--site docs]
+  python tools/parity_test.py [--browser chromium|webkit|firefox|all] [--site docs]
 Tolerance: 0.01 (percentage points for changes, index points for rebased values). Exit code 1 if anything differs. Needs Playwright (the project .venv)."""
 import csv
 import sys
@@ -31,7 +31,7 @@ def close(a, b):
 def run(engine):
     global n_compared
     with sync_playwright() as p:
-        b = p.chromium.launch(channel="chrome") if engine == "chromium" else p.webkit.launch()
+        b = (p.chromium.launch(channel="chrome") if engine == "chromium" else p.firefox.launch() if engine == "firefox" else p.webkit.launch())
         pg = b.new_page(viewport={"width": 1280, "height": 900}, reduced_motion="reduce")
         errs = []
         pg.on("pageerror", lambda e: errs.append(str(e)))
@@ -97,7 +97,7 @@ def run(engine):
         b.close()
 
 
-for eng in (["chromium", "webkit"] if browser == "both" else [browser]):
+for eng in (["chromium", "webkit", "firefox"] if browser in ("both", "all") else [browser]):
     run(eng)
 
 if problems:

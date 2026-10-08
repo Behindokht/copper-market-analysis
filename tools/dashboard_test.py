@@ -1,7 +1,7 @@
 """Behaviour test for the Dashboard and the Story (Playwright): URL state, filter rules, panel chrome, the synced crosshair (pointer, keyboard, touch) and the per-panel readouts, events,
 the CSV download, the expand dialogs (mouse and keyboard, Esc, backdrop, focus return, tables), the 3D donut (hover, focus, reduced motion), equal row-2 panels, no sideways scroll at 400 px
 (also with a dialog open), and the story's structure (one header, light glass sheets, bridges, one drivers block, a closing panel of its own words, the patina photo as the only photo).
-   python tools/dashboard_test.py [--browser chromium|webkit|both] [--site docs]
+   python tools/dashboard_test.py [--browser chromium|webkit|firefox|all] [--site docs]
 Exit code 1 if anything fails."""
 import re
 import sys
@@ -50,7 +50,7 @@ def crosses(pg):
 
 def run(engine):
     with sync_playwright() as p:
-        b = p.chromium.launch(channel="chrome") if engine == "chromium" else p.webkit.launch()
+        b = (p.chromium.launch(channel="chrome") if engine == "chromium" else p.firefox.launch() if engine == "firefox" else p.webkit.launch())
         ctx = b.new_context(viewport={"width": 1400, "height": 900}, reduced_motion="reduce", accept_downloads=True)
         pg = ctx.new_page()
         errs = []
@@ -340,7 +340,7 @@ def run(engine):
         b.close()
 
 
-for eng in (["chromium", "webkit"] if browser == "both" else [browser]):
+for eng in (["chromium", "webkit", "firefox"] if browser in ("both", "all") else [browser]):
     run(eng)
 if problems:
     print(f"DASHBOARD TEST FAILED: {len(problems)} problem(s), {passed} checks passed")

@@ -15,7 +15,7 @@ Who needs copper, who supplies it, and what does the price do when they collide?
 
 ## Three findings
 
-1. **Copper is at a record only as quoted.** $14,326 a tonne in August 2026, the highest of 800 months. In today's money it is still 32% below April 1974.
+1. **Copper is at a record only as quoted.** $14,326 per metric ton in August 2026, the highest of 800 months. In today's money it is still 32% below April 1974.
 2. **The dollar goes with about a third of copper's monthly moves.** The broad dollar index accounts for 31% of them. In 178 of 247 months the two moved in opposite directions. The correlation is -0.56 (95% bootstrap interval -0.67 to -0.40). That is a link, not proof of a cause.
 3. **Aluminium has been the cheaper conductor metal for 213 months.** Copper costs 4.41 times aluminium and the break-even is about 2.01. As a guide to later price changes the ratio is weak, and I say so.
 
@@ -37,7 +37,7 @@ results/res_*.csv  (also written back into the database)
 docs/data/*.js  --->  docs/ static site (plain JavaScript and SVG)
 ```
 
-Cleaning and joins are done in SQL, statistics and charts in Python. 34 registered sources, 163 automatic checks (155 pass, 8 warnings, 0 failures). Statistics use monthly changes, a moving-block bootstrap for intervals and Newey-West standard errors in the regressions.
+Cleaning and joins are done in SQL, statistics and charts in Python. 37 registered sources, 163 automatic checks (155 pass, 8 warnings, 0 failures). Statistics use monthly changes, a moving-block bootstrap for intervals and Newey-West standard errors in the regressions.
 
 ## Rebuild
 
