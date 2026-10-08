@@ -27,13 +27,13 @@
       var cls = r.commodity === "copper" ? "dc" : "grey";
       var pct = CMA.n0(r.latest_pct_of_real_peak);
       return h("li", { class: "brow " + cls, "aria-label": T("bar_aria", { name: names[r.commodity], pct: pct, month: CMA.monthLong(r.real_peak_month + "-01"), year: r.series_start.slice(0, 4) }) },
-        h("div", { class: "bname" }, names[r.commodity], r.at_nominal_record ? h("span", { class: "rtag", text: ", " + T("bar_quoted") }) : null),
+        h("div", { class: "bname" }, names[r.commodity], r.at_nominal_record ? h("span", { class: "rtag sr", text: ", " + T("bar_quoted") }) : null),
         h("div", { class: "btrack" }, h("span", { class: "bfill", style: "width:" + r.latest_pct_of_real_peak + "%" })),
         h("div", { class: "bval num", text: T("bar_value", { pct: pct }) }),
-        h("div", { class: "bsub small muted", text: T("bar_record", { month: CMA.monthShort(r.real_peak_month + "-01") }) + "; " + T("bar_start", { year: r.series_start.slice(0, 4) }) }));
+        h("div", { class: "bsub sr", text: T("bar_record", { month: CMA.monthShort(r.real_peak_month + "-01") }) + "; " + T("bar_start", { year: r.series_start.slice(0, 4) }) }));
     }));
     box.appendChild(h("div", { class: "card chart-card" },
-      h("h3", { class: "qtitle", text: T("chart_title") }), h("p", { class: "hint", text: T("chart_hint") }), list));
+      h("h3", { class: "qtitle", text: T("chart_title") }), h("p", { class: "hint", text: T("chart_hint") }), list, CMA.figFootAuto(["chapters.records"])));
 
     // what the early years of each series are
     var notes = rows.filter(function (r) { return r.note_kind; }).map(function (r) {
@@ -52,8 +52,9 @@
         h("td", { text: CMA.n1(r.latest_pct_of_real_peak) + "%" }));
     }));
     var lim = CMA.limits(window.CMA_STRINGS.just.notshow.items, T("notshow.title"));
-    box.appendChild(lim.short);
-    box.appendChild(CMA.fold(T("details_lead"), [lim.full, notesEl, h("div", { class: "tablewrap" }, h("table", {}, head, body)), h("p", { class: "small muted", text: T("unit_note") })]));
+    var full = box.F || box;
+    full.appendChild(h("p", { class: "hint", text: T("details_lead") }));
+    [lim.full, notesEl, h("div", { class: "tablewrap" }, h("table", {}, head, body)), h("p", { class: "small muted", text: T("unit_note") })].forEach(function (x) { full.appendChild(x); });
     CMA.sources.add({ S02: window.CMA_STRINGS.story.sources.names.S02, S04: window.CMA_STRINGS.story.sources.names.S04, S27: T("sources.names.S27") }, null);
     CMA.bridge(box, T("bridge"));
   };

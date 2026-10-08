@@ -52,9 +52,11 @@
       r2_lo: CMA.n1(rg["all_combinations:low"].total_pct_of_mine), r2_hi: CMA.n1(rg["all_combinations:high"].total_pct_of_mine)
     };
 
-    var wrap = box;
+    var wrap = box, full = box.F || box;
     wrap.appendChild(h("p", { class: "answer", text: T("answer", vars) }));
-    wrap.appendChild(h("p", { class: "intro", text: T("intro", vars) }));
+    full.appendChild(h("p", { class: "hint", text: T("more_title") }));
+    full.appendChild(h("p", { class: "answer", text: T("answer_rest", vars) }));
+    full.appendChild(h("p", { class: "intro", text: T("intro", vars) }));
     wrap.appendChild(h("p", { class: "verdict", text: T("warn") }));
     var findingsEl = h("section", { class: "findings", "aria-label": "Findings" },
       h("p", { class: "finding", text: T("finding_3", vars) }), h("p", { class: "finding", text: T("finding_4", vars) }));
@@ -277,24 +279,28 @@
           h("span", {}, h("i", { class: "sw2 dcx" }), T("seg_dc") + ": " + T("seg_value", { mt: kt(c.dcExtra) }))),
         h("div", { class: "bval num" }, h("span", { class: "small muted", style: "display:block", text: T("total_label") }), T("bar_total", { mt: kt(c.total), pct: pct(c.total) })));
     }
+    // the short read shows the 2030 bar; the 2035 bar sits in the full layer with its own note
+    function stacks(year, c) { return h("ul", { class: "stacks", "aria-label": T("main_aria", { year: year, total: T("bar_total", { mt: kt(c.total), pct: pct(c.total) }) }) }, stack(year, c)); }
     var mainCard = h("div", { class: "card chart-card" },
       h("h3", { class: "qtitle", text: T("main_title") }),
       h("p", { class: "hint", text: T("main_hint") }),
-      h("ul", { class: "stacks", "aria-label": T("main_aria", { y1: 2030, y2: 2035,
-        t1: T("bar_total", { mt: kt(ref30.total), pct: pct(ref30.total) }), t2: T("bar_total", { mt: kt(ref35.total), pct: pct(ref35.total) }) }) },
-        stack(2030, ref30), stack(2035, ref35)),
-      h("p", { class: "finding", text: T("range_line", { lo: vars.r1_lo, hi: vars.r1_hi }) }),
-      h("p", { class: "small muted", text: T("state_ref") }));
+      stacks(2030, ref30),
+      CMA.figFootAuto(["demand.sensitivity"]));
     wrap.appendChild(mainCard);
+    full.appendChild(h("div", { class: "card chart-card" },
+      h("h3", { class: "qtitle", text: T("bar_label", { year: 2035 }) }),
+      h("p", { class: "hint", text: T("panel_note_2035") }),
+      stacks(2035, ref35)));
+    full.appendChild(h("p", { class: "finding", text: T("range_line", { lo: vars.r1_lo, hi: vars.r1_hi }) }));
+    full.appendChild(h("p", { class: "small muted", text: T("state_ref") }));
     // for scale: only said when the total is within 10 percent of Russian mine output (checked in notebook 06 and again here)
     var SCALE = {};
     CMA.rows(window.CMA_DATA.demand.scale).forEach(function (r) { SCALE[r.fact_id] = r; });
     if (SCALE.within_10_pct.value === 1 && Math.abs(SCALE.total_2030_kt.value - ref30.total / 1000) < 1 && Math.abs(SCALE.total_2030_kt.value / SCALE.russia_mine_2025e_kt.value - 1) <= 0.1) {
-      wrap.appendChild(h("p", { class: "finding" }, T("scale", { pct: pct(ref30.total), mt: CMA.n1(SCALE.total_2030_kt.value / 1000) }) + " ", CMA.chip(["demand.scale"])));
+      full.appendChild(h("p", { class: "finding" }, T("scale", { pct: pct(ref30.total), mt: CMA.n1(SCALE.total_2030_kt.value / 1000) }) + " ", CMA.chip(["demand.scale"])));
     }
     // everything else sits one click deeper
-    wrap.appendChild(lim.short);
-    wrap.appendChild(CMA.fold(T("more_title"), [xcard, rcard, findingsEl, basisHost, issues, nsEl, sensEl, limitsEl, inputsEl]));
+    [xcard, rcard, findingsEl, basisHost, issues, nsEl, sensEl, limitsEl, inputsEl].forEach(function (x) { full.appendChild(x); });
     CMA.sources.add(window.CMA_STRINGS.demand.sources.names, T("sources.attribution"));
     CMA.bridge(wrap, T("bridge"));
   };

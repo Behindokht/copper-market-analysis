@@ -728,7 +728,7 @@ body.no-photo { --smoke: rgba(24, 17, 13, .94); }
 .sheet .found { background: none; border: 0; border-top: 1px solid var(--ink); border-radius: 0; padding: 14px 0 0; margin: 8px 0 22px; }
 .sheet .found li { padding: 10px 0; border-top: 1px solid var(--rule); max-width: 60em; }
 .sheet .found li:first-child { border-top: 0; }
-.sheet .found li a { display: block; margin-top: 4px; font-weight: 500; }
+.sheet .found li a { display: inline; margin-top: 0; font-weight: 600; }
 .sheet .guesses { background: none; border: 0; border-top: 1px solid var(--rule); border-radius: 0; padding: 12px 0 0; margin: 18px 0; }
 .sheet .opt { display: flex; gap: 12px; align-items: flex-start; padding: 10px 0; border: 0; border-top: 1px solid var(--rule); border-radius: 0; background: none; cursor: pointer; }
 .sheet .opt:hover { background: rgba(127, 120, 110, .08); }
@@ -830,3 +830,33 @@ dialog.glass::after { display: none; }
 .termtip.glass::after { display: none; }
 @media (prefers-reduced-motion: no-preference) { .termtip.glass { animation: termin 120ms ease both; } }
 @keyframes termin { from { opacity: 0; } to { opacity: 1; } }
+
+/* ---- Round 7: the Story in two layers. The short read is always shown; the full analysis of a chapter is one fold at its end. ---- */
+.readmode { display: flex; align-items: center; justify-content: flex-start; gap: 12px; flex-wrap: wrap; margin: 0 0 10px; }
+.readmode .rm-l { font: 600 12px/1 var(--sans); letter-spacing: .06em; text-transform: uppercase; color: var(--ink); }
+details.fullx { margin: 30px 0 0; border-top: 1px solid var(--ink); }
+details.fullx > summary { position: relative; display: flex; flex-direction: column; gap: 3px; padding: 14px 40px 14px 0; cursor: pointer; list-style: none; }
+details.fullx > summary::-webkit-details-marker { display: none; }
+details.fullx > summary .fx-t { font: 600 16px/1.3 var(--sans); color: var(--ink); }
+details.fullx > summary .fx-s { font: 400 14px/1.4 var(--sans); color: var(--muted); }
+details.fullx > summary:hover .fx-t { color: var(--copper-text); }
+details.fullx > summary:focus-visible { outline: 2px solid var(--copper); outline-offset: 2px; }
+details.fullx > summary::after { content: ""; position: absolute; right: 6px; top: 50%; width: 9px; height: 9px; margin-top: -7px; border-right: 2px solid var(--ink); border-bottom: 2px solid var(--ink); transform: rotate(45deg); }
+details.fullx[open] > summary::after { margin-top: -2px; transform: rotate(-135deg); }
+details.fullx[open] > summary { border-bottom: 1px solid var(--rule); margin-bottom: 18px; }
+details.fullx > .fullbody { font-size: 14px; }
+@media (prefers-reduced-motion: no-preference) { details.fullx[open] > .fullbody { animation: fxin 200ms ease-out both; } }
+@keyframes fxin { from { opacity: 0; } to { opacity: 1; } }
+.fullbody > .answer:first-child, .fullbody > .hint:first-child { margin-top: 0; }
+.drvfold { margin: 0; border-top: 0; }
+.drvfold > summary { font: 600 16px/1.3 var(--sans); }
+.cannot-line { margin: 18px 0 0; max-width: 60ch; font-size: 14px; color: var(--muted); }
+.golink { white-space: nowrap; margin-left: 4px; font-weight: 600; }
+.golink .arr { display: inline-block; width: .8em; height: .8em; margin-left: .3em; vertical-align: -.05em; background: currentColor; -webkit-mask: var(--arrow) center / contain no-repeat; mask: var(--arrow) center / contain no-repeat; }
+:root { --arrow: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path d='M2 8h11M9 4l4 4-4 4' fill='none' stroke='black' stroke-width='1.8'/></svg>"); }
+/* the tornado of chapter 6 in the full layer on a phone: the value labels wrap inside the 64 px at each side of the bar instead of running past the page */
+@media (max-width: 560px) {
+  .ttrack { height: 52px; }
+  .tlab { white-space: normal; width: 58px; line-height: 1.25; font-size: 12px; }
+  .tlab.l { text-align: right; }
+}

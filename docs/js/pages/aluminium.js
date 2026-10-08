@@ -41,7 +41,10 @@
     if (Math.abs(C.mass_factor.value - 0.5) > 0.02) { throw new Error("the wire captions say half the weight, and the data says otherwise"); }
     var vars = { since: CMA.monthLong(firstRun + "-01"), cond: cond, wider: wider, be: CMA.f2(be), month: CMA.monthLong(SR[iLast].month) };
 
+    var full = box.F || box;
     box.appendChild(h("p", { class: "answer", text: T("answer", vars) }));
+    full.appendChild(h("p", { class: "hint", text: T("working_lead") }));
+    full.appendChild(h("p", { text: T("answer_rest", vars) }));
 
     // ---- the ratio chart, with a dashed line at the break-even and the two zone labels
     var vals = SR.map(function (r) { return r.ratio; });
@@ -50,14 +53,14 @@
     var thead = h("thead", {}, h("tr", {}, h("th", { scope: "col", text: T("col_month") }), h("th", { scope: "col", text: T("col_ratio") })));
     var tbody = h("tbody");
     SR.forEach(function (r) { tbody.appendChild(h("tr", {}, h("td", { text: r.month.slice(0, 7) }), h("td", { text: CMA.f2(r.ratio) }))); });
-    box.appendChild(h("div", { class: "card chart-card" },
+    full.appendChild(h("div", { class: "card chart-card" },
       h("h3", { class: "qtitle", text: T("chart_title", vars) }), h("p", { class: "hint", text: T("chart_hint") }), chost,
       h("ol", { class: "marklist" }, marks.map(function (m) { return h("li", { text: m.lines[0] + ": " + m.lines[1] }); })),
       h("details", { class: "tableview" }, h("summary", { text: T("table") }), h("div", { class: "tablewrap" }, h("table", {}, thead, tbody))),
       CMA.figFoot(T("source_line"), ["ratio.case"])));
     var xTicks = [];
     SR.forEach(function (r, i) { var y = +r.month.slice(0, 4); if (r.month.slice(5, 7) === "01" && y % 10 === 0) { xTicks.push({ i: i, label: String(y) }); } });
-    CMA.lineChart(chost, {
+    CMA.lazy(full, function () { CMA.lineChart(chost, {
       n: n, yMax: 5, yTicks: [0, 1, 2, 3, 4, 5], yFormat: function (v) { return CMA.n0(v) + "×"; }, xTicks: xTicks, marginRight: 24,
       band: { v: be, label: T("be_label"), zoneTop: T("zone_top"), zoneBottom: T("zone_bottom") },
       series: [{ id: "ratio", color: "--copper", values: vals, label: { text: T("ctx_label"), short: T("ctx_label_short") } }],
@@ -67,12 +70,14 @@
         return { title: CMA.monthLong(r.month), lines: [T("tip_ratio", { value: CMA.f2(r.ratio) }), T("tip_side", { side: r.ratio > be ? T("tip_above") : T("tip_below") })] };
       },
       aria: T("aria", { from: CMA.monthLong(SR[0].month), to: CMA.monthLong(SR[iLast].month), be: CMA.f2(be) })
-    });
+    }); });
 
     // ---- why the line sits at about two: the two wires, to scale
     var whost = h("div", { class: "wires" }), wsvgHost = h("div", { style: "width:100%;max-width:520px" });
     whost.appendChild(wsvgHost);
-    box.appendChild(h("div", { class: "fig" }, h("h3", { text: T("wires_title") }), h("p", { class: "sub", text: T("wires_hint", vars) }), whost));
+    box.appendChild(h("div", { class: "fig" }, h("h3", { text: T("wires_hint").replace(/\.$/, "") }), whost, CMA.figFootAuto(["ratio.case"])));
+    full.appendChild(h("h3", { text: T("wires_title") }));
+    full.appendChild(h("p", { text: T("wires_rest", vars) }));
     wires(wsvgHost, C.width_factor.value, vars);
     if ("ResizeObserver" in window) { var rt = 0, lw = wsvgHost.clientWidth; new ResizeObserver(function () { if (Math.abs(wsvgHost.clientWidth - lw) < 2) { return; } lw = wsvgHost.clientWidth; cancelAnimationFrame(rt); rt = requestAnimationFrame(function () { wires(wsvgHost, C.width_factor.value, vars); }); }).observe(wsvgHost); }
 
@@ -80,14 +85,13 @@
     var stmt = U.F07.statement, at = stmt.indexOf(" copper in ");
     if (at < 0) { throw new Error("the USGS substitutes statement changed shape"); }
     var list = stmt.slice(at + " copper in ".length);
-    box.appendChild(h("section", { "aria-labelledby": "al-wins", style: "margin-top:28px" }, h("h3", { id: "al-wins", text: T("wins_title") }),
+    full.appendChild(h("section", { "aria-labelledby": "al-wins", style: "margin-top:28px" }, h("h3", { id: "al-wins", text: T("wins_title") }),
       h("p", { text: T("wins_text_replace", { list: list }) }), h("p", { text: T("wins") })));
-    box.appendChild(h("section", { "aria-labelledby": "al-holds" }, h("h3", { id: "al-holds", text: T("holds_title") }),
+    full.appendChild(h("section", { "aria-labelledby": "al-holds" }, h("h3", { id: "al-holds", text: T("holds_title") }),
       h("ul", { class: "holds" }, window.CMA_STRINGS.aluminium.holds_lines.map(function (x) { return h("li", { text: CMA.fill(x, vars) }); }))));
-    box.appendChild(h("p", { class: "closing-line", text: T("closing") }));
+    full.appendChild(h("p", { class: "closing-line", text: T("closing") }));
 
     var lim = CMA.limits(window.CMA_STRINGS.aluminium.notshow.items, T("notshow.title"));
-    box.appendChild(lim.short);
 
     // ---- the working, behind the fold
     var rowsW = [
@@ -98,7 +102,7 @@
     ];
     var wt = h("table", {}, h("thead", {}, h("tr", {}, h("th", { scope: "col", text: T("w_what") }), h("th", { scope: "col", text: T("w_value") }))),
       h("tbody", {}, rowsW.map(function (r) { return h("tr", {}, h("td", { text: T(r[0], r[2]) }), h("td", { class: "num", text: r[1] })); })));
-    box.appendChild(CMA.fold(T("working_lead"), [lim.full, h("div", { class: "tablewrap" }, wt), h("p", { class: "small muted", text: T("w_note") })]));
+    [lim.full, h("div", { class: "tablewrap" }, wt), h("p", { class: "small muted", text: T("w_note") })].forEach(function (x) { full.appendChild(x); });
 
     CMA.sources.add(window.CMA_STRINGS.aluminium.sources.names, T("sources.attribution"));
     CMA.bridge(box, T("bridge"));

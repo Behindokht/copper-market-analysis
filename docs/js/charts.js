@@ -33,6 +33,7 @@
       var Y = function (v) { return mt + ph - ((v - yMin) / (cfg.yMax - yMin)) * ph; };
       host.textContent = "";
       var s = svg("svg", { viewBox: "0 0 " + W + " " + H, role: "img", tabindex: "0", "aria-label": cfg.aria, focusable: "true" });
+      host.appendChild(s);          // in the page already, so text can be measured as it is drawn
       var clipId = "clip-" + Math.random().toString(36).slice(2, 8);
       var defs = svg("defs");
       var clip = svg("clipPath", { id: clipId });
@@ -66,7 +67,7 @@
         s.appendChild(svg("line", { x1: gx, x2: gx, y1: mt, y2: mt + ph, class: "gapline" }));
         if (!narrow) {
           var gl = svg("text", { x: gx - 6, y: mt + ph - 8, "text-anchor": "end", class: "ax" }); gl.textContent = cfg.gap.label; s.appendChild(gl);
-          box(gx - 6 - textW(cfg.gap.label), mt + ph - 22, gx - 6, mt + ph - 4);
+          box(gx - 6 - Math.max(gl.getComputedTextLength() || 0, 7.5 * cfg.gap.label.length) - 8, mt + ph - 32, gx - 2, mt + ph - 2);          // a clear margin round the text: no other label may touch it          // the label is set in the mono face, wider than the 6.4 px per character used for the other text
         }
       }
 

@@ -64,9 +64,10 @@
       sd_eur: CMA.n1(sdEur), sd_usd: CMA.n1(sdUsd), sd_months: sdMonths, sd_from: ym(sdFrom), sd_to: ym(sdTo)
     };
 
-    var wrap = box;
+    var wrap = box, full = box.F || box;
     wrap.appendChild(h("p", { class: "answer", text: T("answer") }));
-    wrap.appendChild(h("p", { class: "intro", text: T("intro") }));
+    full.appendChild(h("p", { class: "hint", text: T("details_lead") }));
+    full.appendChild(h("p", { class: "intro", text: T("intro") }));
 
     // ---- the one chart that answers the question: every month as a point, dollar change across, copper change down
     var SC = CMA.rows(D.scatter), FIT = {};
@@ -84,16 +85,16 @@
     scCard.appendChild(scHost);
     scCard.appendChild(h("p", { class: "small muted", style: "margin-top:8px", text: T("sc_line", { beta: CMA.n1(-FIT.slope_log) }) }));
     if (unchangedMonth.length) { scCard.appendChild(h("p", { class: "small muted", text: T("sc_unchanged", { month: CMA.monthLong(unchangedMonth[0]) }) })); }
-    wrap.appendChild(scCard);
-    CMA.scatterChart(scHost, {
+    full.appendChild(scCard);
+    CMA.lazy(full, function () { CMA.scatterChart(scHost, {
       rows: SC, x: "dollar_pct", y: "copper_pct", fit: FIT, oppShare: CMA.n0(oppShare), opp: nOpp,
       xLabel: T("sc_x"), yLabel: T("sc_y"), big: T("sc_big", { share: CMA.n0(oppShare) }), count: T("sc_count", { opp: nOpp, n: SC.length }), here: T("sc_here"),
       aria: T("sc_aria", { n: SC.length, from: CMA.monthLong(SC[0].month), to: CMA.monthLong(SC[SC.length - 1].month), opp: nOpp }),
       tip: function (r) { return { title: CMA.monthLong(r.month), lines: [T("sc_tip_dollar", { value: CMA.s1(r.dollar_pct) }), T("sc_tip_copper", { value: CMA.s1(r.copper_pct) })] }; }
-    });
+    }); });
 
     // ---- three short findings in plain words
-    wrap.appendChild(h("section", { class: "findings", "aria-label": "Findings" },
+    full.appendChild(h("section", { class: "findings", "aria-label": "Findings" },
       h("p", { class: "finding", text: T("finding_1", vars) }),
       h("p", { class: "finding", text: T("finding_2", vars) }),
       h("p", { class: "finding", text: T("finding_3", vars) })));
@@ -101,7 +102,6 @@
     // ---- what this page does not show
     var nsItems = window.CMA_STRINGS.dollar.notshow.items.map(function (s) { return CMA.fill(s, { me_end: CMA.f2(meEnd["pearson r"]), me_avg: CMA.f2(meAvg["pearson r"]) }); });
     var lim = CMA.limits(nsItems, T("notshow.title"));
-    wrap.appendChild(lim.short);
 
     // =============================== the details, closed by default
     var fold = [lim.full];
@@ -132,7 +132,7 @@
     var lo = Math.min.apply(null, all), hi = Math.max.apply(null, all);
     var yMin = Math.floor(lo * 2) / 2, yMax = Math.ceil(hi * 4) / 4 < 0.25 ? 0.25 : Math.ceil(hi * 4) / 4;
     var ryT = []; for (var v = yMin; v <= yMax + 1e-9; v += 0.25) { ryT.push(Math.round(v * 100) / 100); }
-    CMA.lineChart(rhost, {
+    CMA.lazy(full, function () { CMA.lineChart(rhost, {
       n: n, yMin: yMin, yMax: yMax, yTicks: ryT, yFormat: function (x) { return CMA.f2(x); }, yLabel: T("y_label"), xTicks: rx, marginRight: 24,
       refLabel: ryT.indexOf(0) >= 0 ? { v: 0, text: T("zero_label") } : null,
       series: [
@@ -148,7 +148,7 @@
         ] };
       },
       aria: T("aria_chart", { from: CMA.monthLong(roll[0].month), to: CMA.monthLong(roll[n - 1].month) })
-    });
+    }); });
     var thead = h("thead", {}, h("tr", {},
       h("th", { scope: "col", text: T("col_month") }), h("th", { scope: "col", text: T("label_index") }), h("th", { scope: "col", text: T("label_euro") })));
     var tbody = h("tbody");
@@ -205,14 +205,14 @@
         ntbody.appendChild(h("tr", {}, h("td", { text: r[0] }), h("td", { class: "res num", text: r[1] }), h("td", { class: "mon num", text: String(r[2]) })));
       });
     });
-    fold.push(h("section", { class: "numbers", "aria-labelledby": "dollar-nums" },
+    fold.push(h("section", { class: "numbers", id: "numbers", "aria-labelledby": "dollar-nums" },
       h("h3", { id: "dollar-nums", text: T("numbers_title") }),
       h("p", { class: "hint", text: T("numbers_hint") }),
       h("p", { class: "small muted", text: T("ci_note") }),
       h("div", { class: "numwrap" }, h("table", { class: "numtable" },
         h("thead", {}, h("tr", {}, h("th", { scope: "col", text: T("col_measure") }), h("th", { class: "res", scope: "col", text: T("col_result") }), h("th", { class: "mon", scope: "col", text: T("col_months") }))),
         ntbody))));
-    wrap.appendChild(CMA.fold(T("details_lead"), fold));
+    fold.forEach(function (x) { full.appendChild(x); });
 
     CMA.sources.add(window.CMA_STRINGS.dollar.sources.names, T("sources.attribution"));
     CMA.bridge(wrap, T("bridge"));

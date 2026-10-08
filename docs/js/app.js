@@ -128,11 +128,28 @@
     view("story");
     document.title = t("site.title");
     watch();
-    var el = CMA.CHAPTER_IDS.indexOf(id) >= 0 ? document.getElementById(id) : null;
+    var isChapter = CMA.CHAPTER_IDS.indexOf(id) >= 0;
+    var el = id ? document.getElementById(id) : null;
+    if (!el && id) {
+      // the answers of chapters 2 and 4 are built when the reader guesses or skips: a link to something inside them builds the one that has it
+      var sks = Array.prototype.slice.call(document.querySelectorAll("#story .skiprow button"));
+      for (var k = 0; k < sks.length && !el; k++) { if (sks[k].getClientRects().length) { sks[k].click(); el = document.getElementById(id); } }
+    }
+    if (el && !document.getElementById("story").contains(el)) { el = null; }
     if (el) {
+      // a target inside a closed fold (a limit, an event, a table): open the fold first, then scroll and focus without a jump
+      if (!isChapter) {
+        var rv = el.closest ? el.closest(".reveal") : null;          // an answer still waiting for a guess: a link to it is a choice not to guess
+        if (rv && rv.hidden) { var sk = rv.parentElement.querySelector(".skiprow button"); if (sk) { sk.click(); } }
+        CMA.openAround(el);
+      }
       el.scrollIntoView({ behavior: CMA.reduce || !moveFocus ? "auto" : "smooth", block: "start" });
-      mark(id);
-      if (moveFocus) { var hd = document.getElementById(id + "-title"); if (hd) { hd.focus({ preventScroll: true }); } }
+      var chap = el.closest ? el.closest(".chapter") : null;
+      mark(isChapter ? id : (chap ? chap.id : null));
+      if (moveFocus) {
+        var hd = isChapter ? document.getElementById(id + "-title") : el;
+        if (hd) { if (!isChapter && !hd.hasAttribute("tabindex") && !/^(A|BUTTON|INPUT|SUMMARY)$/.test(hd.tagName)) { hd.setAttribute("tabindex", "-1"); } hd.focus({ preventScroll: true }); }
+      }
     } else {
       window.scrollTo(0, 0);
       mark(null);

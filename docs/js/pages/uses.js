@@ -27,11 +27,11 @@
     CMA.donut(left, { data: data, idle: [String(year), T("donut_idle")], height: 360, legend: leg,
       aria: T("donut_aria", { list: data.map(function (d) { return d.name + " " + d.pct + "%"; }).join(", "), year: year }) });
 
-    box.appendChild(h("p", { class: "small", style: "margin-top:16px" }, T("scale_line", { mined: CMA.n0(F.F05.value), used: CMA.n1(F.F04.value), year: F.F05.year })));
+    var full = box.F || box;
+    full.appendChild(h("p", { class: "small" }, T("scale_line", { mined: CMA.n0(F.F05.value), used: CMA.n1(F.F04.value), year: F.F05.year })));
 
     var lim = CMA.limits(window.CMA_STRINGS.uses.notshow.items.map(function (x) { return CMA.fill(x, { year: year }); }), T("notshow.title"));
-    box.appendChild(lim.short);
-    box.appendChild(CMA.fold(null, [lim.full]));
+    full.appendChild(lim.full);
 
     var R = {};
     CMA.rows(window.CMA_DATA.story.record_facts).forEach(function (r) { R[r.fact_id] = r; });

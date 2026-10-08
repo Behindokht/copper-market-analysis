@@ -52,7 +52,28 @@
     var resetBtn = h("button", { class: "btn secondary small", type: "button", id: "g-reset", text: t("story.reset"), hidden: true, onclick: function () {
       CMA.store.clear(["g1", "g2"]); CMA.pages.story(root);
     } });
-    var drvSheet = h("section", { class: "sheet glass", "aria-labelledby": "h-drv" }, h("h2", { id: "h-drv", class: "drv-head", text: t("drivers.title") }), CMA.drivers());
+    // reading mode: all chapters in the short read, or all in the full analysis; the choice is remembered
+    var layers = {}, modeBtns = {};
+    function layerIds() { return CMA.CHAPTER_IDS.filter(function (id) { return layers[id]; }); }
+    function syncMode() {
+      var all = layerIds(), open = all.filter(function (id) { return layers[id].open; }).length;
+      modeBtns.short.setAttribute("aria-pressed", String(open === 0));
+      modeBtns.full.setAttribute("aria-pressed", String(open === all.length));
+    }
+    function setMode(m, save) {
+      layerIds().forEach(function (id) { if (m === "full") { layers[id].openNow(); } else { layers[id].open = false; } });
+      if (save) { CMA.store.set("readmode", m); }
+      syncMode();
+      CMA.syncBridges();
+    }
+    CMA.layersChanged = syncMode;
+    modeBtns.short = h("button", { type: "button", text: t("story.readmode_short"), onclick: function () { setMode("short", true); } });
+    modeBtns.full = h("button", { type: "button", text: t("story.readmode_full"), onclick: function () { setMode("full", true); } });
+    var modeBar = h("div", { class: "readmode", role: "group", "aria-label": t("story.readmode_label") },
+      h("span", { class: "rm-l", text: t("story.readmode_label") }), h("div", { class: "fseg clear" }, modeBtns.short, modeBtns.full));
+    var drvSheet = h("section", { class: "sheet glass", "aria-labelledby": "h-drv" }, modeBar,
+      h("details", { class: "fold drvfold" }, h("summary", { text: t("story.drivers_fold") }),
+        h("div", { class: "fold-body" }, h("h2", { id: "h-drv", class: "drv-head", text: t("drivers.title") }), CMA.drivers())));
     wrap.appendChild(drvSheet);
     drvSheet.appendChild(resetBtn);
     function refreshReset() { resetBtn.hidden = CMA.store.get("g1") === null && CMA.store.get("g2") === null; }
@@ -64,13 +85,18 @@
       var body = h("div", { class: "story-body" }, label, h("h2", { id: c.id + "-title", tabindex: "-1", text: t("pages." + c.page + ".title") }));
       wrap.appendChild(h("section", { class: "sheet glass chapter", id: c.id, "aria-labelledby": c.id + "-title" }, body));
       bodies[c.id] = body;
+      layers[c.id] = CMA.fullLayer(c.id);
+      body.F = layers[c.id]._body;
     });
 
     function skipButton(onclick) { return h("button", { class: "linkbtn", type: "button", text: t("story.skip"), onclick: onclick }); }
 
     // =============================== chapter 1: the record, guess 2 first
     var optsDef = [["a", "opt_a"], ["b", "opt_b"], ["c", "opt_c"]];
-    var reveal2 = h("div", { class: "reveal", hidden: true });
+    var reveal2 = h("div", { class: "reveal", hidden: true }), short2 = h("div", { class: "shortlayer" });
+    short2.F = layers.record._body;
+    reveal2.appendChild(short2);
+    reveal2.appendChild(layers.record);
     var radios = optsDef.map(function (o) {
       return h("label", { class: "opt" }, h("input", { type: "radio", name: "g2", value: o[0] }), h("span", { text: t("story.guess2." + o[1]) }));
     });
@@ -80,7 +106,8 @@
       shown2 = true;
       reveal2.hidden = false;
       skip2.hidden = true;
-      CMA.chapters.record(reveal2, { choice: choice });
+      CMA.chapters.record(short2, { choice: choice });
+      layers.record.refresh();
       CMA.syncBridges();
     }
     bodies.record.appendChild(h("p", { class: "hint", text: t("story.guess2.hint") }));
@@ -99,7 +126,9 @@
 
     // =============================== chapter 1 (uses) and chapter 3 (not only copper)
     CMA.chapters.uses(bodies.uses);
+    bodies.uses.appendChild(layers.uses);
     CMA.chapters.just(bodies["just-copper"]);
+    bodies["just-copper"].appendChild(layers["just-copper"]);
 
     // =============================== chapter 4: the dollar, guess 1 first
     var g1 = F, guess = 50, locked = false, haveGuess = false, shown1 = false;
@@ -108,9 +137,14 @@
     var lockBtn = h("button", { class: "btn", type: "button", id: "g1-lock", text: t("story.guess1.lock") });
     var reveal1 = h("div", { class: "reveal", hidden: true, "aria-live": "polite" });
     var result1 = h("div", { class: "result" });
-    var rest1 = h("div", { class: "chapterrest" });
+    var rest1 = h("div", { class: "chapterrest" }), meterBox = h("div", { class: "result" }), resultFull = h("div", { class: "resultfull" });
+    rest1.F = layers.dollar._body;
+    layers.dollar._body.appendChild(h("p", { text: t("dollar.usual_rest") }));
+    layers.dollar._body.appendChild(resultFull);
     reveal1.appendChild(result1);
     reveal1.appendChild(rest1);
+    reveal1.appendChild(meterBox);
+    reveal1.appendChild(layers.dollar);
     bodies.dollar.appendChild(h("p", { class: "intro", text: t("dollar.usual") }));
     bodies.dollar.appendChild(h("p", { class: "hint", text: t("story.guess1.question") + " " + t("story.guess1.hint") }));
     bodies.dollar.appendChild(h("div", { class: "row" }, h("label", { for: "g1-slider", class: "sr", text: t("story.guess1.slider_label") }), slider, out, lockBtn));
@@ -130,27 +164,30 @@
       var diff = guess - actual;
       var verdictKey = Math.abs(diff) <= 5 ? "verdict_close" : (diff > 0 ? "verdict_high" : "verdict_low");
       var unchanged = g1.unchanged_months.value;
-      result1.textContent = "";
+      result1.textContent = ""; meterBox.textContent = ""; resultFull.textContent = "";
       result1.appendChild(h("h4", { class: "sr", text: t("story.guess1.reveal_title") }));
       result1.appendChild(h("div", { class: "bignum num", text: CMA.n0(actual) + "%" }));
-      result1.appendChild(h("p", { class: "bigcap", text: t("story.guess1.big_caption", {
-        r2: CMA.n0(actual), r2_euro: CMA.n0(euro), months: g1.months_total.value,
+      result1.appendChild(h("p", { class: "bigcap", text: t("story.guess1.big_caption", { r2: CMA.n0(actual) }) }));
+      resultFull.appendChild(h("p", { text: t("story.guess1.big_caption_rest", {
+        r2_euro: CMA.n0(euro), months: g1.months_total.value,
         from: CMA.monthLong(g1.r2_dollar_index.period_from + "-01"), to: CMA.monthLong(g1.r2_dollar_index.period_to + "-01") }) }));
       if (haveGuess) { result1.appendChild(h("p", { class: "verdict", text: t("story.guess1." + verdictKey, { guess: Math.round(guess), actual: CMA.n0(actual) }) })); }
-      result1.appendChild(meter);
-      result1.appendChild(h("p", { text: t("story.guess1.direction", {
+      meterBox.appendChild(meter);
+      meterBox.appendChild(h("p", { text: t("story.guess1.caveat") }));
+      resultFull.appendChild(h("p", { text: t("story.guess1.direction", {
         in_ten: Math.round(g1.opposite_direction_share.value / 10), opposite: g1.opposite_months.value, months: g1.months_total.value,
         fell_share: CMA.n1(g1.copper_fell_when_dollar_rose.value), rose_months: g1.dollar_rose_months.value,
         rose_share: CMA.n1(g1.copper_rose_when_dollar_fell.value), fell_months: g1.dollar_fell_months.value }) }));
-      if (unchanged > 0) { result1.appendChild(h("p", { class: "small muted", text: unchanged === 1 ? t("story.guess1.unchanged_one") : t("story.guess1.unchanged_many", { unchanged: unchanged }) })); }
-      result1.appendChild(h("p", { text: t("story.guess1.caveat") }));
-      result1.appendChild(h("p", { class: "small muted", text: t("story.guess1.definition") }));
+      if (unchanged > 0) { resultFull.appendChild(h("p", { class: "small muted", text: unchanged === 1 ? t("story.guess1.unchanged_one") : t("story.guess1.unchanged_many", { unchanged: unchanged }) })); }
+      resultFull.appendChild(h("p", { text: t("story.guess1.caveat_rest") }));
+      resultFull.appendChild(h("p", { class: "small muted", text: t("story.guess1.definition") }));
+      layers.dollar.refresh();
     }
     function showDollar() {
       renderResult1();
       reveal1.hidden = false;
       skip1.hidden = true;
-      if (!shown1) { shown1 = true; CMA.chapters.dollar(rest1); CMA.syncBridges(); }
+      if (!shown1) { shown1 = true; CMA.chapters.dollar(rest1); layers.dollar.refresh(); CMA.syncBridges(); }
     }
     function setLocked(v) {
       locked = v;
@@ -169,12 +206,13 @@
     function revealWhenPassed(el, show) {
       // once the box is above the top of the screen (scrolled past, or jumped past with the nav), the visitor chose not to guess.
       // A scroll check, not an IntersectionObserver: a jump from below the screen to above it never crosses an observer threshold.
-      var raf = 0, done = false;
+      var raf = 0, tm = 0, done = false;
       var check = function () {
         if (done || document.getElementById("story").hidden) { return; }
         if (el.getBoundingClientRect().bottom < 0) { done = true; window.removeEventListener("scroll", onScroll); show(); }
       };
-      var onScroll = function () { cancelAnimationFrame(raf); raf = requestAnimationFrame(check); };
+      // a frame is not always drawn (a hidden or slow page), so a short timer checks as well
+      var onScroll = function () { cancelAnimationFrame(raf); raf = requestAnimationFrame(check); clearTimeout(tm); tm = setTimeout(check, 150); };
       window.addEventListener("scroll", onScroll, { passive: true });
     }
     revealWhenPassed(bodies.record.querySelector("fieldset.opts"), function () { showRecord(null); });
@@ -182,10 +220,17 @@
 
     // =============================== chapters 5 to 8
     CMA.chapters.supply(bodies.supply);
+    bodies.supply.appendChild(layers.supply);
     CMA.chapters.demand(bodies.demand);
+    bodies.demand.appendChild(layers.demand);
     CMA.chapters.aluminium(bodies.aluminium);
+    bodies.aluminium.appendChild(layers.aluminium);
     CMA.chapters.summary(bodies.summary);
+    bodies.summary.appendChild(layers.summary);
+    Object.keys(layers).forEach(function (id) { layers[id].refresh(); });
     refreshReset();
+    // the saved reading mode (the default is the short read); a browser without storage just gets the default
+    if (CMA.store.get("readmode") === "full") { setMode("full", false); } else { syncMode(); }
     CMA.syncBridges();
 
     // ---- one Sources line at the foot, with every source used on the page, on a light sheet

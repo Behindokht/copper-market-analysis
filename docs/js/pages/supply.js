@@ -18,9 +18,13 @@
     var top2share = top2.reduce(function (s, r) { return s + r.share_of_world_production_pct; }, 0);
     var kt = function (v) { return CMA.n0(v); }, mt = CMA.mt;     // kt: whole numbers (years); mt: thousand tonnes shown as million tonnes
 
-    box.appendChild(h("p", { class: "answer", text: T("answer", { top2_names: top2.map(function (r) { return r.display_name; }).join(" and "), top2_share: CMA.n0(top2share), year: year }) }));
-    box.appendChild(h("p", { class: "finding", text: T("reserves_line", { years: CMA.n0(world.reserve_life_years) }) }));
-    box.appendChild(h("p", { class: "intro", text: T("intro") }));
+    var full = box.F || box;
+    var chinaRef = CMA.rows(window.CMA_DATA.supply.refined).filter(function (r) { return r.country === "China"; })[0].refinery_share_pct;
+    box.appendChild(h("p", { class: "answer", text: T("answer", { top2_names: top2.map(function (r) { return r.display_name; }).join(" and "), top2_share: CMA.n0(top2share), china_ref: CMA.n0(chinaRef) }) }));
+    full.appendChild(h("p", { class: "hint", text: T("details_lead") }));
+    full.appendChild(h("p", { text: T("answer_rest", { year: year }) }));
+    full.appendChild(h("p", { class: "finding", text: T("reserves_line", { years: CMA.n0(world.reserve_life_years) }) }));
+    full.appendChild(h("p", { class: "intro", text: T("intro") }));
 
     var mode = "output";
     var measures = { output: { key: "production_2025e_kt", share: "share_of_world_production_pct", cls: "out" }, reserves: { key: "reserves_kt", share: "share_of_world_reserves_pct", cls: "res" } };
@@ -42,7 +46,9 @@
     box.appendChild(h("div", { class: "card chart-card supply-card" },
       h("h3", { class: "qtitle", text: T("map_title") }),
       h("fieldset", { class: "seg" }, h("legend", { text: T("switch_legend") }), h("div", { class: "opts-row" }, radios)),
-      mapwrap, listHost, notesHost, altText));
+      mapwrap, altText, CMA.figFootAuto(["supply.countries"])));
+    full.appendChild(listHost);
+    full.appendChild(notesHost);
 
     // ---- the map is built once; switching the measure resizes the circles
     var W = M.viewBox[2], H = M.viewBox[3];
@@ -203,7 +209,7 @@
       return h("tr", {}, h("td", { text: r.display_name }), h("td", { text: r.mine_listed ? mt(r.mine_kt) : T("mr_none") }), h("td", { text: r.mine_listed ? pctTxt(r.mine_share_pct) : T("mr_none") }),
         h("td", { text: mt(r.refinery_kt) }), h("td", { text: pctTxt(r.refinery_share_pct) }));
     }));
-    box.appendChild(h("section", { class: "card chart-card mr", "aria-labelledby": "mr-title" },
+    full.appendChild(h("section", { class: "card chart-card mr", "aria-labelledby": "mr-title" },
       h("h3", { id: "mr-title", class: "qtitle", text: T("mr_title") }),
       h("p", { text: T("mr_above", { chile_mine: CMA.n0(byC.Chile.mine_share_pct), chile_ref: CMA.n0(byC.Chile.refinery_share_pct), china_mine: CMA.n0(byC["China"].mine_share_pct), china_ref: CMA.n0(byC["China"].refinery_share_pct) }) }),
       h("ul", { class: "bars", style: "list-style:none;margin:10px 0 0;padding:0", "aria-label": mrAria }, mrRows),
@@ -214,8 +220,8 @@
       CMA.chip(["supply.refined"])));
 
     var lim = CMA.limits(window.CMA_STRINGS.supply.notshow.items, T("notshow.title"));
-    box.appendChild(lim.short);
-    box.appendChild(CMA.fold(T("details_lead"), [lim.full, h("div", { class: "tablewrap tall" }, h("table", {}, head, body))]));
+    full.appendChild(lim.full);
+    full.appendChild(h("div", { class: "tablewrap tall" }, h("table", {}, head, body)));
     CMA.sources.add(window.CMA_STRINGS.supply.sources.names, T("sources.attribution"));
     CMA.bridge(box, T("bridge"));
   };

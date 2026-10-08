@@ -196,8 +196,51 @@
       card.appendChild(foot);
     });
   };
+  // the same foot with the source line read from the chip itself (the short publisher names of the sources behind the keys)
+  CMA.figFootAuto = function (keys) { var chip = CMA.chip(keys); return CMA.h("div", { class: "fig-foot" }, CMA.h("span", { text: chip.getAttribute("data-src") || "" }), chip); };
   // the foot of a figure: a rule, a short source line, the "Source" link
   CMA.figFoot = function (text, keys) { return CMA.h("div", { class: "fig-foot" }, CMA.h("span", { text: text }), keys && keys.length ? CMA.chip(keys) : null); };
+
+  // ---- the Story's two layers. The short read of a chapter is always shown; everything else sits in one <details class="fullx"> per chapter.
+  // A module writes its short parts into its box and its full parts into box.F (the body of the fold). A chart inside the fold is drawn on the first open
+  // (CMA.lazy), because a closed fold has no width to draw into.
+  var WPM = 200;
+  function proseWords(root) {
+    var n = 0, w = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+    while (w.nextNode()) {
+      var el = w.currentNode.parentElement;
+      if (!el || (el.closest && el.closest("table, svg, script, style, .sr, summary"))) { continue; }
+      n += (w.currentNode.textContent.match(/\S+/g) || []).length;
+    }
+    return n;
+  }
+  CMA.fullLayer = function (id) {
+    var h = CMA.h, body = h("div", { class: "fullbody" }), sub = h("span", { class: "fx-s" });
+    var det = h("details", { class: "fullx", id: id + "-full" }, h("summary", {}, h("span", { class: "fx-t", text: CMA.t("story.full_label") }), sub), body);
+    det._body = body; body._det = det; body._lazy = [];
+    // minutes: prose words only (no tables, no chart text) at 200 words a minute, rounded up, at least one
+    det.refresh = function () { sub.textContent = CMA.t("story.full_sub", { n: Math.max(1, Math.ceil(proseWords(body) / WPM)) }); };
+    det.runLazy = function () { var q = body._lazy; body._lazy = []; q.forEach(function (f) { f(); }); };
+    det.openNow = function () { if (!det.open) { det.open = true; } det.runLazy(); det.refresh(); CMA.syncBridges(); };
+    det.addEventListener("toggle", function () {
+      if (det.open) { det.runLazy(); det.refresh(); }
+      CMA.syncBridges();
+      if (CMA.layersChanged) { CMA.layersChanged(); }
+    });
+    // some engines send the toggle event late: a click on the summary checks as well, after the browser has changed the state
+    det.firstChild.addEventListener("click", function () { setTimeout(function () { if (det.open) { det.runLazy(); det.refresh(); } }, 0); });
+    return det;
+  };
+  CMA.lazy = function (body, fn) {
+    if (body && body._det && !body._det.open) { body._lazy.push(fn); } else { fn(); }
+  };
+  // open the folds that hold an element (a deep link, a find): the layer first, then any small fold inside it
+  CMA.openAround = function (el) {
+    var ds = [];
+    for (var d = el.parentElement && el.parentElement.closest("details"); d; d = d.parentElement && d.parentElement.closest("details")) { ds.push(d); }
+    ds.reverse().forEach(function (d) { if (d.openNow) { d.openNow(); } else { d.open = true; } });
+    return ds.length > 0;
+  };
 
   CMA.pages = CMA.pages || {};
 })();
