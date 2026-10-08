@@ -328,11 +328,13 @@ def run(engine):
         ok(sp.locator("#story .hero").count() == 0, t + "no photo opener of the old kind")
         ok(not any("copper-plate" in u for u in reqs), t + "the copper plate photo must not be loaded")
         close_txt = sp.locator("#story .closing p").inner_text()
-        summ_txt = sp.locator("#summary .answer").inner_text()
+        sp.evaluate("document.querySelector('#summary details.fullx').open = true")          # the summary paragraph sits in the full analysis
+        summ_txt = sp.locator("#summary .summary-verdict").inner_text()
         ok(close_txt.strip() != "" and close_txt.strip() != summ_txt.strip() and len(close_txt) < len(summ_txt), t + "the closing panel must not repeat the summary paragraph")
-        ok(sp.locator("#summary .found li a").count() == 7 and sp.locator("#summary .found .chipx").count() == 0, t + "the summary list has one link per line and no Source link")
+        ok(sp.locator("#summary .found li a").count() == 7 and sp.locator("#summary .found .chipx").count() == 0, t + "the summary list has one link per sentence and no Source link")
         story_txt = sp.locator("#story").inner_text()
         ok("Not covered" not in story_txt and "thousand tonnes" not in story_txt.lower(), t + "no 'not covered' and no 'thousand tonnes' in the story")
+        sp.evaluate("document.querySelector('#aluminium details.fullx').open = true")
         ok(sp.locator("#aluminium").inner_text().count("Where aluminium already") == 1, t + "chapter 7 has one 'Where aluminium already wins' section")
         sctx.close()
 
