@@ -33,7 +33,7 @@
     CMA.rows(window.CMA_DATA.uses.figures).forEach(function (r) { U[r.fact_id] = r; });
     var plaque = h("aside", { class: "plaque smoke", "aria-label": t("hero.plaque_aria") },
       h("div", { class: "kicker", text: t("hero.plaque_label", { month: CMA.monthLong(R.nominal_latest.month) }) }),
-      h("div", { class: "big num" }, CMA.usd0(R.nominal_latest.value), h("small", { text: t("hero.plaque_unit") })),
+      h("div", { class: "big num" }, CMA.usd0(R.nominal_latest.value), h("small", {}, t("hero.plaque_unit"), CMA.term(t("dashboard.unit_t")))),
       h("div", { class: "pl-row" }, h("span", { text: t("hero.cert_nominal") }), h("span", { text: t("hero.cert_nominal_v", { n: CMA.n0(R.series_months.value), since: CMA.monthShort(R.series_months.month) }) })),
       h("div", { class: "pl-row" }, h("span", { text: t("hero.cert_12m") }), h("span", { text: t("hero.cert_12m_v", { pct: CMA.n0(U.copper_12m_change_pct.value), month: CMA.monthShort(U.copper_12m_ago_month.value + "-01"), price: CMA.usd0(U.copper_12m_ago_usd_t.value) }) })),
       h("div", { class: "pl-row" }, h("span", { text: t("hero.cert_real") }), h("span", { text: t("hero.cert_real_v", { pct: CMA.n0(realRec.belowPct), month: CMA.monthLong(realRec.month) }) })));

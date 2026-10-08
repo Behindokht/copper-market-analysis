@@ -84,6 +84,7 @@
     fold.push(h("section", { class: "numbers", "aria-labelledby": "q-src" },
       h("h3", { id: "q-src", text: T("sources_title") }), h("p", { class: "hint", text: T("sources_hint") }),
       h("p", { class: "small muted", text: T("src_lme") }),
+      h("p", { class: "small muted", text: T("src_unit") }),
       h("p", { class: "small muted", text: T("src_iea") }),
       h("p", { class: "small muted" }, T("src_iea_cc") + " ", h("a", { href: "https://www.iea.org/terms/creative-commons-cc-licenses", target: "_blank", rel: "noopener noreferrer", text: T("src_iea_link") })),
       h("div", { class: "numwrap" }, h("table", { class: "numtable srctable" },

@@ -118,7 +118,7 @@
     b.set = function (month, kb) {
       b.month = month; b.kb = !!kb;
       b.charts.forEach(function (c) { c.setMonth(month); });
-      if (!b.raf) { b.raf = requestAnimationFrame(function () { b.raf = 0; paint(); }); }
+      paint();          // direct, not on the next frame: some engines hold animation frames back and the read-out would lag the chart
     };
     b.move = function (delta, list) {
       var i = b.month ? list.indexOf(b.month) : -1;
@@ -138,7 +138,17 @@
   }
   var RO = {
     price: roFn(function (i) { var v = col[copperCol(state)][i]; return v == null ? null : money(v, state.c); }),
-    ratio: roFn(function (i) { var v = col.ratio[i]; return v == null ? null : CMA.f2(v) + "×"; })
+    ratio: roFn(function (i) { var v = col.ratio[i]; return v == null ? null : CMA.f2(v) + "×"; }),
+    // the metals panel: the month, and which price the labels use (the "as quoted / today's money" switch); the values are in the rows
+    metals: function (month) { var i = month ? months.indexOf(month) : months.length - 1; return [h("b", { text: monthShort(months[i]) })]; },
+    // the same for a screen reader: the month and every metal's share of its record and its price (read out while the arrow keys are used)
+    metalsSr: function (month) {
+      if (!month) { return [""]; }
+      var i = months.indexOf(month);
+      return [monthLong(month) + ". " + METROWS.map(function (r) {
+        return r.name + ": " + (r.a[i] == null ? T("readout_none") : T("metals_sr_value", { pct: CMA.n0(r.a[i]), price: metalPrice(r.k, i) || T("readout_none") }));
+      }).join(". ") + "."];
+    }
   };
   function common(bus, ex) {
     return { onMonth: bus.set, onKey: bus.move, getMonth: function () { return bus.month; }, height: ex ? 430 : 290 };
@@ -188,16 +198,25 @@
   }
 
   // ------------------------------------------------------------ chart 2: five small multiples on one scale (share of each metal's own record, today's money)
+  // Units are the Pink Sheet's: copper, aluminium and tin per metric ton (/t), gold per troy ounce (/oz), Brent oil per barrel (/bbl).
+  var METAL_UNIT = { cu: "unit_t", al: "unit_t", tin: "unit_t", gold: "unit_oz", brent: "unit_bbl" };
+  var METROWS = [];
+  function metalPrice(k, i) {            // the price of one metal in one month, as quoted or in today's money, in US dollars (the other panels' currency filter does not apply here)
+    var a = col[k + (state.v === "real" ? "_real" : "_usd")], v = a ? a[i] : null;
+    if (v == null) { return null; }
+    return "$" + (v >= 100 ? CMA.n0(v) : CMA.n1(v)) + T(METAL_UNIT[k]);
+  }
   function drawMetals(host, ex, bus) {
     var c = compute(state), last = c.last, a0 = c.rs, rows = METALS.map(function (m) {
       var a = col[m[0] + "_rec_pct"], peak = 0; a.forEach(function (v, i) { if (v != null && v > (a[peak] == null ? -1 : a[peak])) { peak = i; } });
       return { k: m[0], name: T(m[1]), a: a, v: a[last], peak: peak };
     }).sort(function (p, q) { return q.v - p.v; });
     if (rows.some(function (r) { return r.v >= 100; })) { throw new Error("the title says no metal is at its record, but the data says one is"); }
+    METROWS = rows;
     host.textContent = "";
     var box = h("div", { class: "sm" });
     host.appendChild(box);
-    var H = ex ? 84 : 46, w = Math.max(200, (host.clientWidth || 340) - 110), pl = 2, pr = 38, pt = 4, pb = 4, list = months.slice(a0);
+    var H = ex ? 84 : 46, w = Math.max(200, (host.clientWidth || 340) - 110), pl = 2, pr = 76, pt = 4, pb = 4, list = months.slice(a0);
     rows.forEach(function (r) {
       var line = h("div", { class: "sm-row" + (r.k === "cu" ? " cu" : "") });
       line.appendChild(h("span", { class: "sm-n" }, r.name, h("small", { text: T("metals_sub", { pct: CMA.n0(r.v), month: monthShort(months[r.peak]) }) })));
@@ -211,16 +230,20 @@
       s.appendChild(svg("path", { d: d + "L" + X(last).toFixed(1) + " " + Y(0) + "L" + X(a0).toFixed(1) + " " + Y(0) + "Z", fill: colr, "fill-opacity": r.k === "cu" ? 0.16 : 0.12 }));
       s.appendChild(svg("path", { d: d, fill: "none", stroke: colr, "stroke-width": 1.4, "stroke-linejoin": "round" }));
       if (r.peak >= a0) { s.appendChild(svg("circle", { cx: X(r.peak), cy: Y(100), r: 2.6, fill: "var(--ink)" })); }
-      s.appendChild(svg("circle", { cx: X(last), cy: Y(r.v), r: 3, fill: colr }));
-      var t = svg("text", { x: X(last) + 6, y: Y(r.v) + 4, class: "lbl" }); t.textContent = CMA.n0(r.v) + "%"; s.appendChild(t);
+      var dot = svg("circle", { cx: X(last), cy: Y(r.v), r: 3, fill: colr }); s.appendChild(dot);
+      // the label at the right end: the share of the record at rest; under the pointer the share and the price of that month
+      var lx = X(last) + 6, restY = Y(r.v) + 4;
+      var t = svg("text", { x: lx, y: restY, class: "lbl" }); t.textContent = CMA.n0(r.v) + "%"; s.appendChild(t);
+      var t2 = svg("text", { x: lx, y: restY + 14, class: "lbl2" }); t2.textContent = ""; s.appendChild(t2);
       var xh = svg("line", { y1: pt, y2: H - pb, stroke: "var(--ink)", "stroke-width": 1, "stroke-dasharray": "2 2", visibility: "hidden", "pointer-events": "none" }); s.appendChild(xh);
       var hit = svg("rect", { x: pl, y: 0, width: w - pl - pr, height: H, fill: "transparent" }); s.appendChild(hit);
-      hit.addEventListener("pointermove", function (e) {
-        if (e.pointerType === "touch") { return; }
+      var pick = function (e) {
         var b = s.getBoundingClientRect(), x = (e.clientX - b.left) * (w / b.width);
-        bus.set(months[Math.max(a0, Math.min(last, Math.round(a0 + (x - pl) / (w - pl - pr) * (last - a0))))], false);
-      });
+        return months[Math.max(a0, Math.min(last, Math.round(a0 + (x - pl) / (w - pl - pr) * (last - a0))))];
+      };
+      hit.addEventListener("pointermove", function (e) { if (e.pointerType === "touch") { return; } bus.set(pick(e), false); });
       hit.addEventListener("pointerleave", function (e) { if (e.pointerType !== "touch") { bus.set(null, false); } });
+      CMA.touchScrub(hit, { pick: pick, set: function (m) { bus.set(m, false); }, get: function () { return bus.month; } });
       s.addEventListener("keydown", function (e) {
         var dd = { ArrowLeft: -1, ArrowRight: 1 }[e.key];
         if (e.key === "Escape") { bus.set(null, true); } else if (dd) { e.preventDefault(); bus.move(dd * (e.shiftKey ? 12 : 1), list); }
@@ -228,8 +251,14 @@
       s.addEventListener("blur", function () { bus.set(null, true); });
       bus.add({ setMonth: function (m) {
         var k = m ? months.indexOf(m) : -1;
-        if (k < a0 || k < 0) { xh.setAttribute("visibility", "hidden"); return; }
+        if (k < a0 || k < 0 || r.a[k] == null) {
+          xh.setAttribute("visibility", "hidden");
+          t.textContent = CMA.n0(r.v) + "%"; t.setAttribute("y", restY); t2.textContent = "";
+          return;
+        }
         xh.setAttribute("x1", X(k)); xh.setAttribute("x2", X(k)); xh.setAttribute("visibility", "visible");
+        t.textContent = CMA.n0(r.a[k]) + "%"; t.setAttribute("y", H / 2 - 2);
+        t2.textContent = metalPrice(r.k, k) || T("readout_none"); t2.setAttribute("y", H / 2 + 12);
       } });
     });
     box.appendChild(h("div", { class: "sm-row sm-axis" }, h("span"), h("span", { class: "ro" }, h("span", { text: monthShort(months[a0]) }), h("span", { text: T("metals_key") }), h("span", { text: monthShort(months[last]) }))));
@@ -266,13 +295,13 @@
 
   // ------------------------------------------------------------ chart 5: mined versus refined, a dumbbell per country
   function drawSupply(host, ex, bus, prev, extra) {
-    var W = Math.max(260, host.clientWidth || 360), rowH = (ex ? 44 : 27) + Math.round((extra || 0) / SUP.length), top = 6, H = top + SUP.length * rowH + 20, nameW = ex ? 120 : 76, pr = ex ? 170 : 100, sc = 50;
+    var W = Math.max(260, host.clientWidth || 360), rowH = (ex ? 44 : 27) + Math.round((extra || 0) / SUP.length), top = 6, H = top + SUP.length * rowH + 20, narrowSup = W < 420, nameW = ex ? (narrowSup ? 92 : 120) : 76, pr = ex ? (narrowSup ? 96 : 170) : 100, sc = 50;
     host.textContent = "";
     var sv = svg("svg", { class: "chart", viewBox: "0 0 " + W + " " + H, height: H, role: "img", tabindex: "0",
       "aria-label": T("supply_aria", { list: SUP.map(function (r) { return r.display_name + ": " + (r.mine_listed ? CMA.n1(r.mine_share_pct) + "%" : T("supply_none")) + ", " + CMA.n1(r.refinery_share_pct) + "%"; }).join("; ") }) });
     host.appendChild(sv);
     var X = function (v) { return nameW + (v / sc) * (W - nameW - pr); };
-    [0, 10, 20, 30, 40, 50].forEach(function (v) {
+    (narrowSup ? [0, 20, 40] : [0, 10, 20, 30, 40, 50]).forEach(function (v) {          // fewer ticks on a phone, so the labels do not touch
       sv.appendChild(svg("line", { x1: X(v), x2: X(v), y1: top, y2: H - 18, stroke: "var(--rule)" }));
       var t = svg("text", { x: X(v), y: H - 5, "text-anchor": "middle" }); t.textContent = v + "%"; sv.appendChild(t);
     });
@@ -285,7 +314,7 @@
       }
       sv.appendChild(svg("circle", { cx: xr, cy: y, r: rad, fill: "var(--copper)", "data-series": "--copper" }));
       var v = svg("text", { x: W, y: y + 3.5, "text-anchor": "end" });
-      v.textContent = r.mine_listed ? CMA.n1(r.mine_share_pct) + "% / " + CMA.n1(r.refinery_share_pct) + "%" : T("supply_none") + " / " + CMA.n1(r.refinery_share_pct) + "%"; sv.appendChild(v);
+      v.textContent = r.mine_listed ? CMA.n1(r.mine_share_pct) + "% / " + CMA.n1(r.refinery_share_pct) + "%" : T("supply_none_short") + " / " + CMA.n1(r.refinery_share_pct) + "%"; sv.appendChild(v);          // the short form fits the label column, clear of the dots and gridlines; the title and the table say it in full
       var ti = svg("title"); ti.textContent = r.display_name + ": " + (r.mine_listed ? CMA.n1(r.mine_share_pct) + "% " + T("supply_legend_mine").toLowerCase() : T("supply_none")) + ", " + CMA.n1(r.refinery_share_pct) + "% " + T("supply_legend_ref").toLowerCase(); sv.appendChild(ti);
     });
     return { destroy: function () { } };
@@ -339,7 +368,7 @@
   // ------------------------------------------------------------ panels
   var PANELS = [
     { key: "price", span: "s8", line: true, draw: drawPrice, why: { id: "record", key: "record" }, src: ["S02", "S16"], chip: ["dash.series"], foot: "foot_source_price", ro: "price" },
-    { key: "metals", span: "s4", draw: drawMetals, why: { id: "just-copper", key: "just" }, src: ["S02", "S04"], chip: ["dash.series"], foot: "foot_source_metals", sync: true },
+    { key: "metals", span: "s4", draw: drawMetals, why: { id: "just-copper", key: "just" }, src: ["S02", "S04"], chip: ["dash.series"], foot: "foot_source_metals", sync: true, ro: "metals", sr: "metalsSr" },
     { key: "ratio", span: "s4 third", line: true, draw: drawRatio, why: { id: "aluminium", key: "aluminium" }, src: ["S02", "S32"], chip: ["dash.series"], foot: "foot_source_ratio", ro: "ratio", fit: true },
     { key: "dollar", span: "s4 third", draw: drawDollar, why: { id: "dollar", key: "dollar" }, src: ["S02", "S17"], chip: ["story.guess_dollar", "dash.series"], foot: "foot_source_dollar", fit: true },
     { key: "supply", span: "s4 third", draw: drawSupply, why: { id: "supply", key: "supply" }, src: ["S06"], chip: ["supply.refined"], foot: "foot_source_supply", fit: true },
@@ -363,8 +392,8 @@
   function panelSub(p) {
     if (p.key === "price") {
       var c = compute(state), euroStart = state.c === "eur" && startFor(state.p, col.cu_eur) > startFor(state.p, col.cu_usd);
-      return [T("price_sub", { unit: T("price_unit_" + state.c), change: CMA.pctChange(c.snap.copper_change_pct), month: monthShort(c.snap.start_month) }) +
-        (state.c === "eur" && euroStart ? " " + T("price_sub_euro_start") : "") + (state.c === "eur" ? " " + T("price_sub_euro_real") : "")];
+      return CMA.termIn(T("price_sub", { unit: T("price_unit_" + state.c), change: CMA.pctChange(c.snap.copper_change_pct), month: monthShort(c.snap.start_month) }) +
+        (state.c === "eur" && euroStart ? " " + T("price_sub_euro_start") : "") + (state.c === "eur" ? " " + T("price_sub_euro_real") : ""), T("head_unit"));
     }
     if (p.key === "ratio") { return [T("ratio_hint", { be: CMA.n1(K.breakeven_ratio), since: monthShort(String(RC.first_month_of_run)) })]; }
     if (p.key === "dollar") { return [T("dollar_hint_a") + " ", legend(T("legend_rose"), "--copper", T("legend_fell"), "--verdigris"), h("br"), T("dollar_hint_b", { lim: DOLLAR_LIM })]; }
@@ -379,6 +408,7 @@
     btn.addEventListener("click", function () { openDialog(p, btn); });
     var head = h("div", { class: "ph" }, p.title);
     if (p.ro) { p.roEl = h("span", { class: "ro", id: "ro-" + p.key }); head.appendChild(p.roEl); }
+    if (p.sr) { p.srEl = h("span", { class: "sr", id: "sr-" + p.key, "aria-live": "off" }); head.appendChild(p.srEl); }
     head.appendChild(btn);
     var left = p.key === "price" ? ui.eventsToggle : h("span", { text: T(p.foot) });
     var why = h("a", { href: "#" + p.why.id, text: T("why", { n: CMA.CHAPTER_NO[p.why.key] }) });
@@ -392,19 +422,42 @@
     var title = h("h2", { id: "dlg-t" }), ro = h("span", { class: "ro", id: "x-ro" }), close = h("button", { type: "button", class: "xb clear", id: "dlg-x", text: T("dlg_close") });
     var sub = h("p", { class: "sub" }), chart = h("div", { class: "dlg-chart", id: "dlg-b" }), tab = h("div", { class: "tw" }), evs = h("div", { class: "evlist", hidden: true });
     var det = h("details", { class: "dd", id: "dlg-d" }, h("summary", { text: T("dlg_numbers") }), tab), pf = h("div", { class: "pf" });
-    var el = h("dialog", { id: "dlg", "aria-labelledby": "dlg-t", class: "glass" }, h("div", { class: "dh" }, title, ro, close), sub, chart, det, evs, pf);
-    close.addEventListener("click", function () { el.close(); });
-    el.addEventListener("click", function (e) { if (e.target === el) { el.close(); } });          // a click on the backdrop
-    el.addEventListener("close", function () {
-      if (!dlgState) { return; }
-      if (dlgState.ctl && dlgState.ctl.destroy) { dlgState.ctl.destroy(); }
-      var t = dlgState.trigger; dlgState = null; chart.textContent = "";
-      document.documentElement.classList.remove("dlg-open");
-      if (t) { t.focus(); }
-    });
+    var sr = h("span", { class: "sr", id: "x-sr", "aria-live": "off" });
+    var el = h("dialog", { id: "dlg", "aria-labelledby": "dlg-t", class: "glass" }, h("div", { class: "dh" }, title, ro, sr, close), sub, chart, det, evs, pf);
+    // every way of closing finishes at once (the scroll lock, the focus), without waiting for the browser's close event, which can come late while the page is busy
+    function closeNow() { if (el.open) { el.close(); } finishDialog(); }
+    close.addEventListener("click", closeNow);
+    el.addEventListener("click", function (e) { if (e.target === el) { closeNow(); } });          // a click on the backdrop
+    el.addEventListener("keydown", function (e) { if (e.key === "Escape") { e.preventDefault(); closeNow(); } });
+    el.addEventListener("close", finishDialog);
     window.addEventListener("resize", function () { if (dlgState && el.open) { redrawDialog(); } });
-    dlg = { el: el, title: title, ro: ro, sub: sub, chart: chart, det: det, tab: tab, evs: evs, pf: pf };
+    dlg = { el: el, title: title, ro: ro, sr: sr, sub: sub, chart: chart, det: det, tab: tab, evs: evs, pf: pf };
     return el;
+  }
+  // the page behind a modal dialog does not move, also on iOS Safari: the body is pinned with a negative top and the exact scroll position comes back on close
+  var pageLock = null;
+  function lockPage() {
+    var de = document.documentElement, y = window.pageYOffset || de.scrollTop || 0, b = document.body;
+    pageLock = { y: y };
+    b.style.position = "fixed"; b.style.top = (-y) + "px"; b.style.left = "0"; b.style.right = "0"; b.style.width = "100%";
+    de.classList.add("dlg-open");
+  }
+  function unlockPage() {
+    var de = document.documentElement, b = document.body, y = pageLock ? pageLock.y : 0;
+    b.style.position = ""; b.style.top = ""; b.style.left = ""; b.style.right = ""; b.style.width = "";
+    de.classList.remove("dlg-open");
+    var sb = de.style.scrollBehavior; de.style.scrollBehavior = "auto";          // the page scrolls smoothly otherwise, and the restore would animate
+    window.scrollTo(0, y);
+    de.style.scrollBehavior = sb;
+    pageLock = null;
+  }
+  // everything that closing needs, once: the chart, the scroll lock, the focus (no scrolling)
+  function finishDialog() {
+    if (!dlgState) { return; }
+    if (dlgState.ctl && dlgState.ctl.destroy) { dlgState.ctl.destroy(); }
+    var t = dlgState.trigger; dlgState = null; dlg.chart.textContent = "";
+    unlockPage();
+    if (t) { t.focus({ preventScroll: true }); }
   }
   function redrawDialog() {
     if (dlgState.ctl && dlgState.ctl.destroy) { dlgState.ctl.destroy(); }
@@ -417,7 +470,10 @@
     dlgState = { p: p, trigger: trigger, bus: bus, ctl: null };
     dlg.title.textContent = panelTitle(p); fillSub(dlg.sub, p);
     dlg.ro.textContent = "";
-    if (p.ro) { bus.readouts.push({ el: dlg.ro, fn: RO[p.ro] }); bus.paint(); }
+    dlg.sr.textContent = "";
+    if (p.ro) { bus.readouts.push({ el: dlg.ro, fn: RO[p.ro] }); }
+    if (p.sr) { bus.readouts.push({ el: dlg.sr, fn: RO[p.sr] }); }
+    if (p.ro) { bus.paint(); }
     dlg.det.open = false;
     dlg.tab.textContent = ""; dlg.tab.appendChild(TABLES[p.key]());
     dlg.evs.textContent = "";
@@ -429,10 +485,16 @@
       }))));
     }
     dlg.pf.textContent = ""; dlg.pf.appendChild(h("span", {}, srcFull(p.src) + " ", CMA.chip(p.chip)));
-    dlg.pf.appendChild(h("a", { href: "#" + p.why.id, text: T("why", { n: CMA.CHAPTER_NO[p.why.key] }), onclick: function () { dlg.el.close(); } }));
-    document.documentElement.classList.add("dlg-open");
+    dlg.pf.appendChild(h("a", { href: "#" + p.why.id, text: T("why", { n: CMA.CHAPTER_NO[p.why.key] }), onclick: function (ev) {
+      ev.preventDefault();                                   // close first (the scroll position of the page is restored), then go to the chapter
+      var hash = "#" + p.why.id;
+      dlg.el.close(); finishDialog();
+      location.hash = hash;
+    } }));
+    lockPage();
     dlg.el.showModal();
     redrawDialog();
+    var cb = document.getElementById("dlg-x"); if (cb) { cb.focus({ preventScroll: true }); }
   }
 
   // ------------------------------------------------------------ the page
@@ -448,7 +510,7 @@
     ui.btns = { p: gP.btns, c: gC.btns, v: gV.btns };
     wrap.appendChild(h("section", { class: "head glass", "aria-labelledby": "dashboard-title" },
       h("div", {},
-        h("h1", { id: "dashboard-title", tabindex: "-1" }, h("em", { text: T("head_em") }), " " + T("head_rest", { price: money(K.copper_usd_t, "usd") })),
+        h("h1", { id: "dashboard-title", tabindex: "-1" }, h("em", { text: T("head_em") }), " " + T("head_rest", { price: money(K.copper_usd_t, "usd") }) + " ", CMA.term(T("head_unit")), "."),
         h("p", { text: T("head_lede", { change: CMA.n0(K.copper_12m_change_pct), n: K.months_total, since: monthShort(months[0]), pct: CMA.n0(pctBelow), month: monthLong(K.real_peak_month) }) })),
       h("div", { class: "filters", role: "group", "aria-label": T("filter_aria") }, gP.el, gC.el, gV.el)));
     pageBus = makeBus();
@@ -467,7 +529,7 @@
     var band = h("section", { class: "kpis glass", "aria-label": T("kpi_aria", { month: monthLong(K.latest_month) }) });
     items.forEach(function (it) {
       var sp = h("div", { class: "kspark" });
-      band.appendChild(h("div", { class: "kpi", "data-k": it.id }, h("div", { class: "k-l", text: it.l }), h("div", { class: "k-v num" }, it.v, it.u ? h("small", { text: it.u }) : null), h("div", { class: "k-c" }, it.c), sp));
+      band.appendChild(h("div", { class: "kpi", "data-k": it.id }, h("div", { class: "k-l", text: it.l }), h("div", { class: "k-v num" }, it.v, it.u ? (it.id === "cu" ? h("small", {}, CMA.term(it.u)) : h("small", { text: it.u })) : null), h("div", { class: "k-c" }, it.c), sp));
       kp[it.id] = { host: sp, s: it.s };
     });
     ui.kpiSparks = kp;
@@ -553,7 +615,8 @@
     ui.eventsToggle.querySelector("input").checked = state.e === "1";
     PANELS.forEach(function (p) { p.title.textContent = panelTitle(p); fillSub(p.subEl, p); });
     pageBus.clearCharts();
-    pageBus.readouts = PANELS.filter(function (p) { return p.roEl; }).map(function (p) { return { el: p.roEl, fn: RO[p.ro] }; });
+    pageBus.readouts = [];
+    PANELS.forEach(function (p) { if (p.roEl) { pageBus.readouts.push({ el: p.roEl, fn: RO[p.ro] }); } if (p.srEl) { pageBus.readouts.push({ el: p.srEl, fn: RO[p.sr] }); } });
     PANELS.forEach(function (p) {
       if (p.line) {
         if (p.ctl) { pageBus.add(p.ctl); }

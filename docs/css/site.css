@@ -789,7 +789,7 @@ body.no-photo { --smoke: rgba(24, 17, 13, .94); }
 }
 @media (max-width: 560px) { .drivers { grid-template-columns: 1fr; } .fact { grid-template-columns: 80px 1fr; } .fact b { font-size: 32px; } }
 @media (prefers-reduced-motion: reduce) { .dchart *, .reveal-rect, .d2-fade { transition: none !important; animation: none !important; } }
-dialog.glass { background: var(--card); border: 1px solid var(--rule); -webkit-backdrop-filter: none; backdrop-filter: none; box-shadow: 0 30px 80px -20px rgba(0, 0, 0, .55); }
+dialog.glass { position: fixed; inset: 0; margin: auto; max-height: calc(100vh - 24px); max-height: calc(100dvh - 24px); overscroll-behavior: contain; background: var(--card); border: 1px solid var(--rule); -webkit-backdrop-filter: none; backdrop-filter: none; box-shadow: 0 30px 80px -20px rgba(0, 0, 0, .55); }
 dialog.glass::after { display: none; }
 .kspark { align-self: end; min-height: 26px; }
 .donut-host { min-width: 0; }
@@ -821,3 +821,12 @@ dialog.glass::after { display: none; }
 .cs-links { margin-top: 28px; }
 .cs-note { margin-top: 16px; }
 @media (max-width: 900px) { .cs { padding: 28px 22px; } }
+
+/* Round 6: the term control ("metric ton", "/t"): a dotted underline and a short glass bubble */
+.term { appearance: none; background: none; border: 0; padding: 0; margin: 0; font: inherit; color: inherit; letter-spacing: inherit; text-transform: inherit; text-decoration: underline dotted; text-decoration-thickness: 1px; text-underline-offset: 3px; cursor: help; border-radius: 2px; }
+.term:hover { text-decoration-style: solid; }
+.term:focus-visible { outline: 2px solid var(--copper); outline-offset: 2px; }
+.termtip.glass { position: fixed; z-index: 120; left: 0; top: 0; width: max-content; padding: 10px 12px; font: 400 13px/1.45 var(--sans); letter-spacing: 0; text-transform: none; color: var(--ink); pointer-events: none; box-shadow: var(--read-sh); }
+.termtip.glass::after { display: none; }
+@media (prefers-reduced-motion: no-preference) { .termtip.glass { animation: termin 120ms ease both; } }
+@keyframes termin { from { opacity: 0; } to { opacity: 1; } }

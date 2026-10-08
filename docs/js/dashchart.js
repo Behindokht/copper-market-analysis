@@ -7,6 +7,32 @@
   var CMA = window.CMA, h = CMA.h, svg = CMA.svg;
   var lastTouch = -1e9;       // after a tap some browsers send an emulated mouse move: ignore mouse moves for a moment after a touch
 
+  // a finger on a chart: a tap shows the month under it (a tap again clears it), a horizontal drag moves it, a vertical drag is left to the page (the svg has touch-action: pan-y).
+  // cfg: { pick(event) -> month, set(month | null), get() -> the month now shown }. Mouse and keyboard are handled by the chart itself.
+  CMA.touchScrub = function (el, cfg) {
+    var st = null;
+    el.addEventListener("pointerdown", function (e) {
+      if (e.pointerType === "mouse") { return; }
+      lastTouch = performance.now();
+      st = { x: e.clientX, y: e.clientY, moved: false, was: !!cfg.get(), id: e.pointerId };
+    });
+    el.addEventListener("pointermove", function (e) {
+      if (!st || e.pointerId !== st.id) { return; }
+      lastTouch = performance.now();
+      var dx = e.clientX - st.x, dy = e.clientY - st.y;
+      if (!st.moved && Math.abs(dx) > 6 && Math.abs(dx) > Math.abs(dy)) { st.moved = true; try { el.setPointerCapture(e.pointerId); } catch (x) { /* not capturable: the moves still arrive */ } }
+      if (st.moved) { cfg.set(cfg.pick(e)); }
+    });
+    function end(e) {
+      if (!st || e.pointerId !== st.id) { return; }
+      lastTouch = performance.now();
+      if (e.type === "pointerup" && !st.moved) { cfg.set(st.was ? null : cfg.pick(e)); }
+      st = null;
+    }
+    el.addEventListener("pointerup", end);
+    el.addEventListener("pointercancel", end);
+  };
+
   function niceTicks(lo, hi, count) {
     var span = hi - lo;
     if (!(span > 0)) { return [lo]; }
@@ -194,12 +220,17 @@
         if (v == null) { return; }
         var cx = X(e.i), cy = Y(v), w = textW(e.label) + 4;
         if (cx - lastEx < 90 || lastPx - cx < 90) { return; }
-        var tx = Math.min(Math.max(cx, ml + w / 2 + 2), ml + pw - w / 2 - 2), spot = null;
+        // a label goes straight above its dot at the lowest clear height; on a rising line it may sit to the left or the right of the dot (a flag), so the line does not run through it
+        var spot = null, tx = cx;
         [32, 46, 60, 74, 88].forEach(function (off) {
           if (spot) { return; }
           var ly = cy - off;
           if (ly - 13 < mt) { return; }
-          if (touches(tx - w / 2, ly - 13, tx + w / 2, ly + 5) === 0) { spot = ly; }
+          [0, -w / 2, w / 2, -w * 0.9, w * 0.9].forEach(function (dx) {
+            if (spot) { return; }
+            var x = Math.min(Math.max(cx + dx, ml + w / 2 + 2), ml + pw - w / 2 - 2);
+            if (touches(x - w / 2, ly - 13, x + w / 2, ly + 5) === 0) { spot = ly; tx = x; }
+          });
         });
         if (spot == null) { return; }
         lastEx = cx;
@@ -236,11 +267,7 @@
         if (!raf) { raf = requestAnimationFrame(function () { raf = 0; cfg.onMonth(cfg.months[pendingI], false); }); }
       });
       overlay.addEventListener("pointerleave", function (e) { if (e.pointerType !== "touch" && performance.now() - lastTouch >= 900) { cfg.onMonth(null, false); } });
-      overlay.addEventListener("pointerdown", function (e) {
-        if (e.pointerType !== "touch") { return; }
-        lastTouch = performance.now();
-        if (cfg.getMonth && cfg.getMonth()) { cfg.onMonth(null, false); } else { cfg.onMonth(cfg.months[idxFromEvent(e)], false); }
-      });
+      CMA.touchScrub(overlay, { pick: function (e) { return cfg.months[idxFromEvent(e)]; }, set: function (m) { cfg.onMonth(m, false); }, get: function () { return cfg.getMonth && cfg.getMonth(); } });
       s.addEventListener("keydown", function (e) {
         var d = { ArrowLeft: -1, ArrowRight: 1 }[e.key];
         if (e.key === "Escape") { cfg.onMonth(null, true); return; }
