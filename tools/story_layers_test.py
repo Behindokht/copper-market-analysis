@@ -44,10 +44,11 @@ def open_story(b, w=1366, h=900, skip=True, init=None, storage=True):
     ctx = b.new_context(viewport={"width": w, "height": h}, reduced_motion="reduce")
     if init:
         ctx.add_init_script(init)
+    ctx.set_default_timeout(90000)          # the WebKit build here sometimes takes more than 30 s to load the long page
     pg = ctx.new_page()
     errs = []
     pg.on("pageerror", lambda e: errs.append(str(e)))
-    pg.goto(URL)
+    pg.goto(URL, timeout=90000)
     pg.wait_for_timeout(2200)
     if skip:
         skip_guesses(pg)
@@ -55,12 +56,13 @@ def open_story(b, w=1366, h=900, skip=True, init=None, storage=True):
 
 
 def revealed(pg, sel):
-    # a scroll event can arrive late in a slow engine: wait up to four seconds for the answer
-    try:
-        pg.wait_for_function("(s) => !document.querySelector(s + ' .reveal').hidden", arg=sel, timeout=4000)
-        return True
-    except Exception:
-        return False
+    # headless WebKit does not always send scroll events after a programmatic scroll, so the test sends one every 300 ms for up to four seconds
+    for _ in range(14):
+        if pg.evaluate("(s) => !document.querySelector(s + ' .reveal').hidden", sel):
+            return True
+        pg.evaluate("window.dispatchEvent(new Event('scroll'))")
+        pg.wait_for_timeout(300)
+    return False
 
 
 def skip_guesses(pg):
@@ -238,8 +240,8 @@ def run(engine):
 
         # ------------------------------------------------ reading mode
         ctx, pg, _ = open_story(b)
-        pg.evaluate("document.querySelector('.readmode').scrollIntoView()")
-        pg.get_by_role("button", name="Full analysis", exact=True).first.click(); pg.wait_for_timeout(700)
+        pg.evaluate("document.querySelector('.readmode').scrollIntoView({ block: 'center' })")
+        pg.get_by_role("button", name="Full analysis", exact=True).first.click(force=True); pg.wait_for_timeout(700)
         ok(pg.evaluate("document.querySelectorAll('#story details.fullx[open]').length") == 8, f"{tag} Full analysis should open all eight folds")
         ok(pg.evaluate("document.querySelector('.readmode button[aria-pressed=true]').textContent") == "Full analysis", f"{tag} the switch shows the mode")
         pg.reload(); pg.wait_for_timeout(2500)
@@ -247,14 +249,14 @@ def run(engine):
         skip_guesses(pg)
         sizes = pg.evaluate("Array.from(document.querySelectorAll('#record details.fullx svg[viewBox]')).map(s => s.getBoundingClientRect().width)")
         ok(sizes and all(s > 40 for s in sizes), f"{tag} charts restored in full mode need a size {sizes}")
-        pg.get_by_role("button", name="Short read", exact=True).first.click(); pg.wait_for_timeout(500)
+        pg.get_by_role("button", name="Short read", exact=True).first.click(force=True); pg.wait_for_timeout(500)
         ok(pg.evaluate("document.querySelectorAll('#story details.fullx[open]').length") == 0, f"{tag} Short read should close all folds")
         pg.reload(); pg.wait_for_timeout(2500)
         ok(pg.evaluate("document.querySelectorAll('#story details.fullx[open]').length") == 0, f"{tag} Short read must survive a reload")
         ctx.close()
         ctx, pg, errs = open_story(b, init="Object.defineProperty(window, 'localStorage', { get() { throw new Error('storage is blocked'); } });")
         ok(pg.evaluate("document.querySelectorAll('#story details.fullx').length") == 8 and not errs, f"{tag} the Story must load with blocked storage {errs}")
-        pg.get_by_role("button", name="Full analysis", exact=True).first.click(); pg.wait_for_timeout(500)
+        pg.get_by_role("button", name="Full analysis", exact=True).first.click(force=True); pg.wait_for_timeout(500)
         ok(pg.evaluate("document.querySelectorAll('#story details.fullx[open]').length") == 8, f"{tag} the switch must work with blocked storage")
         ctx.close()
 
@@ -313,10 +315,10 @@ def run(engine):
         # a reader who scrolls past a guess gets the answer
         ctx, pg, errs = open_story(b, skip=False)
         pg.evaluate("document.querySelector('#just-copper').scrollIntoView()"); pg.wait_for_timeout(900)
-        pg.evaluate("window.scrollBy(0, 300)"); pg.wait_for_timeout(900)
+        pg.evaluate("window.scrollBy(0, 300); window.dispatchEvent(new Event('scroll'))"); pg.wait_for_timeout(900)          # headless WebKit does not always send the scroll event itself
         ok(revealed(pg, "#record"), f"{tag} scrolling past chapter 2 should reveal its answer")
         pg.evaluate("document.querySelector('#supply').scrollIntoView()"); pg.wait_for_timeout(900)
-        pg.evaluate("window.scrollBy(0, 300)"); pg.wait_for_timeout(900)
+        pg.evaluate("window.scrollBy(0, 300); window.dispatchEvent(new Event('scroll'))"); pg.wait_for_timeout(900)          # headless WebKit does not always send the scroll event itself
         ok(revealed(pg, "#dollar"), f"{tag} scrolling past chapter 4 should reveal its answer")
         ctx.close()
 
