@@ -31,6 +31,41 @@
     });
   }
 
+  // a one-time note under the Analysis tab on the dashboard: it says where the analysis is, appears once after a short pause,
+  // and never again once the reader closes it or opens the analysis (remembered in local storage; without storage it simply shows again)
+  var nudge = null, nudgeTimer = 0;
+  function buildNudge() {
+    if (CMA.store.get("nudge_seen")) { return; }
+    var seen = function () { CMA.store.set("nudge_seen", "1"); hideNudge(true); };
+    nudge = h("div", { class: "nudge", id: "nudge", role: "note", hidden: true },
+      h("a", { href: "#story", class: "nudge-go", onclick: seen },
+        h("b", { text: t("nudge.lead") }), " " + t("nudge.text", { chapters: NAV.length }) + " ", h("span", { class: "nudge-arrow", "aria-hidden": "true", text: "\u2192" })),
+      h("button", { type: "button", class: "nudge-x", "aria-label": t("nudge.close"), text: "\u00d7", onclick: seen }));
+    document.getElementById("topbar").appendChild(nudge);
+    window.addEventListener("resize", placeNudge);
+  }
+  function placeNudge() {
+    if (!nudge || nudge.hidden) { return; }
+    var a = document.querySelector('#nav a[data-target="story"]'), bar = document.getElementById("topbar");
+    if (!a) { return; }
+    var mid = a.offsetLeft + a.offsetWidth / 2, w = nudge.offsetWidth, left = Math.max(8, Math.min(mid - 34, bar.clientWidth - w - 8));
+    nudge.style.left = left + "px";
+    nudge.style.setProperty("--ax", (mid - left) + "px");
+  }
+  function hideNudge(gone) {
+    clearTimeout(nudgeTimer);
+    if (!nudge) { return; }
+    nudge.hidden = true; nudge.classList.remove("in");
+    if (gone) { nudge.remove(); nudge = null; }
+  }
+  function nudgeFor(name) {
+    if (!nudge) { return; }
+    if (name === "story") { CMA.store.set("nudge_seen", "1"); hideNudge(true); return; }
+    if (name !== "dashboard") { hideNudge(false); return; }
+    clearTimeout(nudgeTimer);
+    nudgeTimer = setTimeout(function () { if (!nudge) { return; } nudge.hidden = false; placeNudge(); requestAnimationFrame(function () { if (nudge) { nudge.classList.add("in"); } }); }, 2500);
+  }
+
   // the slim smoked footer: one line, the credits behind a fold
   function buildFooter() {
     var f = window.CMA_STRINGS.footer, el = document.getElementById("footer");
@@ -91,6 +126,7 @@
     document.documentElement.style.setProperty("--hmax", name === "dashboard" ? "1400px" : "1180px");
     if (!built[name]) { built[name] = true; CMA.pages[name](document.getElementById(name)); if (CMA.glass) { CMA.glass.init(document.getElementById(name)); } }
     var slot = document.getElementById("foot-slot"); if (slot) { slot.hidden = name !== "dashboard"; }
+    nudgeFor(name);
     navOffset();
     if (CMA.glass && CMA.glass.refresh) { CMA.glass.refresh(); }
   }
@@ -174,6 +210,7 @@
   window.addEventListener("scroll", stuck, { passive: true });
   window.addEventListener("resize", stuck);
   buildHeader();
+  buildNudge();
   buildFooter();
   stuck();
   if (CMA.glass) { CMA.glass.init(document); }

@@ -19,8 +19,13 @@ window.CMA_STRINGS = {
   "quality": "Data quality",
   "chapters_aria": "Chapters of the story",
   "dashboard": "Dashboard",
-  "story": "Story",
+  "story": "Analysis",
   "main_aria": "Views"
+ },
+ "nudge": {
+  "lead": "Start here:",
+  "text": "the full analysis in {chapters} short chapters",
+  "close": "Close this note"
  },
  "hero": {
   "eyebrow": "Data analysis portfolio · SQL and Python",

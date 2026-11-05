@@ -548,6 +548,18 @@ body.no-photo { --smoke-fill: linear-gradient(160deg, rgba(26, 31, 30, .94), rgb
 .views a, .chap a { font: 500 13.5px/1 var(--sans); color: var(--ink); text-decoration: none; padding: 16px 9px; border-bottom: 2px solid transparent; white-space: nowrap; }
 .views a:hover, .chap a:hover { color: var(--ink); }
 .views a[aria-current], .chap a[aria-current] { color: var(--ink); font-weight: 600; border-bottom-color: var(--copper); }
+/* the one-time note under the Analysis tab (dashboard only): solid, high contrast, one fade in, no motion after that */
+.nudge { position: absolute; top: calc(100% + 8px); left: 0; z-index: 21; display: flex; align-items: center; gap: 6px; white-space: nowrap; padding: 7px 6px 7px 13px; border-radius: 10px; background: var(--btn-bg); color: var(--btn-fg); box-shadow: 0 10px 28px -10px rgba(0, 0, 0, .55); font: 400 13.5px/1.45 var(--sans); opacity: 0; transform: translateY(-4px); transition: opacity 300ms var(--ease), transform 300ms var(--ease); }
+.nudge.in { opacity: 1; transform: none; }
+.nudge::before { content: ""; position: absolute; top: -6px; left: calc(var(--ax, 34px) - 6px); width: 12px; height: 12px; background: var(--btn-bg); transform: rotate(45deg); border-radius: 2px; }
+.nudge-go { color: var(--btn-fg); text-decoration: none; }
+.nudge-go b { font-weight: 700; }
+.nudge-go:hover .nudge-arrow, .nudge-go:focus-visible .nudge-arrow { text-decoration: underline; }
+.nudge-arrow { font-weight: 700; color: inherit; }
+.nudge-x { flex: none; background: none; border: 0; color: var(--btn-fg); opacity: .75; font: 400 18px/1 var(--sans); padding: 0 4px; cursor: pointer; }
+.nudge-x:hover { opacity: 1; }
+.nudge :focus-visible { outline: 2px solid currentColor; outline-offset: 2px; }
+@media (max-width: 620px) { .nudge { white-space: normal; max-width: calc(100vw - 48px); } }
 .chap { display: flex; gap: 2px; border-top: 1px solid var(--rule); overflow-x: auto; scrollbar-width: none; }
 .chap::-webkit-scrollbar { display: none; }
 .chap a { padding: 11px 9px; font-size: 12.5px; flex: none; }
