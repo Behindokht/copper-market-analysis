@@ -17,12 +17,14 @@ The look: a dark opener (the copper plate photo under an ink scrim, or plain ink
 | `--track` | `#E7E3DA` | bar tracks, chips and table headers (a step between paper and the rules; not in the brief, added for tracks) |
 | `--rule` | `#D9D4CA` | hairlines, card borders, grid lines |
 | `--muted` | `#5E554D` | secondary text on paper |
-| `--copper` | `#B25E2C` | data marks (main series) and accents |
-| `--copper-text` | `#A85629` | copper-coloured text, links and labels on paper |
-| `--copper-bright` | `#E09A63` | accent on ink only: title word, brand, nav underline, spark |
-| `--verdigris` | `#2F6E5F` | second data series (always dashed), the plain-answer rule |
+| `--copper` | `#14574F` | data marks (main series) and accents |
+| `--copper-text` | `#14574F` | copper-coloured text, links and labels on paper |
+| `--copper-bright` | `#5CC0B1` | accent on ink only: brand, nav underline, spark |
+| `--verdigris` | `#6E6A66` | second data series (always dashed), the plain-answer rule |
 
-Rules: use `--copper-text`, never `--copper`, for copper-coloured text; `--copper-bright` is for ink backgrounds only; the verdigris series is always dashed and lines are labelled directly, so colour is never the only cue (copper and verdigris differ mostly in hue, about 1.3:1 in lightness). Radii: 3 to 4 px on paper, 10 px for glass only. No pills, no glow, no gradient bars.
+The accent is copper-oxide green, the colour copper turns as it weathers, so the main series stays tied to the metal without using orange. The token names keep `copper` because they mean "the copper series", not the hue. The second series is a warm grey.
+
+Rules: use `--copper-text`, never `--copper`, for copper-coloured text; `--copper-bright` is for ink backgrounds only; the verdigris series is always dashed and lines are labelled directly, so colour is never the only cue (the green accent and the grey second series also differ in lightness). Radii: 3 to 4 px on paper, 10 px for glass only. No pills, no glow, no gradient bars.
 
 ## Contrast of every pair in use
 
@@ -36,27 +38,27 @@ Required: normal text 4.5:1, large text 3:1, chart marks and focus rings 3:1 (WC
 | Secondary text on paper | `#5E554D` | `#F1EFEA` | 6.34:1 | 4.5:1 (text) | pass |
 | Secondary text on a card | `#5E554D` | `#FAF9F6` | 6.92:1 | 4.5:1 (text) | pass |
 | Secondary text on a track or chip | `#5E554D` | `#E7E3DA` | 5.69:1 | 4.5:1 (text) | pass |
-| Link and copper-coloured text on paper | `#A85629` | `#F1EFEA` | 4.54:1 | 4.5:1 (text) | pass |
-| Link and copper-coloured text on a card | `#A85629` | `#FAF9F6` | 4.95:1 | 4.5:1 (text) | pass |
-| Verdigris text on a card (pass pill) | `#2F6E5F` | `#FAF9F6` | 5.67:1 | 4.5:1 (text) | pass |
-| Verdigris text on paper | `#2F6E5F` | `#F1EFEA` | 5.20:1 | 4.5:1 (text) | pass |
+| Link and copper-coloured text on paper | `#14574F` | `#F1EFEA` | 7.29:1 | 4.5:1 (text) | pass |
+| Link and copper-coloured text on a card | `#14574F` | `#FAF9F6` | 7.96:1 | 4.5:1 (text) | pass |
+| Verdigris text on a card (pass pill) | `#6E6A66` | `#FAF9F6` | 5.09:1 | 4.5:1 (text) | pass |
+| Verdigris text on paper | `#6E6A66` | `#F1EFEA` | 4.67:1 | 4.5:1 (text) | pass |
 | Button text (ivory on ink) | `#F4EFE6` | `#1B1410` | 15.89:1 | 4.5:1 (text) | pass |
 | Text on the ink opener and footer | `#F4EFE6` | `#1B1410` | 15.89:1 | 4.5:1 (text) | pass |
 | Secondary text on the ink opener and footer | `#D8CDBF` | `#1B1410` | 11.61:1 | 4.5:1 (text) | pass |
-| Italic title word, brand and nav underline on ink | `#E09A63` | `#1B1410` | 7.77:1 | 4.5:1 (text) | pass |
+| Brand and nav underline on ink | `#5CC0B1` | `#1B1410` | 8.34:1 | 4.5:1 (text) | pass |
 | Text on the glass fallback (reduced transparency) | `#F4EFE6` | `#2A1D16` | 14.26:1 | 4.5:1 (text) | pass |
 | Secondary text on the glass fallback | `#D8CDBF` | `#2A1D16` | 10.43:1 | 4.5:1 (text) | pass |
-| Chart mark: copper on a card | `#B25E2C` | `#FAF9F6` | 4.40:1 | 3:1 (mark) | pass |
-| Chart mark: copper on paper | `#B25E2C` | `#F1EFEA` | 4.03:1 | 3:1 (mark) | pass |
-| Chart mark: copper on a track | `#B25E2C` | `#E7E3DA` | 3.62:1 | 3:1 (mark) | pass |
-| Chart mark: verdigris on a card (always dashed) | `#2F6E5F` | `#FAF9F6` | 5.67:1 | 3:1 (mark) | pass |
-| Chart mark: verdigris on paper | `#2F6E5F` | `#F1EFEA` | 5.20:1 | 3:1 (mark) | pass |
-| Chart mark: verdigris on a track | `#2F6E5F` | `#E7E3DA` | 4.66:1 | 3:1 (mark) | pass |
+| Chart mark: copper on a card | `#14574F` | `#FAF9F6` | 7.96:1 | 3:1 (mark) | pass |
+| Chart mark: copper on paper | `#14574F` | `#F1EFEA` | 7.29:1 | 3:1 (mark) | pass |
+| Chart mark: copper on a track | `#14574F` | `#E7E3DA` | 6.54:1 | 3:1 (mark) | pass |
+| Chart mark: verdigris on a card (always dashed) | `#6E6A66` | `#FAF9F6` | 5.09:1 | 3:1 (mark) | pass |
+| Chart mark: verdigris on paper | `#6E6A66` | `#F1EFEA` | 4.67:1 | 3:1 (mark) | pass |
+| Chart mark: verdigris on a track | `#6E6A66` | `#E7E3DA` | 4.19:1 | 3:1 (mark) | pass |
 | Axis lines, zero lines and the verdigris plain-answer rule use ink or verdigris on paper | `#1B1410` | `#F1EFEA` | 15.83:1 | 3:1 (mark) | pass |
 | Axis ticks and leader lines (muted) on a card | `#5E554D` | `#FAF9F6` | 6.92:1 | 3:1 (mark) | pass |
-| Focus ring on paper | `#A85629` | `#F1EFEA` | 4.54:1 | 3:1 (mark) | pass |
-| Focus ring on a card | `#A85629` | `#FAF9F6` | 4.95:1 | 3:1 (mark) | pass |
-| Focus ring on ink (nav, opener, footer) | `#E09A63` | `#1B1410` | 7.77:1 | 3:1 (mark) | pass |
+| Focus ring on paper | `#14574F` | `#F1EFEA` | 7.29:1 | 3:1 (mark) | pass |
+| Focus ring on a card | `#14574F` | `#FAF9F6` | 7.96:1 | 3:1 (mark) | pass |
+| Focus ring on ink (nav, opener, footer) | `#5CC0B1` | `#1B1410` | 8.34:1 | 3:1 (mark) | pass |
 
 ### Text on the glass (nav bar and plaque)
 
@@ -66,20 +68,20 @@ The nav bar is ink at 0.86 opacity and the plaque ink at 0.5, over the opener (t
 |---|---|---|---|---|---|
 | Nav bar over the ink opener: ivory | `#F4EFE6` | `#1B1410` | 15.89:1 | 4.5:1 (text) | pass |
 | Nav bar over the ink opener: ivory-dim | `#D8CDBF` | `#1B1410` | 11.61:1 | 4.5:1 (text) | pass |
-| Nav bar over the ink opener: copper-bright | `#E09A63` | `#1B1410` | 7.77:1 | 4.5:1 (text) | pass |
+| Nav bar over the ink opener: copper-bright | `#5CC0B1` | `#1B1410` | 8.34:1 | 4.5:1 (text) | pass |
 | Nav bar over paper (pages without an opener, scrolled page): ivory | `#F4EFE6` | `#39332F` | 10.90:1 | 4.5:1 (text) | pass |
 | Nav bar over paper (pages without an opener, scrolled page): ivory-dim | `#D8CDBF` | `#39332F` | 7.97:1 | 4.5:1 (text) | pass |
-| Nav bar over paper (pages without an opener, scrolled page): copper-bright | `#E09A63` | `#39332F` | 5.34:1 | 4.5:1 (text) | pass |
+| Nav bar over paper (pages without an opener, scrolled page): copper-bright | `#5CC0B1` | `#39332F` | 5.70:1 | 4.5:1 (text) | pass |
 | Plaque over the ink opener (no photo): ivory | `#F4EFE6` | `#1B1410` | 15.89:1 | 4.5:1 (text) | pass |
 | Plaque over the ink opener (no photo): ivory-dim | `#D8CDBF` | `#1B1410` | 11.61:1 | 4.5:1 (text) | pass |
 | Nav bar over the photo, brightest pixel: ivory | `#F4EFE6` | `#382C24` | 11.74:1 | 4.5:1 (text) | pass |
 | Nav bar over the photo, brightest pixel: ivory-dim | `#D8CDBF` | `#382C24` | 8.59:1 | 4.5:1 (text) | pass |
-| Nav bar over the photo, brightest pixel: copper-bright | `#E09A63` | `#382C24` | 5.75:1 | 4.5:1 (text) | pass |
+| Nav bar over the photo, brightest pixel: copper-bright | `#5CC0B1` | `#382C24` | 6.20:1 | 4.5:1 (text) | pass |
 | Plaque over the photo under the scrim, brightest pixel: ivory | `#F4EFE6` | `#5B4A3C` | 7.34:1 | 4.5:1 (text) | pass |
 | Plaque over the photo under the scrim, brightest pixel: ivory-dim | `#D8CDBF` | `#5B4A3C` | 5.36:1 | 4.5:1 (text) | pass |
 | Nav bar over the photo, 99.5th percentile pixel: ivory | `#F4EFE6` | `#34251B` | 12.89:1 | 4.5:1 (text) | pass |
 | Nav bar over the photo, 99.5th percentile pixel: ivory-dim | `#D8CDBF` | `#34251B` | 9.43:1 | 4.5:1 (text) | pass |
-| Nav bar over the photo, 99.5th percentile pixel: copper-bright | `#E09A63` | `#34251B` | 6.31:1 | 4.5:1 (text) | pass |
+| Nav bar over the photo, 99.5th percentile pixel: copper-bright | `#5CC0B1` | `#34251B` | 6.75:1 | 4.5:1 (text) | pass |
 | Plaque over the photo under the scrim, 99.5th percentile pixel: ivory | `#F4EFE6` | `#523929` | 9.28:1 | 4.5:1 (text) | pass |
 | Plaque over the photo under the scrim, 99.5th percentile pixel: ivory-dim | `#D8CDBF` | `#523929` | 6.78:1 | 4.5:1 (text) | pass |
 
@@ -87,8 +89,8 @@ The nav bar is ink at 0.86 opacity and the plaque ink at 0.5, over the opener (t
 
 | Colour use | Foreground | Background | Contrast |
 |---|---|---|---|
-| Copper mark colour as TEXT on paper (not used: use copper-text) | `#B25E2C` | `#F1EFEA` | 4.03:1 |
-| Copper-bright as TEXT on paper (not used: for ink backgrounds only) | `#E09A63` | `#F1EFEA` | 2.04:1 |
+| Copper mark colour as TEXT on paper (not used: use copper-text) | `#14574F` | `#F1EFEA` | 7.29:1 |
+| Copper-bright as TEXT on paper (not used: for ink backgrounds only) | `#5CC0B1` | `#F1EFEA` | 1.90:1 |
 
 ## Palette check for the chart colours
 

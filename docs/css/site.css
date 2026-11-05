@@ -23,10 +23,10 @@
   --track: #E7E3DA;          /* bar tracks and chips: a step between paper and the rules */
   --rule: #D9D4CA;           /* hairlines, card borders, grid lines */
   --muted: #574E47;          /* secondary text on paper */
-  --copper: #B25E2C;         /* data marks (main series), accents */
-  --copper-text: #A85629;    /* copper-coloured text and labels on paper (the brief said #A9572A, which measures 4.48:1 on paper; this is 4.54:1) */
-  --copper-bright: #E09A63;  /* accent on ink only: title word, nav underline, spark */
-  --verdigris: #2F6E5F;      /* second data series (always dashed), plain-answer rule */
+  --copper: #14574F;         /* copper-oxide green: data marks (main series), accents */
+  --copper-text: #14574F;    /* accent text and labels on paper (7.3:1 on paper) */
+  --copper-bright: #5CC0B1;  /* accent on ink only: nav underline, spark (8.3:1 on ink) */
+  --verdigris: #6E6A66;      /* second data series (always dashed), plain-answer rule: warm grey */
   --display: "Newsreader", "Iowan Old Style", Georgia, serif;
   --sans: "Atkinson Hyperlegible Next", "Segoe UI", system-ui, sans-serif;
   --mono: "Atkinson Hyperlegible Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
@@ -73,7 +73,7 @@ a:hover { color: var(--ink); }
 /* spark: nine thin rays, once */
 .spark:not(.go) { visibility: hidden; }
 .spark line { stroke: var(--copper-bright); stroke-width: 1.6; stroke-dasharray: var(--len) var(--len); stroke-dashoffset: var(--len); fill: none; }
-.spark circle { fill: #F6D3A8; opacity: 0; transform-box: fill-box; transform-origin: center; }
+.spark circle { fill: #CDEDE7; opacity: 0; transform-box: fill-box; transform-origin: center; }
 .spark.go line { animation: streak 640ms var(--ease) both; animation-delay: var(--d); }
 .spark.go circle { animation: core 380ms var(--ease) both; }
 .chart .spark line { stroke: var(--copper); }
@@ -455,7 +455,7 @@ ul.stacks { list-style: none; margin: var(--s3) 0 0; padding: 0; }
    ==================================================================================================================================================== */
 :root {
   /* the page background: a dark texture drawn in CSS (teal and copper glow over noise). A photo replaces it only on the owner's own disk (docs/js/bg.js, known issue K08); a public build never asks for it. */
-  --bg-texture: radial-gradient(70% 55% at 16% 10%, rgba(47, 110, 95, .62), rgba(47, 110, 95, 0) 70%), radial-gradient(55% 50% at 88% 84%, rgba(178, 94, 44, .38), rgba(178, 94, 44, 0) 70%), url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='480' height='480'%3E%3Cfilter id='n' x='0' y='0' width='100%25' height='100%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.012 .02' numOctaves='4' seed='7' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .55  0 0 0 0 .75  0 0 0 0 .68  0 0 0 .55 -.12'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"), linear-gradient(#16201e, #16201e);
+  --bg-texture: radial-gradient(70% 55% at 16% 10%, rgba(47, 110, 95, .62), rgba(47, 110, 95, 0) 70%), radial-gradient(55% 50% at 88% 84%, rgba(20, 87, 79, .38), rgba(20, 87, 79, 0) 70%), url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='480' height='480'%3E%3Cfilter id='n' x='0' y='0' width='100%25' height='100%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.012 .02' numOctaves='4' seed='7' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .55  0 0 0 0 .75  0 0 0 0 .68  0 0 0 .55 -.12'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"), linear-gradient(#16201e, #16201e);
   --bg-photo: var(--bg-texture);
   --tex-shade: rgba(241, 239, 234, 0);
   --rad: 12px;
@@ -477,14 +477,14 @@ ul.stacks { list-style: none; margin: var(--s3) 0 0; padding: 0; }
   --smoke-bf: blur(30px) saturate(140%);
   --smoke-sh: inset 0 1px 1px rgba(255, 255, 255, .22), inset 0 0 26px rgba(255, 255, 255, .04), 0 20px 44px -18px rgba(0, 0, 0, .7);
   --spec-op: 1;
-  --sedge: rgba(255, 255, 255, .16); --ivory-2: #D9CFC2; --cu-bright: #F0B88A; --verdigris-text: #2A6354;
-  --grey: #7D7469; --ok: #2F6E5F; --fill: rgba(178, 94, 44, .09);
+  --sedge: rgba(255, 255, 255, .16); --ivory-2: #D9CFC2; --cu-bright: #8FD6CB; --verdigris-text: #5C5853;
+  --grey: #7D7469; --ok: #2F6E5F; --fill: rgba(20, 87, 79, .09);
   --halo: #F8F7F3; --btn-bg: #1B1410; --btn-fg: #F4EFE6; --seg-on: rgba(27, 20, 16, .14);
 }
-body.has-bg { --copper-text: #8E4920; }
+body.has-bg { --copper-text: #14574F; }
 /* dark: the study's dark tokens; reading glass is cool near-black, not brown */
 @media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) body.has-bg { --paper: #16110E; --card: #1A1F1E; --ink: #F4EFE6; --muted: #C3B8AA; --rule: rgba(255, 240, 225, .14); --track: rgba(255, 240, 225, .08); --copper: #D27A43; --copper-text: #F0B88A; --verdigris: #6FB8A4; --grey: #9A9084; --fill: rgba(210, 122, 67, .14); --ok: #6FB8A4; --verdigris-text: #6FB8A4; --halo: #161B1A; --btn-bg: #F4EFE6; --btn-fg: #16110E; --seg-on: rgba(255, 240, 225, .14);
+  :root:not([data-theme="light"]) body.has-bg { --paper: #16110E; --card: #1A1F1E; --ink: #F4EFE6; --muted: #C3B8AA; --rule: rgba(255, 240, 225, .14); --track: rgba(255, 240, 225, .08); --copper: #3FA595; --copper-text: #7FCFC2; --verdigris: #A8A29B; --grey: #9A9084; --fill: rgba(63, 165, 149, .14); --ok: #6FB8A4; --verdigris-text: #B8B2AB; --halo: #161B1A; --btn-bg: #F4EFE6; --btn-fg: #16110E; --seg-on: rgba(255, 240, 225, .14);
     --tex-shade: rgba(10, 8, 7, .62);
     --clear-fill: linear-gradient(160deg, rgba(30, 36, 35, .72), rgba(20, 25, 24, .62)); --top-fill: linear-gradient(160deg, rgba(30, 36, 35, .76), rgba(20, 25, 24, .68));
     --clear-rim: linear-gradient(135deg, rgba(255, 255, 255, .55), rgba(255, 255, 255, .12) 30%, rgba(255, 255, 255, .03) 60%, rgba(255, 255, 255, .28)); --clear-bf: blur(14px) saturate(170%) brightness(.95);
@@ -492,7 +492,7 @@ body.has-bg { --copper-text: #8E4920; }
     --read-fill: linear-gradient(160deg, rgba(26, 31, 30, .92), rgba(14, 18, 17, .88)); --smoke-fill: var(--read-fill); --read-rim: linear-gradient(135deg, rgba(255, 255, 255, .42), rgba(255, 255, 255, .10) 30%, rgba(255, 255, 255, .03) 60%, rgba(255, 255, 255, .22));
     --read-bf: blur(30px) saturate(140%); --read-sh: inset 0 1px 1px rgba(255, 255, 255, .22), inset 0 0 26px rgba(255, 255, 255, .04), 0 20px 44px -18px rgba(0, 0, 0, .7); --spec-op: .55; color-scheme: dark; }
 }
-:root[data-theme="dark"] body.has-bg { --paper: #16110E; --card: #1A1F1E; --ink: #F4EFE6; --muted: #C3B8AA; --rule: rgba(255, 240, 225, .14); --track: rgba(255, 240, 225, .08); --copper: #D27A43; --copper-text: #F0B88A; --verdigris: #6FB8A4; --grey: #9A9084; --fill: rgba(210, 122, 67, .14); --ok: #6FB8A4; --verdigris-text: #6FB8A4; --halo: #161B1A; --btn-bg: #F4EFE6; --btn-fg: #16110E; --seg-on: rgba(255, 240, 225, .14);
+:root[data-theme="dark"] body.has-bg { --paper: #16110E; --card: #1A1F1E; --ink: #F4EFE6; --muted: #C3B8AA; --rule: rgba(255, 240, 225, .14); --track: rgba(255, 240, 225, .08); --copper: #3FA595; --copper-text: #7FCFC2; --verdigris: #A8A29B; --grey: #9A9084; --fill: rgba(63, 165, 149, .14); --ok: #6FB8A4; --verdigris-text: #B8B2AB; --halo: #161B1A; --btn-bg: #F4EFE6; --btn-fg: #16110E; --seg-on: rgba(255, 240, 225, .14);
   --tex-shade: rgba(10, 8, 7, .62);
   --clear-fill: linear-gradient(160deg, rgba(30, 36, 35, .72), rgba(20, 25, 24, .62)); --top-fill: linear-gradient(160deg, rgba(30, 36, 35, .76), rgba(20, 25, 24, .68));
   --clear-rim: linear-gradient(135deg, rgba(255, 255, 255, .55), rgba(255, 255, 255, .12) 30%, rgba(255, 255, 255, .03) 60%, rgba(255, 255, 255, .28)); --clear-bf: blur(14px) saturate(170%) brightness(.95);
@@ -540,7 +540,7 @@ body.no-photo { --smoke-fill: linear-gradient(160deg, rgba(26, 31, 30, .94), rgb
 .top { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20; max-width: var(--hmax, 1180px); margin: 10px auto 0; padding: 0 18px; background: var(--top-fill) padding-box, var(--clear-rim) border-box; }
 .top.stuck { border-top-left-radius: 0; border-top-right-radius: 0; }
 .top-in { display: flex; align-items: center; gap: 24px; height: 50px; }
-.brand { font: italic 400 21px/1 var(--display); color: var(--ink); text-decoration: none; white-space: nowrap; font-variation-settings: "opsz" 24; }
+.brand { font: normal 700 21px/1 var(--display); color: var(--ink); text-decoration: none; white-space: nowrap; font-variation-settings: "opsz" 24; }
 .brand:hover { color: var(--ink); }
 .brand small { font: 600 12px/1 var(--sans); letter-spacing: .06em; text-transform: uppercase; color: var(--ink); font-style: normal; margin-left: 8px; }
 .views { display: flex; gap: 2px; margin-left: auto; }
@@ -575,7 +575,7 @@ footer.foot .btn:hover { background: var(--ivory); color: #1B1410; }
 .dash { max-width: 1400px; margin: 0 auto; }
 .dash .head { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px 40px; flex-wrap: wrap; padding: 26px 28px; margin-block: 20px; }
 .dash .head h1 { margin: 0; font: 400 34px/1.1 var(--display); font-variation-settings: "opsz" 48; letter-spacing: -.01em; text-wrap: balance; }
-.dash .head h1 em { font-style: italic; color: var(--copper-text); }
+.dash .head h1 em { font-style: normal; font-weight: 700; color: inherit; }
 .dash .head p { margin: 8px 0 0; color: var(--muted); font-size: 15px; max-width: 62ch; }
 .filters { display: flex; gap: 18px; flex-wrap: wrap; }
 .fg { display: flex; flex-direction: column; gap: 5px; }
@@ -693,7 +693,7 @@ body.no-photo { --smoke: rgba(24, 17, 13, .94); }
 .op-text { padding: 40px 44px; }
 .kicker { font: 600 12px/1 var(--sans); letter-spacing: .06em; text-transform: uppercase; color: var(--ivory-2); }
 .opener h1 { margin: 16px 0 18px; font: 400 clamp(40px, 5.6vw, 76px)/1.02 var(--display); font-variation-settings: "opsz" 72; letter-spacing: -.015em; text-wrap: balance; color: var(--ivory); }
-.opener h1 em { color: var(--cu-bright); }
+.opener h1 em { font-style: normal; font-weight: 700; color: inherit; }
 .op-text p { color: var(--ivory-2); max-width: 52ch; margin: 0 0 14px; }
 .plaque { padding: 24px 26px; }
 .plaque .big { font: 400 58px/1 var(--display); font-variation-settings: "opsz" 72; margin: 10px 0 4px; font-variant-numeric: lining-nums tabular-nums; }

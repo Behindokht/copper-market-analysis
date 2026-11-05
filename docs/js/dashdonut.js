@@ -7,7 +7,7 @@
    Every id is unique per drawing, so the page and the dialog can both hold one. All text comes in through the options. */
 (function () {
   var CMA = window.CMA, NS = "http://www.w3.org/2000/svg", uidN = 0;
-  var TONES = [["#F6C59B", "#B8622E", "#6F3314"], ["#F0B88A", "#AA5628", "#68300F"], ["#E8AC7C", "#9C4D23", "#5F2B0E"], ["#DEA172", "#8F4620", "#58290C"], ["#D39668", "#84401D", "#522609"], ["#A6DCCB", "#3F8F7A", "#1D5043"]];
+  var TONES = [["#9FD9CE", "#1E7268", "#0B3A35"], ["#92D0C5", "#1A675E", "#0A3530"], ["#85C6BA", "#175C54", "#08302B"], ["#78BCB0", "#14524B", "#072B27"], ["#6BB2A6", "#114841", "#062622"], ["#D9D3CB", "#8A847C", "#4A4641"]];
 
   function el(tag, attrs, parent) {
     var e = document.createElementNS(NS, tag);

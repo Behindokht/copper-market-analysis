@@ -13,7 +13,7 @@
     host.appendChild(sv);
     var r1 = Math.min(48, (w - 120) / 4.8), r2 = r1 * widthFactor, cy = 74, gap = Math.min(110, w - 2 * r1 - 2 * r2 - 80), x1 = r1 + 40, x2 = x1 + r1 + r2 + gap;
     var defs = svg("defs"); sv.appendChild(defs);
-    defs.innerHTML = '<radialGradient id="' + uid + 'cu" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#E9A472"/><stop offset=".6" stop-color="#B8622E"/><stop offset="1" stop-color="#8A4520"/></radialGradient>' +
+    defs.innerHTML = '<radialGradient id="' + uid + 'cu" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#6BB8AB"/><stop offset=".6" stop-color="#1E7268"/><stop offset="1" stop-color="#0B3A35"/></radialGradient>' +
       '<radialGradient id="' + uid + 'al" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#E6E8EA"/><stop offset=".6" stop-color="#BFC4C8"/><stop offset="1" stop-color="#959BA1"/></radialGradient>' +
       '<filter id="' + uid + 'gr"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" seed="4"/><feColorMatrix type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  1.4 0 0 0 -.6"/><feComposite in2="SourceAlpha" operator="in"/></filter>';
     [[x1, r1, "cu", T("wire_cu"), T("wire_cu_sub")], [x2, r2, "al", T("wire_al"), T("wire_al_sub", vars)]].forEach(function (a) {

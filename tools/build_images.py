@@ -53,7 +53,7 @@ html,body{{margin:0;width:{W}px;height:{H}px;overflow:hidden;background:#16201e}
 .bg{{display:block !important;position:absolute;inset:0;background-image:var(--bg-texture);background-size:cover}}
 .card{{position:absolute;left:40px;top:40px;right:40px;bottom:40px;border-radius:14px;padding:44px 48px;box-sizing:border-box;color:#F4EFE6}}
 h1{{margin:0;font:400 64px/1.04 'Newsreader',Georgia,serif;font-variation-settings:'opsz' 72;letter-spacing:-.01em;color:#F4EFE6;max-width:900px}}
-h1 em{{color:#F0B88A}}
+h1 em{{font-style:normal;font-weight:700;color:inherit}}
 .k{{font:600 14px/1 'Atkinson Hyperlegible Next',sans-serif;letter-spacing:.06em;text-transform:uppercase;color:#D9CFC2;margin-bottom:18px}}
 .p{{margin-top:22px;font:400 16px 'Atkinson Hyperlegible Next',sans-serif;color:#D9CFC2}}
 .p b{{font:400 40px 'Newsreader',Georgia,serif;color:#F4EFE6;margin-right:12px}}
@@ -63,8 +63,8 @@ svg{{position:absolute;left:0;top:0}}
 <div class="card smoke"><div class="k">Data analysis portfolio · SQL and Python</div>
 <h1><em>Copper</em> is at a record price. Is it as special as it looks?</h1>
 <div class="p"><b>{price}</b>a tonne, World Bank monthly average, August 2026</div></div>
-<svg width="{W}" height="{H}" viewBox="0 0 {W} {H}"><path d="{area}" fill="rgba(240,184,138,.14)"/><path d="{d}" fill="none" stroke="#E09A63" stroke-width="3" stroke-linejoin="round"/>
-<circle cx="{xy[-1][0]:.1f}" cy="{xy[-1][1]:.1f}" r="6" fill="#F0B88A"/>
+<svg width="{W}" height="{H}" viewBox="0 0 {W} {H}"><path d="{area}" fill="rgba(143,214,203,.14)"/><path d="{d}" fill="none" stroke="#5CC0B1" stroke-width="3" stroke-linejoin="round"/>
+<circle cx="{xy[-1][0]:.1f}" cy="{xy[-1][1]:.1f}" r="6" fill="#8FD6CB"/>
 <text x="{x0}" y="{y1 + 22}" font-family="Atkinson Hyperlegible Mono, monospace" font-size="14" fill="#D9CFC2">1960</text>
 <text x="{x1}" y="{y1 + 22}" text-anchor="end" font-family="Atkinson Hyperlegible Mono, monospace" font-size="14" fill="#D9CFC2">2026</text></svg></body>"""
 

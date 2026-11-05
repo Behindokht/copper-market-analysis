@@ -138,7 +138,7 @@ for mode in ("light", "dark"):
     base = (22, 32, 30)
     sh = (lambda c: over(shade[1], shade[0], c)) if mode == "dark" else (lambda c: c)
     backdrops[mode]["no photo: texture, teal glow"] = sh(over(0.62, (47, 110, 95), base))
-    backdrops[mode]["no photo: texture, copper glow"] = sh(over(0.38, (178, 94, 44), base))
+    backdrops[mode]["no photo: texture, copper glow"] = sh(over(0.38, (20, 87, 79), base))
 card_dark = hexrgb("#1A1F1E")
 
 
