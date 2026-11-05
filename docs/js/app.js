@@ -39,7 +39,7 @@
     var seen = function () { CMA.store.set("nudge_seen", "1"); hideNudge(true); };
     nudge = h("div", { class: "nudge", id: "nudge", role: "note", hidden: true },
       h("a", { href: "#story", class: "nudge-go", onclick: seen },
-        h("span", { text: t("nudge.lead") + " " }), h("b", { text: t("nudge.text") + " " }), h("span", { class: "nudge-arrow", "aria-hidden": "true", text: "\u2192" })),
+        h("span", { text: t("nudge.lead") + " " }), h("b", { text: t("nudge.text") })),
       h("button", { type: "button", class: "nudge-x", "aria-label": t("nudge.close"), text: "\u00d7", onclick: seen }));
     document.getElementById("topbar").appendChild(nudge);
     window.addEventListener("resize", placeNudge);

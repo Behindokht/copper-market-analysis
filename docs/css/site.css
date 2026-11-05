@@ -555,7 +555,6 @@ body.no-photo { --smoke-fill: linear-gradient(160deg, rgba(26, 31, 30, .94), rgb
 .nudge-go, .nudge-go:hover, .nudge-go:focus-visible { color: var(--btn-fg); text-decoration: none; }
 .nudge-go:hover b, .nudge-go:focus-visible b { text-decoration: underline; text-underline-offset: 3px; }
 .nudge-go b { font-weight: 700; }
-.nudge-arrow { font-weight: 700; color: inherit; }
 .nudge-x { flex: none; background: none; border: 0; color: var(--btn-fg); opacity: .75; font: 400 18px/1 var(--sans); padding: 0 4px; cursor: pointer; }
 .nudge-x:hover, .nudge-x:focus-visible { opacity: 1; color: var(--btn-fg); }
 .nudge :focus-visible { outline: 2px solid currentColor; outline-offset: 2px; }
