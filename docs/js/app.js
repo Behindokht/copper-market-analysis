@@ -39,7 +39,7 @@
     var seen = function () { CMA.store.set("nudge_seen", "1"); hideNudge(true); };
     nudge = h("div", { class: "nudge", id: "nudge", role: "note", hidden: true },
       h("a", { href: "#story", class: "nudge-go", onclick: seen },
-        h("b", { text: t("nudge.lead") }), " " + t("nudge.text", { chapters: NAV.length }) + " ", h("span", { class: "nudge-arrow", "aria-hidden": "true", text: "\u2192" })),
+        h("span", { text: t("nudge.lead") + " " }), h("b", { text: t("nudge.text") + " " }), h("span", { class: "nudge-arrow", "aria-hidden": "true", text: "\u2192" })),
       h("button", { type: "button", class: "nudge-x", "aria-label": t("nudge.close"), text: "\u00d7", onclick: seen }));
     document.getElementById("topbar").appendChild(nudge);
     window.addEventListener("resize", placeNudge);
@@ -48,7 +48,7 @@
     if (!nudge || nudge.hidden) { return; }
     var a = document.querySelector('#nav a[data-target="story"]'), bar = document.getElementById("topbar");
     if (!a) { return; }
-    var mid = a.offsetLeft + a.offsetWidth / 2, w = nudge.offsetWidth, left = Math.max(8, Math.min(mid - 34, bar.clientWidth - w - 8));
+    var mid = a.offsetLeft + a.offsetWidth / 2, w = nudge.offsetWidth, left = Math.max(8, Math.min(mid - w / 2, bar.clientWidth - w - 8));
     nudge.style.left = left + "px";
     nudge.style.setProperty("--ax", (mid - left) + "px");
   }

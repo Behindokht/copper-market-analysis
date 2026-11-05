@@ -23,8 +23,8 @@ window.CMA_STRINGS = {
   "main_aria": "Views"
  },
  "nudge": {
-  "lead": "Start here:",
-  "text": "the full analysis in {chapters} short chapters",
+  "lead": "Want the story behind these numbers?",
+  "text": "Read the analysis",
   "close": "Close this note"
  },
  "hero": {
