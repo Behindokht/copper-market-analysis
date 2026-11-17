@@ -2,9 +2,7 @@
 
 ## Fonts (self-hosted in `docs/fonts/`)
 
-- **Newsreader** (titles, questions, big figures; variable, optical size and weight, normal and italic), Copyright 2020 The Newsreader Project Authors, <https://github.com/productiontype/Newsreader>. Licensed under the SIL Open Font License 1.1 (`docs/fonts/OFL-Newsreader.txt`). Used unmodified, in Latin subsets.
-- **Atkinson Hyperlegible Next** (text, labels and the small capitals; 400, 500, 600 and 700), Copyright 2020-2024 The Atkinson Hyperlegible Next Project Authors, <https://github.com/googlefonts/atkinson-hyperlegible-next> (designed for the Braille Institute of America). Licensed under the SIL Open Font License 1.1 (`docs/fonts/OFL-Atkinson-Hyperlegible-Next.txt`). Used unmodified, in a Latin subset. The woff2 files are the Fontsource packaging of the project's release (npm `@fontsource/atkinson-hyperlegible-next`, version 5.3.0).
-- **Atkinson Hyperlegible Mono** (axis ticks, readouts and figures in tables; 400 and 500), Copyright 2020-2024 The Atkinson Hyperlegible Mono Project Authors, <https://github.com/googlefonts/atkinson-hyperlegible-next-mono>. Licensed under the SIL Open Font License 1.1 (`docs/fonts/OFL-Atkinson-Hyperlegible-Mono.txt`). Used unmodified, in a Latin subset. Same packaging (npm `@fontsource/atkinson-hyperlegible-mono`).
+- **Source Sans 3** (all text, headings and numbers; 400, 500, 600 and 700, Latin subset), Copyright 2010-2023 Adobe (http://www.adobe.com/), with Reserved Font Name 'Source', <https://github.com/adobe-fonts/source-sans>. SIL Open Font License 1.1, text in `docs/fonts/OFL-Source-Sans-3.txt`.
 
 ## Code ideas
 

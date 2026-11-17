@@ -2,7 +2,7 @@
 
 A portfolio project by Behindokht Alipour. Copper is at a record price. Is it as special as it looks? SQL and Python, a static website, and every number traced to a source.
 
-Live site (after GitHub Pages is switched on): https://behindokht.github.io/copper-market-analysis/  
+Live site: https://behindokht.github.io/copper-market-analysis/  
 Short write-up: [case study](https://behindokht.github.io/copper-market-analysis/case-study.html) | Every number I may quote: [FACTS.md](docs/FACTS.md)
 
 ![The dashboard](docs/img/readme-dashboard.png)

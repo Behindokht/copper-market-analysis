@@ -1,16 +1,12 @@
 /* Copper market analysis: site styles. Light content on neutral paper, a dark opener, smoked glass on the nav bar and the opener plaque only.
    Every colour is a state of copper: bright metal, oxidised ink, verdigris patina, and paper to read on.
-   Fonts (Newsreader for headings and big numbers, Atkinson Hyperlegible Next for text, Atkinson Hyperlegible Mono for ticks and figures in tables) are self-hosted in ../fonts; nothing is loaded from the web.
+   One font family, Source Sans 3 (400 to 700), for headings, text, numbers and ticks, self-hosted in ../fonts; nothing is loaded from the web.
    tools/contrast_report.py reads the tokens below and checks every pair of colours that is used. */
 
-@font-face { font-family: "Newsreader"; src: url("../fonts/newsreader-latin-opsz-normal.woff2") format("woff2"); font-weight: 200 800; font-style: normal; font-display: swap; }
-@font-face { font-family: "Newsreader"; src: url("../fonts/newsreader-latin-opsz-italic.woff2") format("woff2"); font-weight: 200 800; font-style: italic; font-display: swap; }
-@font-face { font-family: "Atkinson Hyperlegible Next"; src: url("../fonts/atkinson-next-latin-400-normal.woff2") format("woff2"); font-weight: 400; font-style: normal; font-display: swap; }
-@font-face { font-family: "Atkinson Hyperlegible Next"; src: url("../fonts/atkinson-next-latin-500-normal.woff2") format("woff2"); font-weight: 500; font-style: normal; font-display: swap; }
-@font-face { font-family: "Atkinson Hyperlegible Next"; src: url("../fonts/atkinson-next-latin-600-normal.woff2") format("woff2"); font-weight: 600; font-style: normal; font-display: swap; }
-@font-face { font-family: "Atkinson Hyperlegible Next"; src: url("../fonts/atkinson-next-latin-700-normal.woff2") format("woff2"); font-weight: 700; font-style: normal; font-display: swap; }
-@font-face { font-family: "Atkinson Hyperlegible Mono"; src: url("../fonts/atkinson-mono-latin-400-normal.woff2") format("woff2"); font-weight: 400; font-style: normal; font-display: swap; }
-@font-face { font-family: "Atkinson Hyperlegible Mono"; src: url("../fonts/atkinson-mono-latin-500-normal.woff2") format("woff2"); font-weight: 500; font-style: normal; font-display: swap; }
+@font-face { font-family: "Source Sans 3"; src: url("../fonts/source-sans-3-latin-400-normal.woff2") format("woff2"); font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: "Source Sans 3"; src: url("../fonts/source-sans-3-latin-500-normal.woff2") format("woff2"); font-weight: 500; font-style: normal; font-display: swap; }
+@font-face { font-family: "Source Sans 3"; src: url("../fonts/source-sans-3-latin-600-normal.woff2") format("woff2"); font-weight: 600; font-style: normal; font-display: swap; }
+@font-face { font-family: "Source Sans 3"; src: url("../fonts/source-sans-3-latin-700-normal.woff2") format("woff2"); font-weight: 700; font-style: normal; font-display: swap; }
 
 :root {
   color-scheme: light;
@@ -27,9 +23,9 @@
   --copper-text: #14574F;    /* accent text and labels on paper (7.3:1 on paper) */
   --copper-bright: #5CC0B1;  /* accent on ink only: nav underline, spark (8.3:1 on ink) */
   --verdigris: #6E6A66;      /* second data series (always dashed), plain-answer rule: warm grey */
-  --display: "Newsreader", "Iowan Old Style", Georgia, serif;
-  --sans: "Atkinson Hyperlegible Next", "Segoe UI", system-ui, sans-serif;
-  --mono: "Atkinson Hyperlegible Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --display: "Source Sans 3", "Segoe UI", system-ui, sans-serif;
+  --sans: "Source Sans 3", "Segoe UI", system-ui, sans-serif;
+  --mono: "Source Sans 3", "Segoe UI", system-ui, sans-serif;
   --ease: cubic-bezier(.22, .61, .36, 1);
   --s1: 4px; --s2: 8px; --s3: 16px; --s4: 24px; --s5: 40px; --s6: 64px; --s7: 112px;
 }
@@ -871,3 +867,40 @@ details.fullx > .fullbody { font-size: 14px; }
   .tlab { white-space: normal; width: 58px; line-height: 1.25; font-size: 12px; }
   .tlab.l { text-align: right; }
 }
+
+/* ---------- flat look (replaces the glass plates and the photo backdrop) ----------
+   Solid cards with a hairline border and a soft shadow on a plain background. The glass tokens above stay as names
+   so nothing else has to change; their values are overridden here. */
+:root, body.has-bg {
+  --bg-photo: none; --bg-texture: none; --tex-shade: rgba(0, 0, 0, 0);
+  --clear-fill: linear-gradient(#FFFFFF, #FFFFFF); --top-fill: linear-gradient(#FFFFFF, #FFFFFF); --read-fill: linear-gradient(#FFFFFF, #FFFFFF); --smoke-fill: linear-gradient(#16201E, #16201E);
+  --clear-rim: linear-gradient(var(--rule), var(--rule)); --read-rim: linear-gradient(var(--rule), var(--rule)); --smoke-rim: linear-gradient(#16201E, #16201E);
+  --clear-bf: none; --read-bf: none; --smoke-bf: none; --bf: none;
+  --clear-sh: 0 1px 2px rgba(20, 30, 28, .06); --read-sh: 0 1px 2px rgba(20, 30, 28, .06), 0 6px 18px -12px rgba(20, 30, 28, .25); --smoke-sh: none;
+  --spec-op: 0; --clear-solid: #FFFFFF;
+}
+body.has-bg .bg { background: #EDF0EE; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) body.has-bg {
+    --clear-fill: linear-gradient(#1A1F1E, #1A1F1E); --top-fill: linear-gradient(#1A1F1E, #1A1F1E); --read-fill: linear-gradient(#1A1F1E, #1A1F1E); --smoke-fill: linear-gradient(#1A1F1E, #1A1F1E); --clear-solid: #1A1F1E;
+    --clear-rim: linear-gradient(rgba(255, 255, 255, .09), rgba(255, 255, 255, .09)); --read-rim: linear-gradient(rgba(255, 255, 255, .09), rgba(255, 255, 255, .09)); --smoke-rim: linear-gradient(rgba(255, 255, 255, .09), rgba(255, 255, 255, .09));
+    --clear-sh: none; --read-sh: none; --clear-bf: none; --read-bf: none; --smoke-bf: none; --spec-op: 0; }
+  :root:not([data-theme="light"]) body.has-bg .bg { background: #111514; }
+}
+:root[data-theme="dark"] body.has-bg {
+  --clear-fill: linear-gradient(#1A1F1E, #1A1F1E); --top-fill: linear-gradient(#1A1F1E, #1A1F1E); --read-fill: linear-gradient(#1A1F1E, #1A1F1E); --smoke-fill: linear-gradient(#1A1F1E, #1A1F1E); --clear-solid: #1A1F1E;
+  --clear-rim: linear-gradient(rgba(255, 255, 255, .09), rgba(255, 255, 255, .09)); --read-rim: linear-gradient(rgba(255, 255, 255, .09), rgba(255, 255, 255, .09)); --smoke-rim: linear-gradient(rgba(255, 255, 255, .09), rgba(255, 255, 255, .09));
+  --clear-sh: none; --read-sh: none; --clear-bf: none; --read-bf: none; --smoke-bf: none; --spec-op: 0; }
+:root[data-theme="dark"] body.has-bg .bg { background: #111514; }
+.clear, .glass, .smoke { -webkit-backdrop-filter: none; backdrop-filter: none; }
+.lens::before, .clear::after, .glass::after, .smoke::after { display: none; }
+
+/* labels in sentence case: no capitals, no letter spacing */
+.mono, .eyebrow, .brand small, .fg > span, .k-l, .kicker, .pl-row > span:first-child, .sheet .ch, .drv small, .limits h4, .cs .ch, .readmode .rm-l, .pill { text-transform: none; letter-spacing: 0; font-size: 12.5px; }
+
+/* no spark animation */
+.spark { display: none !important; }
+
+/* one sans family: headings and big figures at 600 instead of a light serif */
+h1, h2, h3, h4, .hook, .bignum, .answer, .finding, .guess-value, .k-v, .plaque .big, .opener h1, .dash .head h1, .closing-line, .bridge { font-weight: 600 !important; letter-spacing: -.01em; font-variation-settings: normal; font-style: normal; }
+.answer, .finding, .closing-line, .bridge { font-weight: 400 !important; letter-spacing: 0; }

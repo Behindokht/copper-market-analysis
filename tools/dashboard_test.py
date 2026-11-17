@@ -76,7 +76,7 @@ def run(engine):
         open_dash(pg)
         ok(pg.locator("#topbar").count() == 1 and pg.locator("header").count() == 1, t + "there should be one header for the whole site")
         st = re.sub(r"\s+", " ", pg.locator("#status").inner_text())
-        ok(re.match(r"^Data through \w{3} \d{4} . \d+ checks passed . \d+ failures . \d+ warnings$", st.strip()) is not None, t + f"the status line is wrong: {st!r}")
+        ok(re.match(r"^Data through \w{3} \d{4}\. \d+ checks passed, \d+ failures, \d+ warnings$", st.strip()) is not None, t + f"the status line is wrong: {st!r}")
         ok(pg.locator("#dashboard .kpi").count() == 5, t + "the key figures should be five items")
         txt = pg.locator("#dashboard").inner_text()
         ok("Hover over a chart" not in txt and "Data health" not in txt and "known issues" not in txt, t + "the hint sentence, the health tile and the bottom strip should be gone")

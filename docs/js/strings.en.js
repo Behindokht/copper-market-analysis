@@ -28,7 +28,7 @@ window.CMA_STRINGS = {
   "close": "Close this note"
  },
  "hero": {
-  "eyebrow": "Data analysis portfolio · SQL and Python",
+  "eyebrow": "A data analysis portfolio project in SQL and Python",
   "title_em": "Copper",
   "title_rest": " is at a record price. Is it as special as it looks?",
   "lead": "Copper just hit its highest price in {years} years of data, up {change}% in a year. {chapters} short chapters test how special that is, with every number traceable to its source.",
@@ -92,7 +92,7 @@ window.CMA_STRINGS = {
  "story": {
   "reset": "Clear my guesses",
   "full_label": "Full analysis",
-  "full_sub": "data, method, limits and sources · about {n} min",
+  "full_sub": "data, method, limits and sources, about {n} min",
   "readmode_label": "Reading mode",
   "readmode_short": "Short read",
   "readmode_full": "Full analysis",
@@ -1008,7 +1008,7 @@ window.CMA_STRINGS = {
   "page_title": "Case study | Copper market analysis",
   "page_description": "A one-page write-up of the copper market analysis: the question, the data, the methods, the findings, what I would do next and what I learned.",
   "kicker": "Case study",
-  "byline": "Behindokht Alipour · data analysis portfolio",
+  "byline": "Behindokht Alipour, data analysis portfolio",
   "h_problem": "The problem",
   "p_problem": "In {month} copper cost {price} per metric ton, the highest monthly price in {years} years of data as quoted. That raised three questions. Is the price really special once inflation is taken out? What moves it from month to month? And at what price would buyers look at aluminium instead?",
   "h_data": "The data",
@@ -1051,7 +1051,7 @@ window.CMA_STRINGS = {
   "disclaimer": "Historical results are not forecasts and not investment advice. A link in a sample is not proof that one thing causes another.",
   "credits_summary": "Credits and licences",
   "credits": [
-   "Fonts: Newsreader (titles and big numbers), Atkinson Hyperlegible Next (text) and Atkinson Hyperlegible Mono (ticks and figures in tables), self-hosted. All use the SIL Open Font License 1.1. Newsreader: Copyright 2020 The Newsreader Project Authors. Atkinson Hyperlegible: Copyright 2020-2024 The Atkinson Hyperlegible Project Authors.",
+   "Fonts: Source Sans 3 for all text and numbers, self-hosted. It uses the SIL Open Font License 1.1. Source Sans 3: Copyright 2010-2023 Adobe, with Reserved Font Name 'Source'.",
    "Copper prices: adapted from World Bank Commodity Price Data, licensed under CC BY 4.0. Changes made: prices are deflated with US CPI, rebased or turned into monthly changes, as each page says.",
    "US inflation (CPIAUCSL): U.S. Bureau of Labor Statistics, Consumer Price Index for All Urban Consumers: All Items in U.S. City Average, retrieved from FRED, Federal Reserve Bank of St. Louis. Public domain, citation requested.",
    "Dollar index (DTWEXBGS), euro exchange rate (EXUSEU) and 10-year yield (GS10): Board of Governors of the Federal Reserve System (US), retrieved from FRED, Federal Reserve Bank of St. Louis. Public domain, citation requested.",
@@ -1060,7 +1060,7 @@ window.CMA_STRINGS = {
    "Raw IEA files are not redistributed. The electric-car sales and shares come from the IEA Global EV Data Explorer and the data-centre capacity from the data annex to Energy and AI. Neither is under the IEA's CC BY 4.0 licence, so they are not in this repository. Download them from the sources listed below.",
    "No LME price data is shown or published on this site."
   ],
-  "slim_left": "Behindokht Alipour · Copper market analysis, a portfolio project",
+  "slim_left": "Behindokht Alipour. Copper market analysis, a portfolio project",
   "slim_right": "Not a forecast and not investment advice.",
   "repo_label_short": "Code on GitHub",
   "portfolio_label_short": "Art portfolio",
@@ -1135,7 +1135,7 @@ window.CMA_STRINGS = {
   "metals_tin": "Tin",
   "metals_aluminium": "Aluminium",
   "metals_brent": "Brent oil",
-  "metals_sub": "{pct}% · peak {month}",
+  "metals_sub": "{pct}% of peak, {month}",
   "metals_row_aria": "{name}: {pct} percent of its record in today's money. Record in {month}. Use the arrow keys to move along it.",
   "metals_key": "dot = record month",
   "ratio_aria": "Dot and line chart of the copper-to-aluminium price ratio and its 12-month average from {from} to {to}. A dashed line at {be} marks the break-even. Use the arrow keys to move along it.",
@@ -1177,7 +1177,7 @@ window.CMA_STRINGS = {
    "ratio_12_month_average",
    "copper_pct_of_own_record"
   ],
-  "status": "Data through {month} · {passed} checks passed · {fail} failures · {warn} warnings",
+  "status": "Data through {month}. {passed} checks passed, {fail} failures, {warn} warnings",
   "status_aria": "Status of the data",
   "head_em": "Copper",
   "head_rest": "is at a record: {price} per",

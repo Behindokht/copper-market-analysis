@@ -4,8 +4,8 @@
 2. Legend: each coloured swatch is the colour of the series it names (supply: mining verdigris, refining copper) and its text matches the right series.
 3. Chart labels: no label sits on a chart line, a dot or another label (bounding boxes of SVG text against the paths and circles), on the dashboard, in its expanded views and in the Story.
 4. Halos: no light outline on chart labels in dark mode (and no dark one in light mode); the halo is the panel's own colour.
-5. Type: nothing under 12 px anywhere (SVG text is measured after the chart is scaled), the kicker labels are sans, 12 px, 600, tracked, uppercase, no mono capitals, the fonts are Atkinson Hyperlegible
-   Next, Atkinson Hyperlegible Mono and Newsreader and all of them load, and tabular figures are on where numbers line up.
+5. Type: nothing under 12 px anywhere (SVG text is measured after the chart is scaled), the labels are 12.5 px, 600, sentence case, untracked, the one font family is Source Sans 3
+   and it loads, and tabular figures are on where numbers line up.
 6. Width: at 1024, 1100, 1280, 1400 and 400 px nothing is cut at the right edge (header, status line, filters, key figures, panels) and no key-figure label is truncated.
 7. Glass: the header and the headline plate carry no refraction filter on the large plates; the denser header fill hides text that scrolls under it (measured: the header region is the same with and without text behind it).
 Exit code 1 if anything fails."""
@@ -231,13 +231,13 @@ def run(engine):
             open_view(pg, "dashboard", "#dashboard .grid")
             pg.evaluate("document.fonts.ready")
             fam = pg.evaluate("""() => { const f = Array.from(document.fonts).filter(x => x.status === 'loaded').map(x => x.family.replace(/"/g, '') + ' ' + x.weight); return f; }""")
-            ok(any(x.startswith("Atkinson Hyperlegible Next") for x in fam) and any(x.startswith("Atkinson Hyperlegible Mono") for x in fam) and any(x.startswith("Newsreader") for x in fam), tt + f"the three font families should load, loaded: {fam}")
+            ok(any(x.startswith("Source Sans 3") for x in fam) and not any(x.startswith(("Newsreader", "Atkinson")) for x in fam), tt + f"Source Sans 3 should load and nothing else, loaded: {fam}")
             ok(not any("Plex" in x for x in fam), tt + "IBM Plex must not load any more")
             kick = pg.evaluate("""() => Array.from(document.querySelectorAll('.k-l, .fg > span')).map(e => { const c = getComputedStyle(e); return { t: e.textContent.trim(), fam: c.fontFamily, size: c.fontSize, w: c.fontWeight, ls: c.letterSpacing, tt: c.textTransform }; })""")
             ok(len(kick) >= 8, tt + "expected the key-figure labels and the filter labels")
             for k in kick:
-                ok("Atkinson Hyperlegible Next" in k["fam"] and "Mono" not in k["fam"] and k["size"] == "12px" and k["w"] == "600" and k["tt"] == "uppercase" and abs(float(k["ls"].replace("px", "")) - 0.72) < 0.05,
-                   tt + f"kicker {k['t']!r} should be sans 12px 600 uppercase tracked .06em, is {k}")
+                ok("Source Sans 3" in k["fam"] and k["size"] == "12.5px" and k["w"] == "600" and k["tt"] == "none" and k["ls"] in ("0px", "normal"),
+                   tt + f"label {k['t']!r} should be Source Sans 3 12.5px 600 in sentence case, untracked, is {k}")
             mono_caps = pg.evaluate("""() => Array.from(document.querySelectorAll('body *')).filter(e => { const c = getComputedStyle(e); return c.textTransform === 'uppercase' && /Mono|monospace/.test(c.fontFamily) && e.textContent.trim() && e.getBoundingClientRect().width; }).map(e => e.className).slice(0, 5)""")
             ok(not mono_caps, tt + f"no mono capitals: {mono_caps}")
             tab = pg.evaluate("() => ['#dashboard .k-v', '#dashboard .ro', '#status', '#dashboard .chip2'].map(s => { const e = document.querySelector(s); return e ? getComputedStyle(e).fontVariantNumeric : 'missing'; })")

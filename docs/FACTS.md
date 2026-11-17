@@ -65,7 +65,7 @@ Read from the import statements in `tools/`, `copper_database/build_db.py` and t
 - statsmodels 0.15.0
 - Lighthouse 12.8.2 (run from Node, outside the repository)
 
-The site is plain JavaScript and SVG with no library at run time. Fonts are self-hosted (Newsreader, Atkinson Hyperlegible Next and Mono, SIL Open Font License).
+The site is plain JavaScript and SVG with no library at run time. Fonts are self-hosted (Source Sans 3, SIL Open Font License).
 
 ## Not claimed
 

@@ -167,7 +167,7 @@ md_lines += ["", "## IEA material", "",
              IEA.RAW_NOT_REDISTRIBUTED + " The demand figure above is derived from that data (tonnes and percentages only, inputs not published).", ""]
 md_lines += ["", "## Tools actually used", "", "Read from the import statements in `tools/`, `copper_database/build_db.py` and the notebooks, with the versions installed in the project `.venv`.", ""]
 md_lines += [f"- {t_}" for t_ in tools]
-md_lines += ["", js_note + ". Fonts are self-hosted (Newsreader, Atkinson Hyperlegible Next and Mono, SIL Open Font License).", "",
+md_lines += ["", js_note + ". Fonts are self-hosted (Source Sans 3, SIL Open Font License).", "",
              "## Not claimed", "", "The project does not use machine learning, a forecasting model, a cloud service or a database server. Anything not listed above is not used.", ""]
 (ROOT / "docs" / "FACTS.md").write_text("\n".join(md_lines), encoding="utf-8", newline="\n")
 print("wrote docs/FACTS.md:", len(table), "facts,", len(tools), "tools")
